@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  #FIXME_AB: figaro
   VERIFY_MAIL_VALIDITY_HOURS = 5
 
   def new
@@ -6,6 +7,8 @@ class UsersController < ApplicationController
   end
 
   def create
+
+    #FIXME_AB: User.regular.new
     @user = User.new(user_params)
 
     respond_to do |format|
@@ -20,17 +23,19 @@ class UsersController < ApplicationController
   def verify
     user = User.find_by_verification_token(params[:id])
 
+    #FIXME_AB: use like this: "if user.verify". 1. check if token is valid. 2. set verified_at 3. clear verification token and date
     if user.verification_token_sent_at > VERIFY_MAIL_VALIDITY_HOURS.hours.ago
+
       user.update_column(:verified_at, Time.now)
-      flash[:notice] = "User successfully verified" 
+      flash[:notice] = "User successfully verified"
     else
-      flash[:alert] = "User could not got verified" 
+      flash[:alert] = "User could not got verified"
     end
     redirect_to login_url
   end
 
   private
-  
+
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end

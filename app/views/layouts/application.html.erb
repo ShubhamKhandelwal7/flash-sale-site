@@ -22,11 +22,12 @@
           <a class="nav-item nav-link" href="#">Deals</a>
           <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
           <a class="nav-item nav-link" href="#">Admin</a>
+          <% #FIXME_AB: make a helper current_user -%>
           <%if User.find_by(password_reset_token: cookies[:password_reset_token])%>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
             <a class="nav-item nav-link" href= <%= login_url %>>SignIn</a>
-          <%end%>  
+          <%end%>
           <%# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> %>
         </div>
       </div>
