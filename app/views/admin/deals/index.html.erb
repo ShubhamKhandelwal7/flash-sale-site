@@ -1,0 +1,28 @@
+<div class="container">
+  <% @deals.each do |deal| %>
+  <div class="row">
+    <div class="col">
+      <% image = deal.images.first if deal.images.attached? %>
+      <%= image_tag( url_for(image), class: "img-thumbnail" ) %>
+      <p>
+        <strong>Title:</strong>
+        <%= deal.title %>
+      </p>
+      <p>
+        <strong>Description:</strong>
+        <%= deal.description %>
+      </p>
+      <p>
+        <strong>Price:</strong>
+        <%= deal.price %>
+      </p> 
+      <p>
+        <strong>Publishable:</strong>
+        <%= deal.published_date ? deal.published_date : false %>
+      </p> 
+      <br>
+    </div>
+  </div> 
+  <% end %>
+  <%= link_to "Create New Deal", new_admin_deal_path %>
+</div>

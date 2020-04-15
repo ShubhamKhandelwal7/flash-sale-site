@@ -14,4 +14,8 @@ class ApplicationController < ActionController::Base
   rescue ActiveRecord::RecordNotFound
   end
 
+  private def authorize_for_admin
+    return if current_user.admin
+    redirect_to login_path, alert: "You don't have privilege to access this section"
+  end
 end

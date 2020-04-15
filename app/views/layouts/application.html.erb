@@ -19,13 +19,13 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="#">Deals</a>
+          <a class="nav-item nav-link" href= <%= admin_deals_path %> >Deals</a>
           <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
           <a class="nav-item nav-link" href="#">Admin</a>
           <% if current_user.present? %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
-            <a class="nav-item nav-link" href= <%= login_url %>>SignIn</a>
+            <a class="nav-item nav-link" href= <%= login_path %>>SignIn</a>
           <%end%>
           <%# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> %>
         </div>
