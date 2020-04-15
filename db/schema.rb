@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_09_075513) do
+ActiveRecord::Schema.define(version: 2020_04_15_051830) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -25,9 +25,13 @@ ActiveRecord::Schema.define(version: 2020_04_09_075513) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "verification_token"
+    t.datetime "verification_token_sent_at"
+    t.datetime "verified_at"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
+    t.index ["verification_token"], name: "index_users_on_verification_token", unique: true
   end
 
 end
