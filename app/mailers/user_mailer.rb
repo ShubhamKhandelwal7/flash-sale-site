@@ -8,7 +8,7 @@ class UserMailer < ApplicationMailer
   def sign_up_verification(user_id)
     @user = User.find(user_id)
     #FIXME_AB: send mail if user is not verified
-    mail to: @user.email, subject: "Welcome to Flash Sale Site"
+    mail to: @user.email, subject: "Welcome to Flash Sale Site" if @user.verified_at.blank?
   end
 
   def not_verified(user_id)

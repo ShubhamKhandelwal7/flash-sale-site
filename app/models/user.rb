@@ -14,7 +14,7 @@ class User < ApplicationRecord
   before_validation { generate_token(:password_reset_token) }
   before_validation { generate_token(:verification_token) }
   #FIXME_AB: after_commit :send_signup_verification_mail, on: :create, unless: -> { admin? }
-  after_commit :send_signup_verification_mail, on: :create, if: -> { admin.blank? }
+  after_commit :send_signup_verification_mail, on: :create, unless: -> { admin? }
 
   scope :admin, -> { where(admin: true) }
   scope :regular, -> { where(admin: false) }
@@ -56,9 +56,7 @@ class User < ApplicationRecord
     UserMailer.not_verified(id).deliver_later
   end
 
-  private
-
-  def generate_token(column)
+  private def generate_token(column)
     begin
       token_val = SecureRandom.urlsafe_base64
       self.public_send("#{column}=", token_val)
@@ -67,7 +65,7 @@ class User < ApplicationRecord
     end while User.exists?(column => token_val)
   end
 
-  def send_signup_verification_mail
+  private def send_signup_verification_mail
     generate_token(:verification_token)
     self.verification_token_sent_at = Time.current
     save!

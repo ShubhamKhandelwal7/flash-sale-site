@@ -10,7 +10,8 @@ class ApplicationController < ActionController::Base
 
   private def current_user
     #FIXME_AB: user_id = session[:user_id] || cookies.signed[:user_id]
-    @current_user ||= User.find(session[:user_id], cookies.signed[:user_id])
+    user_id = session[:user_id] || cookies.signed[:user_id]
+    @current_user ||= User.find(user_id)
   rescue ActiveRecord::RecordNotFound
   end
 

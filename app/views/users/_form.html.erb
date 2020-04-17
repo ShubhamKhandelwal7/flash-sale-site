@@ -1,7 +1,7 @@
 <div class = "container">
   <%= form_with(model: user, local: true, class: "form-signin") do |form| %>
 
-    <%= render partial: 'shared/errors', locals:{ attribute: user } %>
+    <%= render partial: 'shared/errors', locals:{ object: user } %>
 
     <h4> Enter User Details </h4>
 

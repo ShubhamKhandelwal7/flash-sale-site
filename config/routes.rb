@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     post 'login' => :create
     delete 'logout'  => :destroy
   end
-  <ge></ge>t 'dummy_homepage', action: :dummy_homepage, controller: 'dummy'
+  get 'dummy_homepage', action: :dummy_homepage, controller: 'dummy'
   get "verify/:token", action: :verify, controller: :users, as: 'verify'
 
   resources :users, only: [:new, :create]

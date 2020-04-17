@@ -1,13 +1,13 @@
 default: &default
-  adapter:
-  pool:
-  timeout:
+  adapter: postgresql
+  pool: RAILS_MAX_THREADS
+  timeout: 5000
 
 development:
   <<: *default
-  database:
-  username:
-  password:
+  database: pg
+  username: abc
+  password: ***
 
 test:
   <<: *default
