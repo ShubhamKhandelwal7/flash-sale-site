@@ -1,8 +1,7 @@
 <div class = "container">
   <%= form_for @user, url: password_reset_url(params[:token], class: "form-signup") do |form| %>
 
-    <% #FIXME_AB: make a partial file in views/shared folder '_errors.html.erb' -%>
-    <% #FIXME_AB: render partial: 'shared/_errors', local: @user -%>
+    <% #FIXME_AB: attribute to object -%>
     <%= render partial: 'shared/errors', locals: { attribute: @user } %>
 
     <h4>Please enter your NEW password </h4>

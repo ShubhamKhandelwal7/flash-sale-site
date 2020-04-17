@@ -22,7 +22,6 @@
           <a class="nav-item nav-link" href="#">Deals</a>
           <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
           <a class="nav-item nav-link" href="#">Admin</a>
-          <% #FIXME_AB: make a helper current_user -%>
           <% if current_user.present? %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>

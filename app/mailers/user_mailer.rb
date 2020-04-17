@@ -19,8 +19,6 @@ class UserMailer < ApplicationMailer
   def password_reset(user_id)
     @user = User.find(user_id)
 
-    #FIXME_AB: use mail inceptor https://guides.rubyonrails.org/action_mailer_basics.html#intercepting-and-observing-emails
-    #FIXME_AB: to prepend environment in subject, except for production env.
     mail to: @user.email, subject: "Password Reset"
   end
 end

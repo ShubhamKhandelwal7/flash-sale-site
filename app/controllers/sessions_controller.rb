@@ -8,26 +8,23 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
       if params[:remember_me]
-        #FIXME_AB: signed cookie. Valid for 14 days.
+        #FIXME_AB: lets take this duration from figaro.
         cookies.signed[:user_id] = { value: user.id, expires: 14.days.from_now }
       else
-        #FIXME_AB: save in session
-        #FIXME_AB: read about rails session management in rails and session store.
+        #FIXME_AB: read about rails session management in rails and session store. Where is your application saving session, and how would you change your session storate to something else like DB
         session[:user_id] = user.id
       end
-      # TODO: redirect to homepage
-      #FIXME_AB: make a plain dummy controller to redirect
       redirect_to dummy_homepage_path, notice: "Logged in successfully"
     else
-      #FIXME_AB: why login_url not login_path
       redirect_to login_path, alert: "Incorrect Username/password, please try again"
     end
   end
 
   def destroy
+    #FIXME_AB: this is not the right way to expiring cookie
     cookies[:user_id] = nil if cookies[:user_id]
+    #FIXME_AB: no need to check session
     reset_session if session[:user_id]
-    #FIXME_AB: when we save info in session, on logout call "reset_session" helper to clear session. Read about this
     redirect_to login_path, alert: "Logged out successfully"
   end
 end
