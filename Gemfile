@@ -32,7 +32,6 @@ gem 'acts_as_paranoid', '0.6.3'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
-#FIXME_AB: add gem version
 #FIXME_AB: read about Gemfile and Gemfile.lock https://github.com/vinsol/vtapp_study_material/blob/master/rails/Gemfile%20and%20Gemfile.lock%20in%20Ruby%20-%20Daval%20Pargal%20-%20Medium.pdf
 gem "figaro", '1.1.1'
 

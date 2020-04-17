@@ -1,5 +1,4 @@
 class PasswordResetsController < ApplicationController
-  #FIXME_AB: also add database.yml.example file
 
   skip_before_action :authorize
   include UserVerification

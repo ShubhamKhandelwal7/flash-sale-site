@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
   before_validation { generate_token(:password_reset_token) }
   before_validation { generate_token(:verification_token) }
-  #FIXME_AB: after_commit :send_signup_verification_mail, on: :create, unless: -> { admin? }
+
   after_commit :send_signup_verification_mail, on: :create, unless: -> { admin? }
 
   scope :admin, -> { where(admin: true) }
@@ -21,7 +21,6 @@ class User < ApplicationRecord
 
   def send_password_reset
     generate_token(:password_reset_token)
-    #FIXME_AB: how to set application's timezone
     self.password_reset_sent_at = Time.current
     save!
     UserMailer.password_reset(id).deliver_later
