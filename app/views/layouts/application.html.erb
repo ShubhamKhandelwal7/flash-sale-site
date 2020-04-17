@@ -39,7 +39,7 @@
     } %>
     <div class = text-center>
       <% flash.each do |type| %>
-        <aside class = <%= flash_bootstrap_class[type[0]] %>> <%= type[1] %></aside>
+        <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
       <% end %>
       <%= yield %>
     </div>
