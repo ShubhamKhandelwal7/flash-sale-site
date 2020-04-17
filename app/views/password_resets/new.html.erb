@@ -1,0 +1,14 @@
+<h2>Password Recovery</h2>
+<br>
+<h5>Please enter the EMAIL used while signing-up</h5>
+<div class = "container">
+  <%= form_tag(password_resets_path, method: :post, class: "form-signup") do %>
+    <div class = "form-group">
+      <%= label_tag :email, "Email:", class: "sr-only" %>
+      <%= text_field_tag :email, params[:email], placeholder: "Email" %>
+    </div>
+    <div class = "form-group">
+    <%= submit_tag "Reset Password", class: "btn btn-primary btn-lg" %>
+    </div>
+  <% end %>
+</div>

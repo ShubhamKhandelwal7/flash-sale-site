@@ -1,0 +1,34 @@
+<div class = "container">
+  <%= form_with(model: user, local: true, class: "form-signin") do |form| %>
+
+    <%= render partial: 'shared/errors', locals:{ object: user } %>
+
+    <h4> Enter User Details </h4>
+
+    <div class = "form-group">
+      <%= form.label :name, "Name:", class: "sr-only" %>
+      <%= form.text_field :name, placeholder: "Name" %>
+    </div>
+
+    <div class = "form-group">
+      <%= form.label :Email, "Email:", class: "sr-only" %>
+      <%= form.text_field :email, placeholder: "Email" %>
+    </div>
+
+    <div class = "form-group">
+      <%= form.label :password, "Password:", class: "sr-only" %>
+      <%= form.password_field :password, placeholder: "Password" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password_confirmation, 'Confirm:', class: "sr-only" %>
+      <%= form.password_field :password_confirmation, placeholder: "Confirm Password",
+                               id: :user_password_confirmation %>
+    </div>
+
+    <div class = "form-group">
+      <%= form.submit :SIGNUP, class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
+</div>

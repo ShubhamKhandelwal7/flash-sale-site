@@ -10,6 +10,38 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+      <img src= <%= image_path 'flash-sale-logo-navbar.jpg' %> width="130" height="80" alt=""></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="#">Deals</a>
+          <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
+          <a class="nav-item nav-link" href="#">Admin</a>
+          <% if current_user.present? %>
+            <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
+          <% else %>
+            <a class="nav-item nav-link" href= <%= login_url %>>SignIn</a>
+          <%end%>
+          <%# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> %>
+        </div>
+      </div>
+    </nav>
+    <br>
+    <% flash_bootstrap_class = {
+      'alert' => 'alert-warning',
+      'notice' => "alert-success",
+      'error' => "alert-danger"
+    } %>
+    <div class = text-center>
+      <% flash.each do |type| %>
+        <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
+      <% end %>
+      <%= yield %>
+    </div>
   </body>
 </html>

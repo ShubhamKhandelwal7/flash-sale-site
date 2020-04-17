@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  pool: RAILS_MAX_THREADS
+  timeout: 5000
+
+development:
+  <<: *default
+  database: pg
+  username: abc
+  password: ***
+
+test:
+  <<: *default
+  database:
+
+production:
+  <<: *default
+  database:
