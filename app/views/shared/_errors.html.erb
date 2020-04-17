@@ -1,0 +1,14 @@
+<% if attribute.errors.any? %>
+  <div class = "card text-white bg-danger mb-4">
+    <div class = "card-header">
+      <h2> <%= attribute.errors.count %> errors prohibited this user from getting saved:</h2>
+    </div>
+    <ul>
+    <div class="card-text">
+      <% attribute.errors.full_messages.each do |message| %>
+        <li> <%= message %> </li>
+      <% end %>
+      </div>
+    </ul>
+  </div>
+<% end %>

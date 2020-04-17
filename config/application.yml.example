@@ -1,0 +1,15 @@
+development:
+  RESET_MAIL_VALIDITY_HOURS:
+  VERIFY_MAIL_VALIDITY_HOURS:
+  default_from_mail:
+
+test:
+  RESET_MAIL_VALIDITY_HOURS:
+  VERIFY_MAIL_VALIDITY_HOURS:
+  default_from_mail:
+
+production:
+  RESET_MAIL_VALIDITY_HOURS:
+  VERIFY_MAIL_VALIDITY_HOURS:
+  default_from_mail:
+

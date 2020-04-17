@@ -23,7 +23,7 @@
           <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
           <a class="nav-item nav-link" href="#">Admin</a>
           <% #FIXME_AB: make a helper current_user -%>
-          <%if User.find_by(password_reset_token: cookies[:password_reset_token])%>
+          <% if current_user.present? %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
             <a class="nav-item nav-link" href= <%= login_url %>>SignIn</a>
@@ -33,7 +33,15 @@
       </div>
     </nav>
     <br>
+    <% flash_bootstrap_class = {
+      'alert' => 'alert-warning',
+      'notice' => "alert-success",
+      'error' => "alert-danger"
+    } %>
     <div class = text-center>
+      <% flash.each do |type| %>
+        <aside class = <%= flash_bootstrap_class[type[0]] %>> <%= type[1] %></aside>
+      <% end %>
       <%= yield %>
     </div>
   </body>

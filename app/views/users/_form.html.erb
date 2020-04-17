@@ -1,19 +1,7 @@
 <div class = "container">
   <%= form_with(model: user, local: true, class: "form-signin") do |form| %>
-    <% if user.errors.any? %>
-      <div class = "card text-white bg-danger mb-4">
-        <div class = "card-header">
-          <h2> <%= user.errors.count %> errors prohibited this user from getting saved:</h2>
-        </div>
-        <ul>
-        <div class="card-text">
-          <% user.errors.full_messages.each do |message| %>
-            <li> <%= message %> </li>
-          <% end %>
-          </div>
-        </ul>
-      </div>
-    <% end %>
+
+    <%= render partial: 'shared/errors', locals:{ attribute: user } %>
 
     <h4> Enter User Details </h4>
 

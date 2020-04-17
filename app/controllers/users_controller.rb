@@ -1,7 +1,12 @@
 class UsersController < ApplicationController
+  before_action :authorize
   #FIXME_AB: figaro
-  VERIFY_MAIL_VALIDITY_HOURS = 5
 
+  include UserVerification
+  before_action  only: [:verify] do
+    current_user_via_token(:verification_token)
+  end
+  
   def new
     @user = User.new
   end
@@ -9,11 +14,10 @@ class UsersController < ApplicationController
   def create
 
     #FIXME_AB: User.regular.new
-    @user = User.new(user_params)
-
+    @user = User.regular.new(user_params)
     respond_to do |format|
       if @user.save
-        format.html { redirect_to login_url, notice: "#{@user.name} successfully created" }
+        format.html { redirect_to login_path, notice: "#{@user.name} successfully created" }
       else
         format.html { render :new, notice: "#{@user.name} not got created" }
       end
@@ -21,18 +25,15 @@ class UsersController < ApplicationController
   end
 
   def verify
-    user = User.find_by_verification_token(params[:id])
-
-    #FIXME_AB: use like this: "if user.verify". 1. check if token is valid. 2. set verified_at 3. clear verification token and date
-    if user.verification_token_sent_at > VERIFY_MAIL_VALIDITY_HOURS.hours.ago
-
-      user.update_column(:verified_at, Time.now)
+    if @user.verify
       flash[:notice] = "User successfully verified"
     else
+      @user.send_not_verified_mail
       flash[:alert] = "User could not got verified"
     end
-    redirect_to login_url
+    redirect_to login_path
   end
+    #FIXME_AB: use like this: "if user.verify". 1. check if token is valid. 2. set verified_at 3. clear verification token and date
 
   private
 

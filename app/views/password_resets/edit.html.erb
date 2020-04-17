@@ -1,22 +1,9 @@
 <div class = "container">
-  <%= form_for @user, url: password_reset_url(params[:id], class: "form-signup") do |form| %>
+  <%= form_for @user, url: password_reset_url(params[:token], class: "form-signup") do |form| %>
 
-  <% #FIXME_AB: make a partial file in views/shared folder '_errors.html.erb' -%>
-  <% #FIXME_AB: render partial: 'shared/_errors', local: @user -%>
-    <% if @user.errors.any? %>
-      <div class = "card text-white bg-danger mb-4">
-        <div class = "card-header">
-          <h2> <%= @user.errors.count %> errors prohibited this user from getting saved:</h2>
-        </div>
-        <ul>
-        <div class="card-text">
-          <% @user.errors.full_messages.each do |message| %>
-            <li> <%= message %> </li>
-          <% end %>
-          </div>
-        </ul>
-      </div>
-    <% end %>
+    <% #FIXME_AB: make a partial file in views/shared folder '_errors.html.erb' -%>
+    <% #FIXME_AB: render partial: 'shared/_errors', local: @user -%>
+    <%= render partial: 'shared/errors', locals: { attribute: @user } %>
 
     <h4>Please enter your NEW password </h4>
     <div class = "form-group">

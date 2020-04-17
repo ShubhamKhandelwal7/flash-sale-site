@@ -1,10 +1,4 @@
 <section class="login-form">
-  <% if flash[:alert] %>
-    <aside class = "alert alert-danger"><%= flash[:alert] %></aside>
-  <% end %>
-  <% if flash[:notice] %>
-    <aside class = "alert alert-success"><%= flash[:notice] %></aside>
-  <% end %>
 
   <div class = 'container'>
     <%= form_tag class: "form-signin" do %>
