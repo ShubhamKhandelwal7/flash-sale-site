@@ -18,11 +18,12 @@
       </p> 
       <p>
         <strong>Publishable:</strong>
-        <%= deal.published_date ? deal.published_date : false %>
+        <%= deal.published_at ? deal.published_at : false %>
       </p> 
       <br>
     </div>
   </div> 
   <% end %>
+  <%= paginate @deals %>
   <%= link_to "Create New Deal", new_admin_deal_path %>
 </div>

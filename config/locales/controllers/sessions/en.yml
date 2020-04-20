@@ -1,0 +1,9 @@
+en:
+  create:
+    flash:
+      success: Logged in successfully
+      failure: Incorrect Username/password, please try again
+
+  destroy:
+    flash:
+      logout: Logged out successfully

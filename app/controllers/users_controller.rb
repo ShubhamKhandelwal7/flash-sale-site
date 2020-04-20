@@ -14,20 +14,20 @@ class UsersController < ApplicationController
     @user = User.regular.new(user_params)
     respond_to do |format|
       if @user.save
-        format.html { redirect_to login_path, notice: "#{@user.name} successfully created" }
+        format.html { redirect_to login_path, notice: "#{@user.name} #{t("create.flash.success")}" }
       else
-        format.html { render :new, notice: "#{@user.name} not got created" }
+        format.html { render :new, notice: "#{@user.name} #{t("create.flash.failure")}" }
       end
     end
   end
 
   def verify
     if @user.verify
-      flash[:notice] = "User successfully verified"
+      flash[:notice] = t("verify.flash.success")
     else
       @user.send_not_verified_mail
       #FIXME_AB: flash.now, flash.keep. How flash messages are retained in next request, while other variables not? Read.
-      flash[:alert] = "User could not got verified"
+      flash[:alert] = t("verify.flash.failure")
     end
     redirect_to login_path
   end

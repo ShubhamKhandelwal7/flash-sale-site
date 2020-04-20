@@ -13,7 +13,7 @@
   </p> 
   <p>
     <strong>Publishable:</strong>
-    <%= @deal.published_date ? @deal.published_date : false %>
+    <%= @deal.published_at ? @deal.published_at : false %>
   </p> 
 
   <% if @deal.images.attached? %>

@@ -1,7 +1,8 @@
 $(document).on("turbolinks:load", function(){
   function dealFormFields() {
     $('form').on('click', '.add_fields', function(event) {
-      $(this).before($(this).data('fields'))
+      _this = $(this)
+      _this.before(_this.data('fields'))
       event.preventDefault()
     })
   }

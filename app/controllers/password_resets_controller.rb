@@ -17,20 +17,20 @@ class PasswordResetsController < ApplicationController
     user = User.find_by(email: params[:email])
     if user
       user.send_password_reset
-      redirect_to login_path, notice: "Email sent with password reset instructions"
+      redirect_to login_path, notice: t("create.flash.success")
     else
-      redirect_to new_password_reset_path , alert: "Email not present in record, please try with email you used to sign-up."
+      redirect_to new_password_reset_path , alert: t("create.flash.failure")
     end
   end
 
   def update
     reset_request = @user.reset_password(user_params)
     if reset_request[:status]
-      redirect_to login_url, notice: "Password reset success"
+      redirect_to login_url, notice: t("update.flash.success")
     elsif !reset_request[:status] && reset_request[:reason] == "update_validation_failed"
-      render :edit, notice: "Password couldn't be saved"
+      render :edit, notice: t("update.flash.failure.message")
     else
-      render :new, notice: "Password token expired, please try again"
+      render :new, notice: t("update.flash.failure.tokenexpire")
     end
   end
 
