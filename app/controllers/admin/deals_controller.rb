@@ -1,9 +1,10 @@
 module Admin
   class DealsController < AdminController
-    before_action :set_deal, only: [:show, :edit, :update, :destroy]
+    before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability]
 
     def index
-      @deals = Deal.with_attached_images.page(params[:page]).per(1)
+      @deals = Deal.with_attached_images.page(params[:page])
+                   .per(ENV["PER_PAGE_DEAL"].to_i)
     end
 
     def new
@@ -21,16 +22,6 @@ module Admin
       end
     end
 
-    def show
-      if params[:publishable_check_date]
-        @status = @deal.can_be_scheduled_to_publish_on(Date.parse(params[:publishable_check_date]))
-      end
-      respond_to do |format|
-        format.js
-        format.html
-      end
-    end
-
     def edit
     end
 
@@ -45,11 +36,19 @@ module Admin
     end
 
     def destroy
-      @deal.destroy
-      respond_to do |format|
-        format.html { redirect_to admin_deals_path, alert: @deal.errors[:base][0] }
+      if @deal.destroy
         flash[:notice] = t("destroy.flash.success")
+      else
+        flash[:error] = "#{t("destroy.flash.failure")} #{@deal.errors[:base][0]}"
       end
+      redirect_to admin_deals_path
+    end
+
+    def check_publishability
+      if params[:publishable_check_date]
+        @status = @deal.can_be_scheduled_to_publish_on(Date.parse(params[:publishable_check_date]))
+      end
+      
     end
 
     private def deal_params

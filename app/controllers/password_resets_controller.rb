@@ -28,9 +28,9 @@ class PasswordResetsController < ApplicationController
     if reset_request[:status]
       redirect_to login_url, notice: t("update.flash.success")
     elsif !reset_request[:status] && reset_request[:reason] == "update_validation_failed"
-      render :edit, notice: t("update.flash.failure.message")
+      render :edit, alert: t("update.flash.failure.message")
     else
-      render :new, notice: t("update.flash.failure.tokenexpire")
+      render :new, alert: t("update.flash.failure.tokenexpire")
     end
   end
 

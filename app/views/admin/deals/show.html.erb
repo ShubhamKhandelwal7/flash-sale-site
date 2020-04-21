@@ -28,7 +28,9 @@
   <div id = "publish-data">
   </div>
 
-  <%= form_with method: :get, class: "form-signin" do %>
+  <br>
+  
+  <%= form_with method: :get, url: check_publishability_admin_deal_path, class: "form-signin" do %>
 
     <div class = "form-group">
       <%= label_tag(:date, "Date:") %>
