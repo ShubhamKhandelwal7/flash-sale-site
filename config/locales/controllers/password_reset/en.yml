@@ -10,3 +10,4 @@ en:
       failure:
         message: Password couldn't be saved
         tokenexpire: Password token expired, please try again
+        

@@ -7,3 +7,4 @@ en:
   destroy:
     flash:
       logout: Logged out successfully
+      

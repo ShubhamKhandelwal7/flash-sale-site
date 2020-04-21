@@ -24,6 +24,22 @@
       </div>
     <% end %>
   <% end %>
+
+  <div id = "publish-data">
+  </div>
+
+  <%= form_with method: :get, class: "form-signin" do %>
+
+    <div class = "form-group">
+      <%= label_tag(:date, "Date:") %>
+      <%= date_field_tag(:publishable_check_date, class: "form-date") %>
+    </div>
+    <div class = "form-group">
+      <%= submit_tag "Check Publishability", class: "btn btn-info" %>
+    </div>
+
+  <%end%>
+
   <%= link_to "Back", admin_deals_path %>
 </div>
   

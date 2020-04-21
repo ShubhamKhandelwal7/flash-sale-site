@@ -3,8 +3,7 @@ module Admin
     before_action :set_deal, only: [:show, :edit, :update, :destroy]
 
     def index
-      @deals = Deal.with_attached_images.all
-      @deals = Kaminari.paginate_array(@deals).page(params[:page]).per(1)
+      @deals = Deal.with_attached_images.page(params[:page]).per(1)
     end
 
     def new
@@ -19,6 +18,16 @@ module Admin
         else
           format.html { render :new }
         end
+      end
+    end
+
+    def show
+      if params[:publishable_check_date]
+        @status = @deal.can_be_scheduled_to_publish_on(Date.parse(params[:publishable_check_date]))
+      end
+      respond_to do |format|
+        format.js
+        format.html
       end
     end
 
@@ -50,7 +59,7 @@ module Admin
 
     private def set_deal
       @deal = Deal.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
+      redirect_to login_path, notice: "Please login again" if @deal.blank?
     end
 
   end

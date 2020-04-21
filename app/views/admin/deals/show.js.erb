@@ -1,0 +1,7 @@
+publishStateDiv = document.getElementById("publish-data")
+
+<% if @status %>
+  publishStateDiv.innerHTML = "The Deal is publishable"
+<% else %>
+  publishStateDiv.innerHTML = "The Deal is NOT publishable"
+<%end%>

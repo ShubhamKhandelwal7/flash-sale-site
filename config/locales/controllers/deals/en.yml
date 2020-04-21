@@ -10,3 +10,4 @@ en:
   destroy:
     flash:
       success: Deal destroyed sucessfully
+      

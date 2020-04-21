@@ -2,3 +2,4 @@ en:
   errors:
     discount_price: "must be greater than discount price"
     image: "upload should be more than"
+    

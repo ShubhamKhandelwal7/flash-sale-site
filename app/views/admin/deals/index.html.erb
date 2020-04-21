@@ -2,16 +2,8 @@
   <% @deals.each do |deal| %>
   <div class="row">
     <div class="col">
-      <% image = deal.images.first if deal.images.attached? %>
+      <% image = deal.cover_image if deal.images.attached? %>
       <%= image_tag( url_for(image), class: "img-thumbnail" ) %>
-      <p>
-        <strong>Title:</strong>
-        <%= deal.title %>
-      </p>
-      <p>
-        <strong>Description:</strong>
-        <%= deal.description %>
-      </p>
       <p>
         <strong>Price:</strong>
         <%= deal.price %>
