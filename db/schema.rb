@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_125038) do
+ActiveRecord::Schema.define(version: 2020_04_22_133252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -39,14 +39,16 @@ ActiveRecord::Schema.define(version: 2020_04_16_125038) do
 
   create_table "deals", force: :cascade do |t|
     t.citext "title", null: false
-    t.string "description"
+    t.text "description"
     t.decimal "price", precision: 8, scale: 2
-    t.decimal "discount_price", default: "0.0", null: false
+    t.decimal "discount_price", precision: 8, scale: 2, default: "0.0", null: false
     t.integer "quantity", default: 0, null: false
-    t.datetime "published_date"
+    t.datetime "published_at"
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "live_begin"
+    t.datetime "live_end"
     t.index ["deleted_at"], name: "index_deals_on_deleted_at"
     t.index ["title"], name: "index_deals_on_title", unique: true
   end

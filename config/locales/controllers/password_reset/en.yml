@@ -1,0 +1,13 @@
+en:
+  create:
+    flash:
+      success: Email sent with password reset instructions 
+      failure: Email not present in record, please try with email you used to sign-up
+
+  update:
+    flash:
+      success: Password reset success
+      failure:
+        message: Password couldn't be saved
+        tokenexpire: Password token expired, please try again
+        

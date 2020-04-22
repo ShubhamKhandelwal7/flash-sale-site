@@ -1,0 +1,5 @@
+en:
+  errors:
+    authorize: Please Login in again
+    admin_authorize: You don't have privilege to access this section
+    

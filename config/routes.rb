@@ -10,5 +10,11 @@ Rails.application.routes.draw do
   resources :users, only: [:new, :create]
 
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
+
+  namespace :admin do 
+    resources :deals do
+      get "check_publishability", on: :member, action: "check_publishability"
+    end
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

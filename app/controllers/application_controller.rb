@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 
   private def authorize
     if current_user.blank?
-      redirect_to login_path, alert: "Please Login in again"
+      redirect_to login_path, alert: t("errors.authorize")
     end
   end
 
@@ -14,4 +14,8 @@ class ApplicationController < ActionController::Base
   rescue ActiveRecord::RecordNotFound
   end
 
+  private def authorize_for_admin
+    return if current_user.admin?
+    redirect_to login_path, alert: t("errors.admin_authorize")
+  end
 end

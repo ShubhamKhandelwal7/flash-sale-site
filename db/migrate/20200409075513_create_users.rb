@@ -7,10 +7,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.citext :email, null: false
       t.string :password_digest, null: false
       t.string :password_reset_token
-      t.string :verifiation_token
-      t.datetime :verifiation_token_sent_at
       t.datetime :password_reset_sent_at
-      t.datetime :verified_at
       t.datetime :deleted_at
 
       t.timestamps
@@ -19,6 +16,5 @@ class CreateUsers < ActiveRecord::Migration[6.0]
     add_index :users, :deleted_at
     add_index :users, :email, unique: true
     add_index :users, :password_reset_token, unique: true
-    add_index :users, :verifiation_token, unique: true
   end
 end

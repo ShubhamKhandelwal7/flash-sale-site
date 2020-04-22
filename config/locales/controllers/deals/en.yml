@@ -1,0 +1,16 @@
+en:
+  admin:
+    deals:
+      create:
+        flash:
+          success: Deal created sucessfully
+      
+      update:
+        flash:
+          success: Deal updated sucessfully
+
+      destroy:
+        flash:
+          success: Deal destroyed sucessfully
+          failure: Deal couldn't be destroyed sucessfully
+        

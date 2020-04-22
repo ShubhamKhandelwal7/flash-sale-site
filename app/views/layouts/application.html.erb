@@ -7,6 +7,7 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= yield :js %>
   </head>
 
   <body>
@@ -19,13 +20,13 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="#">Deals</a>
+          <a class="nav-item nav-link" href= <%= admin_deals_path %> >Deals</a>
           <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
           <a class="nav-item nav-link" href="#">Admin</a>
           <% if current_user.present? %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
-            <a class="nav-item nav-link" href= <%= login_url %>>SignIn</a>
+            <a class="nav-item nav-link" href= <%= login_path %>>SignIn</a>
           <%end%>
           <%# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> %>
         </div>
@@ -37,10 +38,12 @@
       'notice' => "alert-success",
       'error' => "alert-danger"
     } %>
-    <div class = text-center>
-      <% flash.each do |type| %>
-        <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
-      <% end %>
+    <div>
+      <div class = "text-center">
+        <% flash.each do |type| %>
+          <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
+        <% end %>
+      </div>
       <%= yield %>
     </div>
   </body>
