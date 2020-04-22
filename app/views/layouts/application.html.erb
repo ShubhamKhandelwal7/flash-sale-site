@@ -38,7 +38,7 @@
       'notice' => "alert-success",
       'error' => "alert-danger"
     } %>
-    <div class = text-center>
+    <div>
       <% flash.each do |type| %>
         <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
       <% end %>

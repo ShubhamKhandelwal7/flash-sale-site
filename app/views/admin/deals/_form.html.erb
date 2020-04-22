@@ -2,20 +2,20 @@
   <% content_for :js do %>
     <%= javascript_pack_tag  'deal_form_images', 'data-turbolinks-track': 'reload' %>
   <% end %>
-
+<div class = 'row'>
   <%= form_with(model: deal, url: deal_path, local: true, class: "form-signin", id: "deals-form") do |form| %>
     <%= render partial: 'shared/errors', locals:{ object: deal } %>
-    
+
     <h4> Enter Deal Details </h4>
 
     <div class = "form-group">
       <%= form.label :title, "Title:" %>
-      <%= form.text_field :title, placeholder: "Title" %>
+      <%= form.text_field :title, placeholder: "Title", class: 'form-control' %>
     </div>
 
     <div class = "form-group">
       <%= form.label :description, "Description:", class: "sr-only" %>
-      <%= form.text_area :description, placeholder: "Description", rows: 5, cols: 30  %>
+      <%= form.text_area :description, placeholder: "Description", class: 'form-control', rows: 5, cols: 30  %>
     </div>
 
     <div class = "form-group">
@@ -39,7 +39,7 @@
     <div class = "form-group">
     <br>
       <%= form.submit :CREATE, class: "btn btn-primary" %>
-    </div>
+    </div></div>
 
   <% end %>
 </div>
