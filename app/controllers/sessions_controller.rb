@@ -13,15 +13,15 @@ class SessionsController < ApplicationController
         #FIXME_AB: read about rails session management in rails and session store. Where is your application saving session, and how would you change your session storate to something else like DB
         session[:user_id] = user.id
       end
-      redirect_to dummy_homepage_path, notice: t("create.flash.success")
+      redirect_to dummy_homepage_path, notice: t(".flash.success")
     else
-      redirect_to login_path, alert: t("create.flash.failure")
+      redirect_to login_path, alert: t(".flash.failure")
     end
   end
 
   def destroy
     cookies.delete :user_id
     reset_session
-    redirect_to login_path, alert: t("destroy.flash.logout")
+    redirect_to login_path, alert: t(".destroy.flash.logout")
   end
 end

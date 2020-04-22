@@ -15,7 +15,7 @@ module Admin
       @deal = Deal.new(deal_params)
       respond_to do |format|
         if @deal.save
-          format.html { redirect_to admin_deal_path(@deal), notice: t("create.flash.success")}
+          format.html { redirect_to admin_deal_path(@deal), notice: t(".flash.success")}
         else
           format.html { render :new }
         end
@@ -28,7 +28,7 @@ module Admin
     def update
       respond_to do |format|
         if @deal.update(deal_params)
-          format.html { redirect_to admin_deal_path(@deal), notice: t("update.flash.success") }
+          format.html { redirect_to admin_deal_path(@deal), notice: t(".flash.success") }
         else
           format.html { render :edit }
         end
@@ -37,9 +37,9 @@ module Admin
 
     def destroy
       if @deal.destroy
-        flash[:notice] = t("destroy.flash.success")
+        flash[:notice] = t(".flash.success")
       else
-        flash[:error] = "#{t("destroy.flash.failure")} #{@deal.errors[:base][0]}"
+        flash[:error] = "#{t(".flash.failure")} #{@deal.errors[:base][0]}"
       end
       redirect_to admin_deals_path
     end
