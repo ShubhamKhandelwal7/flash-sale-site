@@ -5,6 +5,7 @@ development:
   REMEMBER_ME_COOKIE_EXPIRY_DAYS: 14
   HOSTNAME_MAILER_DEV: "localhost:3000"
   PER_PAGE_DEAL: '1'
+  DEAL_LIVE_DAYS: '1'
 
 test:
   RESET_MAIL_VALIDITY_HOURS:
@@ -12,6 +13,7 @@ test:
   default_from_mail:
   REMEMBER_ME_COOKIE_EXPIRY_DAYS: 
   PER_PAGE_DEAL:
+  DEAL_LIVE_DAYS:
 
 production:
   RESET_MAIL_VALIDITY_HOURS:
@@ -19,4 +21,5 @@ production:
   default_from_mail:
   REMEMBER_ME_COOKIE_EXPIRY_DAYS: 
   PER_PAGE_DEAL:
+  DEAL_LIVE_DAYS:
 
