@@ -10,7 +10,7 @@
       </p> 
       <p>
         <strong>Publishable:</strong>
-        <%= deal.published_at ? deal.published_at : false %>
+        <%= deal.published_at ? deal.published_at.to_date : false %>
       </p> 
       <br>
     </div>

@@ -1,0 +1,76 @@
+<div class = "container">
+  <div class = "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class = "masthead mb-auto">
+      <div class = "inner">
+        <h1 class = "masthead-brand text-center"> Flash Sale Welcome !!! </h1>
+      </div>
+    </header>
+    <main class = "inner cover" role = "main">
+    <% if @live_deals.present? %>
+      <h3 class="cover-heading text-center"> LIVE DEALS </h3>
+    <% else %>
+      <h3 class="cover-heading text-center"> PAST DEALS </h3>
+    <% end %>
+    <% deals = @live_deals || @past_deals %>
+
+    <% deals.each do |deal| %> 
+      <div class="row">
+        <div class="col">
+          <div class = "card text-white bg-dark mb-4">
+            <div class = "card-header">
+              <div id="carouselExampleControls<%=deal.id%>" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                  <% if deal.images.attached? %>
+                    <% deal.images.each_with_index do |image, index| %>
+                      <div class = "carousel-item <%= if index == 0; "active"; end %> id = "slide <%= index + 1 %>">
+                        <%= image_tag(url_for(image), class: "rounded mx-auto d-block img-fluid") %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls<%=deal.id%>" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls<%=deal.id%>" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+              <div class = "card-body">
+                <h5 class="card-title text-center"><%= deal.title %></h5>
+                <p>
+                  <strong>Description:</strong>
+                  <%= deal.description %>
+                </p>
+                <p>
+                  <strong>Price:</strong>
+                  <%= deal.price %>
+                </p>
+                <p>
+                  <strong>Discount:</strong>
+                  <%= deal.discount_price %>
+                </p>
+                <p>
+                  <strong>Stock Left:</strong>
+                  <%= deal.quantity %>
+                </p>
+              </div>
+              <br>
+            </div>
+          </div> 
+        </div>
+      </div>
+
+
+    <% end %>
+    </main>
+    <footer class = "mastfoot mt-auto">
+      <div class = "inner text-center">
+        <p>2020 </p>
+        <%# <h2> <strong>Flash Sale Welcome !!!</strong></h2> %>
+        <%# <p><strong> LIVE DEALS </strong></p> %>
+      </div>
+    </footer>
+  </div>
+</div>

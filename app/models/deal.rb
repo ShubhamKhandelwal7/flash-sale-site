@@ -19,10 +19,11 @@ class Deal < ApplicationRecord
 
   before_save :ensure_publishability_criteria, if: -> { published_at.present? }
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
+  scope :live_deals, -> { where('? BETWEEN live_begin AND live_end', Date.today ) }
 
   def can_be_scheduled_to_publish_on(date)
     #FIXME_AB: need to consider current deal
-    if published_at&.date == date
+    if published_at&.to_date == date
       return true
     end
     valid? && (self.class.published_deals_on(date) < DEALS[:max_deals_per_day].to_i) &&
