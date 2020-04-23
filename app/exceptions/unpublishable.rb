@@ -1,2 +1,0 @@
-class UnPublishabileError < StandardError
-end
