@@ -5,7 +5,7 @@
 class Deal < ApplicationRecord
 
   acts_as_paranoid
-  # has_many_attached :images, dependent: :purge_later
+  has_many_attached :images, dependent: :purge_later
 
   #FIXME_AB: let's add a validation to qty to be > 0 when published_at is present. if not scheduled to publish, we can leave qty validation
 
@@ -47,7 +47,7 @@ class Deal < ApplicationRecord
     #FIXME_AB: in case of updating the deal which is scheduled to publish on specific day, it will fail
     #FIXME_AB: make a method for every condition can_be_scheduled_to_publish_on?(date) && valid_qty_available? && valid_publish_date_margin
     unless can_be_scheduled_to_publish_on? && valid_qty_availaible? && valid_publish_date_margin?
-    raise UnPublishabileError.new "Publishability criteria failed"
+    raise UnPublishableError.new "Publishability criteria failed"
     end
   end
 
@@ -63,8 +63,12 @@ class Deal < ApplicationRecord
   end
 
   private def valid_publish_date_margin?
-    if (self.class.exists?(id) && self.class.find(id).published_at < Time.current-1.day) ||
-      published_at < (Date.today + 1.day)
+    if self.class.exists? id && self.class.find(id).published_at.present?
+      if self.class.find(id).published_at.to_date < (Time.current - 1.day) || 
+         self.class.find(id).published_at.to_date != published_at.to_date && published_at.to_date < (Date.today + 1.day)
+        return false 
+      end
+    elsif published_at.to_date < (Date.today + 1.day)
       return false
     end
     true
