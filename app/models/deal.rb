@@ -19,6 +19,8 @@ class Deal < ApplicationRecord
 
   before_save :ensure_publishability_criteria, if: -> { published_at.present? }
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
+
+  #FIXME_AB: using between this way is no the rails way and also not database agnostic. Use the rails
   scope :live_deals, -> { where('? BETWEEN live_begin AND live_end', Time.current) }
 
   def can_be_scheduled_to_publish_on(date)
@@ -64,7 +66,7 @@ class Deal < ApplicationRecord
   end
 
   private def valid_publish_date_margin?
-    if (self.class.exists?(id) &&  self.class.find(id).published_at && 
+    if (self.class.exists?(id) &&  self.class.find(id).published_at &&
         self.class.find(id).published_at.to_date < Time.current-1.day) ||
         published_at.to_date < (Date.today + 1.day)
       return false
