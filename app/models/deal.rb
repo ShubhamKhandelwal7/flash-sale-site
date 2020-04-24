@@ -64,7 +64,7 @@ class Deal < ApplicationRecord
 
   private def valid_publish_date_margin?
     if self.class.exists? id && self.class.find(id).published_at.present?
-      if self.class.find(id).published_at.to_date < (Time.current + 1.day) || 
+      if self.class.find(id).published_at.to_date < (Time.current - 1.day) || 
          self.class.find(id).published_at.to_date != published_at.to_date && published_at.to_date < (Date.today + 1.day)
         return false 
       end
