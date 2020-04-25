@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authorize
+  skip_before_action :authorize
+  before_action :check_if_logged_in, only: [:new, :create]
 
   include UserVerification
   before_action  only: [:verify] do
@@ -14,7 +15,7 @@ class UsersController < ApplicationController
     @user = User.regular.new(user_params)
     respond_to do |format|
       if @user.save
-        format.html { redirect_to login_path, notice: "#{@user.name} #{t("create.flash.success")}" }
+        format.html { redirect_to home_path, notice: "#{@user.name} #{t("create.flash.success")}" }
       else
         format.html { render :new, notice: "#{@user.name} #{t("create.flash.failure")}" }
       end
@@ -34,5 +35,9 @@ class UsersController < ApplicationController
 
   private def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+
+  private def check_if_logged_in
+    redirect_to home_path if current_user.present?
   end
 end

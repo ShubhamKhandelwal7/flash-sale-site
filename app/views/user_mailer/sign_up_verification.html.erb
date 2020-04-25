@@ -1,7 +1,12 @@
-<h1> Hi <%= @user.name %></h1>
+<h2> Hi <%= @user.name.capitalize %></h2>
 <p>Welcome to the Flash Sale Site where you can save more as you shop more.</p>
+<h3>Please click the below link to verify</h3>
+<br>
+<p><%= link_to nil, verify_url(@user.verification_token) %></p>
+<br>
+<p> The above link is valid for <strong><%= ENV["VERIFY_MAIL_VALIDITY_HOURS"] %>hrs</strong> after it its generation</p> 
 
-<p>Click here to verify </p>
-<%= link_to "verify_path", verify_url(@user.verification_token) %>
-<h3>Happy Shopping !!!</h3>
-<h4>Thank You</h4>
+<p>Happy Shopping !!!</p>
+<br>
+<h4>Thanks,</h4>
+<h4>The Flash Team</h4>

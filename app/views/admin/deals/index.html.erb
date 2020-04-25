@@ -6,7 +6,7 @@
       <%= image_tag( url_for(image), class: "img-thumbnail" ) %>
       <p>
         <strong>Price:</strong>
-        <%= deal.price %>
+        <%= number_to_currency(deal.price) %>
       </p> 
       <p>
         <strong>Publishable:</strong>

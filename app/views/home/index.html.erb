@@ -6,14 +6,18 @@
       </div>
     </header>
     <main class = "inner cover" role = "main">
-    <% if @live_deals.present? %>
-      <h3 class="cover-heading text-center"> LIVE DEALS </h3>
-    <% else %>
-      <h3 class="cover-heading text-center"> PAST DEALS </h3>
-    <% end %>
+      <% #FIXME_AB: H3 tag is being repeated, you can just take this out of if statement and put if-else for the text to be shown -%>
+    <h3 class="cover-heading text-center">  
+      <% if @live_deals.present? %>
+        LIVE DEALS
+      <% else %>
+        PAST DEALS 
+      <% end %>
+    </h3>
+    
     <% deals = @live_deals || @past_deals %>
 
-    <% deals.each do |deal| %> 
+    <% deals.each do |deal| %>
       <div class="row">
         <div class="col">
           <div class = "card text-white bg-dark mb-4">
@@ -45,20 +49,22 @@
                 </p>
                 <p>
                   <strong>Price:</strong>
-                  <%= deal.price %>
+                  <%= number_to_currency(deal.price) %>
                 </p>
                 <p>
                   <strong>Discount:</strong>
-                  <%= deal.discount_price %>
+                  <% #FIXME_AB: use currency helper to show prices everywhere "number_to_currency" -%>
+                  <%= number_to_currency(deal.discount_price) %>
                 </p>
                 <p>
-                  <strong>Stock Left:</strong>
+                  <% #FIXME_AB: this is not stock left, it is the original qty that was available to deal -%>
+                  <strong>Original Quantity:</strong>
                   <%= deal.quantity %>
                 </p>
               </div>
               <br>
             </div>
-          </div> 
+          </div>
         </div>
       </div>
 
@@ -68,8 +74,6 @@
     <footer class = "mastfoot mt-auto">
       <div class = "inner text-center">
         <p>2020 </p>
-        <%# <h2> <strong>Flash Sale Welcome !!!</strong></h2> %>
-        <%# <p><strong> LIVE DEALS </strong></p> %>
       </div>
     </footer>
   </div>

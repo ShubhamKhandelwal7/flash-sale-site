@@ -19,7 +19,9 @@ class Deal < ApplicationRecord
 
   before_save :ensure_publishability_criteria, if: -> { published_at.present? }
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
-  scope :live_deals, -> { where('? BETWEEN live_begin AND live_end', Time.current) }
+  scope :past_live, ->(quantity) { where('published_at < ?', Time.current - 1.day).order(:published_at).last(quantity) }
+  #FIXME_AB: using between this way is no the rails way and also not database agnostic. Use the rails
+  scope :live_deals, ->(datetime) { where('live_begin <= :lookup_time AND live_end >= :lookup_time', { lookup_time: datetime }) }
 
   def can_be_scheduled_to_publish_on(date)
     #FIXME_AB: need to consider current deal

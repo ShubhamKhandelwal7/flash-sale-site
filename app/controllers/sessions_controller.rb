@@ -22,6 +22,6 @@ class SessionsController < ApplicationController
   def destroy
     cookies.delete :user_id
     reset_session
-    redirect_to login_path, alert: t(".destroy.flash.logout")
+    redirect_to home_path, alert: t(".destroy.flash.logout")
   end
 end

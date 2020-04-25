@@ -12,7 +12,9 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
-  namespace :admin do 
+  namespace :admin do
+    get "/", to: "home#index", as: "home"
+    # resources :home, only: :index
     resources :deals do
       get "check_publishability", on: :member, action: "check_publishability"
     end
