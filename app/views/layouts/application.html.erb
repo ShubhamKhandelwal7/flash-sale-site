@@ -20,8 +20,6 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href= <%= home_path %> >Home <span class="sr-only">(current)</span></a>
-          <% #FIXME_AB: Remove this link to admin section. user will go to admin section directly by going to /admin -%>
-          <% #FIXME_AB: remove unwanted links -%>
           <% if current_user.present? %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>

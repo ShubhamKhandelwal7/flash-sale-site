@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_action :authorize
+  #FIXME_AB: I should not be able to visit login page or login#create  if I am already logged in. Redirect to home page
 
   def new
   end

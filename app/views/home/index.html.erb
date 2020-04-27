@@ -6,17 +6,16 @@
       </div>
     </header>
     <main class = "inner cover" role = "main">
-      <% #FIXME_AB: H3 tag is being repeated, you can just take this out of if statement and put if-else for the text to be shown -%>
-    <h3 class="cover-heading text-center">  
+    <h3 class="cover-heading text-center">
       <% if @live_deals.present? %>
         <% deals = @live_deals %>
         LIVE DEALS
       <% else %>
         <% deals = @past_deals %>
-        PAST DEALS 
+        PAST DEALS
       <% end %>
     </h3>
-    
+
     <% deals.each do |deal| %>
       <div class="row">
         <div class="col">
@@ -53,11 +52,9 @@
                 </p>
                 <p>
                   <strong>Discount:</strong>
-                  <% #FIXME_AB: use currency helper to show prices everywhere "number_to_currency" -%>
                   <%= number_to_currency(deal.discount_price) %>
                 </p>
                 <p>
-                  <% #FIXME_AB: this is not stock left, it is the original qty that was available to deal -%>
                   <strong>Original Quantity:</strong>
                   <%= deal.quantity %>
                 </p>
