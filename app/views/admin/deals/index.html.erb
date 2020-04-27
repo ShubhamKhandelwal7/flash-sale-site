@@ -1,21 +1,51 @@
 <div class="container">
-  <% @deals.each do |deal| %>
   <div class="row">
-    <div class="col">
-      <% image = deal.cover_image if deal.images.attached? %>
-      <%= image_tag( url_for(image), class: "img-thumbnail" ) %>
-      <p>
-        <strong>Price:</strong>
-        <%= number_to_currency(deal.price) %>
-      </p> 
-      <p>
-        <strong>Publishable:</strong>
-        <%= deal.published_at ? deal.published_at.to_date : false %>
-      </p> 
-      <br>
+    <% @deals.to_enum.with_index(1).each do |deal, index| %>
+
+      <%if index % 3 == 0%>
+        </div>
+        <div class="row">
+      <% end%>
+
+      <div class="col-md-6 d-flex align-items-stretch col-lg-6">
+        <div class = "card text-white bg-dark mb-3 " style="width: 80%;">
+          <div class = "card-header text-center bg-dark">
+            <% image = deal.cover_image if deal.images.attached? %>
+            <div class="col text-center">
+              <%= image_tag( url_for(image), class: "rounded img-thumbnail thumbnail" ) %>
+            </div>
+          </div>
+
+
+            <div class = "card-body">
+              <h5 class="card-title"><%= deal.title %></h5>
+              <p> <strong>Price:</strong>
+                <%= number_to_currency(deal.price) %>
+              </p> 
+              <p> <strong>Publishable:</strong>
+                <%= deal.published_at ? deal.published_at.to_date : false %>
+              </p>
+
+              <table class="table text-white">
+                <tbody>
+                  <tr>
+                    <td> <%= link_to "EDIT", edit_admin_deal_path(deal) %> </td>
+                    <td> <%= link_to "SHOW", admin_deal_path(deal) %> </td>
+                    <td> <%= link_to "DESTROY", admin_deal_path(deal), method: :delete,
+                                     data: { confirm: "Are you sure?" } %> </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div> 
+            <br>
+        </div>
+      </div>
+    <% end %>
+
+  <div class="container text-center">
+    <%= paginate @deals %>
+    <br>
+    <%= link_to "Create New Deal", new_admin_deal_path %>
     </div>
-  </div> 
-  <% end %>
-  <%= paginate @deals %>
-  <%= link_to "Create New Deal", new_admin_deal_path %>
 </div>

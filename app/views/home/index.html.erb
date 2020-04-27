@@ -9,14 +9,14 @@
       <% #FIXME_AB: H3 tag is being repeated, you can just take this out of if statement and put if-else for the text to be shown -%>
     <h3 class="cover-heading text-center">  
       <% if @live_deals.present? %>
+        <% deals = @live_deals %>
         LIVE DEALS
       <% else %>
+        <% deals = @past_deals %>
         PAST DEALS 
       <% end %>
     </h3>
     
-    <% deals = @live_deals || @past_deals %>
-
     <% deals.each do |deal| %>
       <div class="row">
         <div class="col">
@@ -27,7 +27,7 @@
                   <% if deal.images.attached? %>
                     <% deal.images.each_with_index do |image, index| %>
                       <div class = "carousel-item <%= if index == 0; "active"; end %> id = "slide <%= index + 1 %>">
-                        <%= image_tag(url_for(image), class: "rounded mx-auto d-block img-fluid") %>
+                        <%= image_tag(url_for(image), class: "rounded mx-auto d-block img-fluid thumbnail") %>
                       </div>
                     <% end %>
                   <% end %>

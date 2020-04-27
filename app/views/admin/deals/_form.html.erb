@@ -2,7 +2,7 @@
   <% content_for :js do %>
     <%= javascript_pack_tag  'deal_form_images', 'data-turbolinks-track': 'reload' %>
   <% end %>
-<div class = 'row'>
+<div class = 'row container'>
   <%= form_with(model: deal, url: deal_path, local: true, class: "form-signin", id: "deals-form") do |form| %>
     <%= render partial: 'shared/errors', locals:{ object: deal } %>
 
