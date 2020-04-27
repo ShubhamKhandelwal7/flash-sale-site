@@ -1,13 +1,7 @@
-#FIXME_AB: move this validator to app/validators folder
-
-#FIXME_AB: move this to app/exceptions
-
 class Deal < ApplicationRecord
 
   acts_as_paranoid
   has_many_attached :images, dependent: :purge_later
-
-  #FIXME_AB: let's add a validation to qty to be > 0 when published_at is present. if not scheduled to publish, we can leave qty validation
 
   validates :title, :description, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -20,7 +14,6 @@ class Deal < ApplicationRecord
   before_save :ensure_publishability_criteria, if: -> { published_at.present? }
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
   scope :past_live, ->(quantity) { where('published_at < ?', Time.current - 1.day).order(:published_at).last(quantity) }
-  #FIXME_AB: using between this way is no the rails way and also not database agnostic. Use the rails
   scope :live_deals, ->(datetime) { where('live_begin <= :lookup_time AND live_end >= :lookup_time', { lookup_time: datetime }) }
 
   def can_be_scheduled_to_publish_on(date)
