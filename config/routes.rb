@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     post 'login' => :create
     delete 'logout'  => :destroy
   end
-  # get 'home', action: :dummy_homepage, controller: 'dummy'
+  
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   root 'home#index', as: 'home'
   get "verify/:token", action: :verify, controller: :users, as: 'verify'
 

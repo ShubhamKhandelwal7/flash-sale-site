@@ -1,11 +1,13 @@
 class UsersController < ApplicationController
-  skip_before_action :authorize
-  before_action :check_if_logged_in, only: [:new, :create]
 
+  include UserPresence
   include UserVerification
   before_action  only: [:verify] do
     current_user_via_token(:verification_token)
   end
+
+  skip_before_action :authorize
+  before_action :check_if_logged_in, only: [:new, :create]
 
   def new
     @user = User.new
@@ -37,7 +39,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
-  private def check_if_logged_in
-    redirect_to home_path if current_user.present?
-  end
+  # private def check_if_logged_in
+  #   redirect_to home_path if current_user.present?
+  # end
 end
