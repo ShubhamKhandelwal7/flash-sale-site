@@ -2,6 +2,8 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :password,  presence: true, on: :reset_password
+  validates :password, length: { minimum: USERS[:min_password_length].to_i }
+  validates :password, format: { with: REGEXPS[:password], message: I18n.t(".users.errors.password") }
   validates :email, uniqueness: true, case_sensitive: false, format: {
     with: REGEXPS[:email]
   }

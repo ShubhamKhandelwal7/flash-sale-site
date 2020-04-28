@@ -1,5 +1,6 @@
 REGEXPS = {
-  email: /\A[^@\s]+@[-a-z0-9]+\.+[a-z]{2,}\z/i
+  email: /\A[^@\s]+@[-a-z0-9]+\.+[a-z]{2,}\z/i,
+  password: /\A(?=.*[a-zA-Z])(?=.*[0-9]).*\z/
 }
 
 ERROR_MSGS = {
@@ -10,4 +11,8 @@ DEALS = {
   min_images_limit: '1',
   min_quant_limit: '10',
   max_deals_per_day: '2'
+}
+
+USERS = {
+  min_password_length: '6'
 }
