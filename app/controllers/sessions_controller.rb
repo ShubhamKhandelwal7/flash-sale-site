@@ -1,9 +1,8 @@
 class SessionsController < ApplicationController
-  
+
   include UserPresence
   skip_before_action :authorize
   before_action :check_if_logged_in, only: [:new, :create]
-  #FIXME_AB: I should not be able to visit login page or login#create  if I am already logged in. Redirect to home page
 
   def new
   end
