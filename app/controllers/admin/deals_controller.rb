@@ -53,7 +53,7 @@ module Admin
 
     private def deal_params
       params.require(:deal).permit(:title, :description, :price, :discount_price,
-                                   :quantity, images: [])
+                                   :quantity, :tax, images: [])
     end
 
     private def set_deal

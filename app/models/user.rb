@@ -12,6 +12,9 @@ class User < ApplicationRecord
 
   has_secure_password
   acts_as_paranoid
+  has_many :addresses, dependent: :destroy
+  has_many :orders, dependent: :destroy
+  has_many :line_items, through: :orders
 
   before_validation { generate_token(:password_reset_token) }
   before_validation { generate_token(:verification_token) }
