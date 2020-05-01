@@ -51,6 +51,12 @@ module Admin
       
     end
 
+    def delete_image_attachment
+      @deal_image = ActiveStorage::Attachment.find(params[:id])
+      @deal_image.purge_later
+      redirect_back(fallback_location: admin_deals_path)
+    end
+
     private def deal_params
       params.require(:deal).permit(:title, :description, :price, :discount_price,
                                    :quantity, :tax, images: [])

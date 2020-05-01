@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user
+  helper_method :current_user, :current_order
   before_action :authorize, :make_action_mailer_use_request_host
 
   private def authorize
@@ -21,5 +21,10 @@ class ApplicationController < ActionController::Base
 
   private def make_action_mailer_use_request_host
     ActionMailer::Base.default_url_options[:host] = request.host_with_port
+  end
+
+  private def current_order
+    @current_order = Order.find(session[:order_id])
+  rescue ActiveRecord::RecordNotFound
   end
 end

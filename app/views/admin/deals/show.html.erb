@@ -2,12 +2,18 @@
   <div class = "card text-black bg-light " style="width: 80%;">
     <div class = "card-header bg-dark">
       <% if @deal.images.attached? %>
-        <% @deal.images.each do |image| %>
-          <div class = "container">
-            <%= image_tag(url_for(image), class: "rounded mx-auto img-thumbnail thumbnail") %>
-            <br>
-          </div>
-        <% end %>
+        <div class="row">
+          <% @deal.images.each_with_index do |image, index| %>
+            <%if index % 3 == 0 && index != 0%>
+              </div>
+              <div class="row">
+            <% end%>
+            <div class = "col">
+              <%= image_tag(url_for(image), class: "rounded mx-auto img-thumbnail thumbnail") %>
+              <br>
+            </div>
+          <% end %>
+        </div>
       <% end %>
     </div>
     <div class = "card-body">

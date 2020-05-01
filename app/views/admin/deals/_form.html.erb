@@ -38,12 +38,32 @@
       <%= form.text_field :tax, placeholder: "Tax (in %)", class: 'form-control' %>
     </div>
 
+    <% if deal.images.exists? %>
+      <div class = "form-group">
+        <%= form.label :images, "Images" %>
+        <br>
+        <% deal.images.each do |image| %>
+          <div class="container text-center border border-primary rounded ">
+            <%= image_tag(url_for(image), class: "rounded mx-auto img-thumbnail thumbnail mt-3") %>
+            <h4><%= image.blob.filename %> </h4>
+            <br>
+            <%= link_to 'Remove', delete_image_attachment_admin_deal_url(image),
+                          method: :delete,
+                          data: { confirm: "Are you sure?\n(this will permanently delete the image)" },
+                          remote: :true, class: "btn btn-outline-danger mb-3" %>
+          </div>
+          <br>
+        <%end%>
+      </div>
+    <%end%>
+
     <%= render 'image_fields', f: form %>
-    <%= link_to_add_fields "Add more Images", form, "images" %>
+    <%= link_to_add_fields "Add more", form, "images" %>
 
     <div class = "form-group">
     <br>
-      <%= form.submit :CREATE, class: "btn btn-primary" %>
+      <%= form.submit :SAVE, class: "btn btn-primary" %>
+      <%= link_to :CANCEL, admin_deals_path,  class: "btn btn-primary"  %>
     </div></div>
 
   <% end %>

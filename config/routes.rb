@@ -13,10 +13,16 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
+  resources :line_items, only: [:destroy]
+  resources :orders do
+    get "add_to_cart", on: :member
+  end
+
   namespace :admin do
     get "/", to: "home#index", as: "home"
     resources :deals do
       get "check_publishability", on: :member, action: "check_publishability"
+      delete "delete_image_attachment", on: :member
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
