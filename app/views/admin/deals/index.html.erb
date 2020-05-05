@@ -12,6 +12,7 @@
           <div class = "card-header text-center bg-dark">
             <% image = deal.cover_image if deal.images.attached? %>
             <div class="col text-center">
+              <% #FIXME_AB: handle this case when image not exists -%>
               <%= image_tag( url_for(image), class: "rounded img-thumbnail thumbnail" ) %>
             </div>
           </div>
@@ -21,8 +22,10 @@
               <h5 class="card-title"><%= deal.title %></h5>
               <p> <strong>Price:</strong>
                 <%= number_to_currency(deal.price) %>
-              </p> 
+              </p>
               <p> <strong>Publishable:</strong>
+                <% #FIXME_AB: 'scheduled on 5th may 2020' / 'not scheduled' -%>
+                <% #FIXME_AB: deal.presenter.publish_status -%>
                 <%= deal.published_at ? deal.published_at.to_date : false %>
               </p>
 
@@ -31,13 +34,14 @@
                   <tr>
                     <td> <%= link_to "EDIT", edit_admin_deal_path(deal) %> </td>
                     <td> <%= link_to "SHOW", admin_deal_path(deal) %> </td>
+                    <% #FIXME_AB:  we should show the deal title in the confirm message when deleting the deal. "Are you sure to delete deal with title 'xyz' "-%>
                     <td> <%= link_to "DESTROY", admin_deal_path(deal), method: :delete,
                                      data: { confirm: "Are you sure?" } %> </td>
                   </tr>
                 </tbody>
               </table>
 
-            </div> 
+            </div>
             <br>
         </div>
       </div>

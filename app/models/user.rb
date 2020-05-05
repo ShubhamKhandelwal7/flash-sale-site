@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_secure_password
   acts_as_paranoid
   has_many :addresses, dependent: :destroy
+  #FIXME_AB: we should not allow user to be deleted if any of his order exists in non cart state
   has_many :orders, dependent: :destroy
   has_many :line_items, through: :orders
 

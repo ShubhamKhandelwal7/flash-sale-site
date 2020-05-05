@@ -48,12 +48,14 @@ module Admin
       if params[:publishable_check_date]
         @status = @deal.can_be_scheduled_to_publish_on(Date.parse(params[:publishable_check_date]))
       end
-      
+
     end
 
     def delete_image_attachment
       @deal_image = ActiveStorage::Attachment.find(params[:id])
+      #FIXME_AB: what if record not found
       @deal_image.purge_later
+      #FIXME_AB: we should not redirect when using ajax. send json response for success or failure and handle in the frontend
       redirect_back(fallback_location: admin_deals_path)
     end
 
