@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   root 'home#index', as: 'home'
   get "verify/:token", action: :verify, controller: :users, as: 'verify'
+  get "homedeals", to: "home#deals"
 
   resources :users, only: [:new, :create]
 

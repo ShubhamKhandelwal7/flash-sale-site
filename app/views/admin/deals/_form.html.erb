@@ -38,7 +38,7 @@
       <%= form.text_field :tax, placeholder: "Tax (in %)", class: 'form-control' %>
     </div>
 
-    <% if deal.images.exists? %>
+    <% if deal.images.present? %>
       <div class = "form-group">
         <%= form.label :images, "Images" %>
         <br>
@@ -62,7 +62,11 @@
 
     <div class = "form-group">
     <br>
+    <%if deal.persisted? %>
       <%= form.submit :SAVE, class: "btn btn-primary" %>
+    <% else %>
+      <%= form.submit :CREATE, class: "btn btn-primary" %>
+    <% end %>
       <%= link_to :CANCEL, admin_deals_path,  class: "btn btn-primary"  %>
     </div></div>
 

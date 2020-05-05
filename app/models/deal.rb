@@ -7,11 +7,12 @@ class Deal < ApplicationRecord
 
   validates :title, :description, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
-  validates :quantity, :discount_price, numericality: { only_decimal: true }
+  validates :quantity, :discount_price, numericality: { only_decimal: true, greater_than: 0 }
   validates :quantity, numericality: {  greater_than: 0 }, if: -> { published_at.present? }
   validates :title, uniqueness: true, case_sensitive: false, if: -> { title.present? }
   validates :tax, inclusion: { in: DEALS[:min_tax_allowed].to_i..DEALS[:max_tax_allowed].to_i,
              message: "should lie between #{DEALS[:min_tax_allowed]} and #{DEALS[:max_tax_allowed]}"}, allow_nil: true
+            #  , format: { with: /\A\d+(?:\.\d{0,4})?\z/, message: "can have max 4decimal places" }
   validate :ensure_min_image_upload
 
   validates_with PriceValidator
