@@ -28,17 +28,17 @@
       <p>
         <strong>Price:</strong>
         <%= number_to_currency(@deal.price) %>
-      </p> 
+      </p>
       <p>
         <strong>Publishable:</strong>
         <%= @deal.published_at ? @deal.published_at.to_date : false %>
-      </p> 
+      </p>
 
       <div id = "publish-data">
       </div>
 
       <br>
-      
+
       <%= form_with method: :get, url: check_publishability_admin_deal_path, class: "form-signin" do %>
 
         <div class = "form-group">
@@ -55,4 +55,3 @@
     </div>
   </div>
 </div>
-  

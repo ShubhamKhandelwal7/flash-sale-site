@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   end
 
   skip_before_action :authorize
+  #FIXME_AB: we should also add verify
   before_action :check_if_logged_in, only: [:new, :create]
 
   def new
