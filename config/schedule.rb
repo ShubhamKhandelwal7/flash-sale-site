@@ -3,6 +3,10 @@
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
 
-every :day, at: '10:00am' do
+set :output, path + '/log/cron.log'
+
+
+every 1.minute, roles: [:db] do
+# every :day, at: '4:30am', roles: [:db] do
   rake "custom:publish"
 end
