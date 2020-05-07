@@ -1,10 +1,12 @@
 REGEXPS = {
   email: /\A[^@\s]+@[-a-z0-9]+\.+[a-z]{2,}\z/i,
-  password: /\A(?=.*[a-zA-Z])(?=.*[0-9]).*\z/
+  password: /\A(?=.*[a-zA-Z])(?=.*[0-9]).*\z/,
+  tax: /\A\d+(?:\.\d{0,4})?\z/
 }
 
 ERROR_MSGS = {
-  token: "Secure Token could not be generated"
+  token: "Secure Token could not be generated",
+  md5_token: "MD5 token could not be generated"
 }
 
 DEALS = {
@@ -16,5 +18,15 @@ DEALS = {
 }
 
 USERS = {
-  min_password_length: '6'
+  min_password_length: '6',
+  max_orders_count_for_discount: '5'
+}
+
+ADDRESSES = {
+  pincode_length: '6'
+}
+
+ORDERS = {
+  max_deal_quant_per_user: '1',
+  max_deal_quant_per_order: '1'
 }

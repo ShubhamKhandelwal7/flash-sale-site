@@ -55,6 +55,7 @@ group :development do
   gem "letter_opener", '1.7.0'
   gem 'pry-rails', '0.3.9'
   gem 'letter_opener_web', '1.4.0'
+  gem 'basic_presenter', '0.0.4'
 end
 
 group :test do

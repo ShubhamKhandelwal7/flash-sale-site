@@ -1,5 +1,6 @@
 class Deal < ApplicationRecord
-
+  
+  include BasicPresenter::Concern
   acts_as_paranoid
   has_many_attached :images, dependent: :purge_later
   has_many :line_items, dependent: :restrict_with_error
@@ -7,12 +8,13 @@ class Deal < ApplicationRecord
 
   validates :title, :description, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
-  validates :quantity, :discount_price, numericality: { only_decimal: true, greater_than: 0 }
+  validates :discount_price, numericality: { only_decimal: true, greater_than_or_equal_to: 0 }
+  validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :quantity, numericality: {  greater_than: 0 }, if: -> { published_at.present? }
   validates :title, uniqueness: true, case_sensitive: false, if: -> { title.present? }
   validates :tax, inclusion: { in: DEALS[:min_tax_allowed].to_i..DEALS[:max_tax_allowed].to_i,
-             message: "should lie between #{DEALS[:min_tax_allowed]} and #{DEALS[:max_tax_allowed]}"}, allow_nil: true
-            #  , format: { with: /\A\d+(?:\.\d{0,4})?\z/, message: "can have max 4decimal places" }
+             message: "should lie between #{DEALS[:min_tax_allowed]} and #{DEALS[:max_tax_allowed]}"}, allow_nil: true,
+             format: { with: REGEXPS[:tax], message: "can have max 4 decimal places" }
   validate :ensure_min_image_upload
 
   validates_with PriceValidator
@@ -35,9 +37,6 @@ class Deal < ApplicationRecord
     published_on(date).count
   end
 
-  def cover_image
-    images.first
-  end
 
   private def ensure_min_image_upload
     if images.count < DEALS[:min_images_limit].to_i

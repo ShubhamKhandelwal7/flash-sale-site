@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_063708) do
+ActiveRecord::Schema.define(version: 2020_05_06_190036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -47,7 +47,10 @@ ActiveRecord::Schema.define(version: 2020_04_29_063708) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "home_address"
+    t.string "token"
     t.index ["deleted_at"], name: "index_addresses_on_deleted_at"
+    t.index ["token"], name: "index_addresses_on_token", unique: true
     t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
@@ -64,6 +67,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_063708) do
     t.datetime "live_begin"
     t.datetime "live_end"
     t.decimal "tax"
+    t.integer "sold_quantity", default: 0, null: false
     t.index ["deleted_at"], name: "index_deals_on_deleted_at"
     t.index ["title"], name: "index_deals_on_title", unique: true
   end
@@ -79,6 +83,9 @@ ActiveRecord::Schema.define(version: 2020_04_29_063708) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "sale_price", precision: 8, scale: 2
+    t.decimal "sub_total", precision: 8, scale: 2
+    t.decimal "sub_tax_total", precision: 8, scale: 2
     t.index ["deal_id"], name: "index_line_items_on_deal_id"
     t.index ["deleted_at"], name: "index_line_items_on_deleted_at"
     t.index ["order_id"], name: "index_line_items_on_order_id"

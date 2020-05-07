@@ -10,11 +10,13 @@
       <div class="col-md-6 d-flex align-items-stretch col-lg-6">
         <div class = "card text-white bg-dark mb-3 " style="width: 80%;">
           <div class = "card-header text-center bg-dark">
-            <% image = deal.cover_image if deal.images.attached? %>
-            <div class="col text-center">
-              <% #FIXME_AB: handle this case when image not exists -%>
-              <%= image_tag( url_for(image), class: "rounded img-thumbnail thumbnail" ) %>
-            </div>
+            <%if deal.images.attached? %>
+              <% image = deal.presenter.cover_image %>
+              <div class="col text-center">
+                <% #FIXME_AB: handle this case when image not exists -%>
+                <%= image_tag( url_for(image), class: "rounded img-thumbnail thumbnail" ) %>
+              </div>
+            <% end %>
           </div>
 
 
@@ -26,7 +28,7 @@
               <p> <strong>Publishable:</strong>
                 <% #FIXME_AB: 'scheduled on 5th may 2020' / 'not scheduled' -%>
                 <% #FIXME_AB: deal.presenter.publish_status -%>
-                <%= deal.published_at ? deal.published_at.to_date : false %>
+                <%= deal.presenter.publish_status %>
               </p>
 
               <table class="table text-white">
@@ -36,7 +38,7 @@
                     <td> <%= link_to "SHOW", admin_deal_path(deal) %> </td>
                     <% #FIXME_AB:  we should show the deal title in the confirm message when deleting the deal. "Are you sure to delete deal with title 'xyz' "-%>
                     <td> <%= link_to "DESTROY", admin_deal_path(deal), method: :delete,
-                                     data: { confirm: "Are you sure?" } %> </td>
+                                     data: { confirm: "Are you sure to delete deal with title #{deal.title}?" } %> </td>
                   </tr>
                 </tbody>
               </table>

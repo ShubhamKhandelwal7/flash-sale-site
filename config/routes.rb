@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     get "/", to: "home#index", as: "home"
     resources :deals do
       get "check_publishability", on: :member, action: "check_publishability"
-      delete "delete_image_attachment", on: :member
+      get "delete_image_attachment", on: :member
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

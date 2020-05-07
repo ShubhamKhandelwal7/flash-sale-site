@@ -1,0 +1,5 @@
+en:
+  address:
+    errors:
+      not_unique: "Address is already present"
+      

@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
   skip_before_action :authorize
   #FIXME_AB: we should also add verify
-  before_action :check_if_logged_in, only: [:new, :create]
+  before_action :ensure_not_logged_in
 
   def new
     @user = User.new
@@ -39,8 +39,4 @@ class UsersController < ApplicationController
   private def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
-
-  # private def check_if_logged_in
-  #   redirect_to home_path if current_user.present?
-  # end
 end

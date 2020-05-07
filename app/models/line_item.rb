@@ -4,37 +4,48 @@ class LineItem < ApplicationRecord
   belongs_to :order, optional: true
   belongs_to :deal
 
-  validates :deal_id, uniqueness: { scope: :order_id }, if: -> { order_id.present? }
+  with_options if: -> { order_id.present? } do |line_item|
+    line_item.validates :deal_id, uniqueness: { scope: :order_id }
+    line_item.validates :quantity, numericality: { less_than_or_equal_to: ORDERS[:max_deal_quant_per_order].to_i }
+    line_item.validate :ensure_overall_deal_qty
+  end
   #FIXME_AB: need validation on qty. only one qty can be purchased by a user
 
-  def evaluate_discounts
-    calculate_deal_discount
-    calculate_loyalty_discount
+  def evaluate_amounts
+    self.price = deal.price
+    calculate_discounts
+    calculate_sale_price
     calculate_tax
+    calculate_totals
   end
-
-  private def calculate_deal_discount
-    self.deal_discount_price = (deal.price - deal.discount_price)
-  end
-
-  private def calculate_loyalty_discount
-    no_of_orders = order.class.placed_orders(order.user.id).count
-    if no_of_orders > 0
-      self.loyalty_discount_price = get_loyalty_discount(no_of_orders.count)
-    else
-      self.loyalty_discount_price = deal_discount_price
+# here total quantity together is being validated, infuture if we limit max quantity for a deal we can check
+  private def ensure_overall_deal_qty
+    ordered_deal_quant = User.find(order.user_id).ordered_deal_quantity(deal_id)
+    if (quantity <= ORDERS[:max_deal_quant_per_order].to_i) && 
+       (quantity + ordered_deal_quant) > ORDERS[:max_deal_quant_per_user].to_i
+      errors.add(:quantity, "Deal already ordered by user")
     end
   end
 
+  private def calculate_discounts
+    self.deal_discount_price = (price - deal.discount_price)
+    self.loyalty_discount_price = ((order.user.get_loyalty_discount.to_f/100) * deal_discount_price)
+  end
+
+  private def calculate_sale_price
+    self.sale_price = (deal_discount_price - loyalty_discount_price)
+  end
+
   private def calculate_tax
-    self.taxed_price = loyalty_discount_price + (deal.tax/100 * deal.price)
+    self.taxed_price = ((deal.tax/100) * sale_price)
+  end
+
+  private def calculate_totals
+    self.sub_total = quantity * (sale_price + taxed_price)
+    self.sub_tax_total = quantity * taxed_price
   end
 
   #FIXME_AB: this should be in user. user.get_loyalty_discount
-  private def get_loyalty_discount(orders_count)
-    orders_count = 5 if orders_count >= 5
-    deal_discount_price - ((orders_count/100) * deal_discount_price)
-  end
 end
 
 

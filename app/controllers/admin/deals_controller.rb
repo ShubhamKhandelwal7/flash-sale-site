@@ -56,7 +56,9 @@ module Admin
       #FIXME_AB: what if record not found
       @deal_image.purge_later
       #FIXME_AB: we should not redirect when using ajax. send json response for success or failure and handle in the frontend
-      redirect_back(fallback_location: admin_deals_path)
+      render json: { status: true }
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: false }
     end
 
     private def deal_params
@@ -66,7 +68,9 @@ module Admin
 
     private def set_deal
       @deal = Deal.find(params[:id])
-      redirect_to login_path, notice: "Please login again" if @deal.blank?
+      if @deal.blank?
+        redirect_to login_path, notice: "Please login again"
+      end
     end
 
   end
