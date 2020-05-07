@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   end
 
   # // for time being lets open letter opener for all envs
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" #if Rails.env.development?
 
   root 'home#index', as: 'home'
   get "verify/:token", action: :verify, controller: :users, as: 'verify'
