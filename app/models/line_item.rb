@@ -9,7 +9,6 @@ class LineItem < ApplicationRecord
     line_item.validates :quantity, numericality: { less_than_or_equal_to: ORDERS[:max_deal_quant_per_order].to_i }
     line_item.validate :ensure_overall_deal_qty
   end
-  #FIXME_AB: need validation on qty. only one qty can be purchased by a user
 
   def evaluate_amounts
     self.price = deal.price
@@ -20,9 +19,9 @@ class LineItem < ApplicationRecord
   end
 # here total quantity together is being validated, infuture if we limit max quantity for a deal we can check
   private def ensure_overall_deal_qty
+    #FIXME_AB: order.user.ordered_deal_quant
     ordered_deal_quant = User.find(order.user_id).ordered_deal_quantity(deal_id)
-    if (quantity <= ORDERS[:max_deal_quant_per_order].to_i) && 
-       (quantity + ordered_deal_quant) > ORDERS[:max_deal_quant_per_user].to_i
+    if (quantity <= ORDERS[:max_deal_quant_per_order].to_i) && (quantity + ordered_deal_quant) > ORDERS[:max_deal_quant_per_user].to_i
       errors.add(:quantity, "Deal already ordered by user")
     end
   end
@@ -45,7 +44,6 @@ class LineItem < ApplicationRecord
     self.sub_tax_total = quantity * taxed_price
   end
 
-  #FIXME_AB: this should be in user. user.get_loyalty_discount
 end
 
 

@@ -4,8 +4,7 @@ class PasswordResetsController < ApplicationController
   include UserPresence
 
   skip_before_action :authorize
-  #FIXME_AB: we should ensure that user is not logged in
-  
+
   before_action :ensure_not_logged_in
   before_action  only: [:edit, :update] do
     current_user_via_token(:password_reset_token)

@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
     redirect_to login_path, alert: t("errors.admin_authorize")
   end
 
+  #FIXME_AB: set in config/application.rb. Take host from env.and make required keys
   private def make_action_mailer_use_request_host
     ActionMailer::Base.default_url_options[:host] = request.host_with_port
   end

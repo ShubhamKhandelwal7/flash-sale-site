@@ -13,7 +13,6 @@ class User < ApplicationRecord
   has_secure_password
   acts_as_paranoid
   has_many :addresses, dependent: :destroy
-  #FIXME_AB: we should not allow user to be deleted if any of his order exists in non cart state
   has_many :orders, dependent: :destroy
   has_many :line_items, through: :orders
 
@@ -61,6 +60,9 @@ class User < ApplicationRecord
   end
 
   def ordered_deal_quantity(deal_id)
+    #FIXME_AB: orders
+    #FIXME_AB: orders.line_items.where(deal_id: deal_id).sum(&:quantity)
+    #FIXME_AB: this should consider only placed orders
     all_orders = Order.where(user_id: id)
     total_deal_quantity = 0
     all_orders.each do |order|
@@ -72,6 +74,8 @@ class User < ApplicationRecord
   end
 
   def get_loyalty_discount
+    #FIXME_AB: orders.placed_orders.count
+    #FIXME_AB: [orders.placed_orders.count, USERS[:max_orders_count_for_discount].to_].min
     orders_count = Order.placed_orders(id).count
     if orders_count >= USERS[:max_orders_count_for_discount].to_i
       orders_count = USERS[:max_orders_count_for_discount].to_i
