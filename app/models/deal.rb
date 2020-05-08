@@ -1,7 +1,8 @@
 class Deal < ApplicationRecord
-  
+
   include BasicPresenter::Concern
   acts_as_paranoid
+  #FIXME_AB: we should check the uploaded file should be image only
   has_many_attached :images, dependent: :purge_later
   has_many :line_items, dependent: :restrict_with_error
   has_many :orders, through: :line_items
@@ -70,9 +71,9 @@ class Deal < ApplicationRecord
   private def valid_publish_date_margin?
     existing_user = self.class.find(id) if self.class.exists?(id)
     if existing_user && existing_user.published_at.present?
-      if existing_user.published_at.to_date < (Time.current - 1.day) || 
+      if existing_user.published_at.to_date < (Time.current - 1.day) ||
          existing_user.published_at.to_date != published_at.to_date && published_at.to_date < (Date.today + 1.day)
-        return false 
+        return false
       end
     elsif published_at.to_date < (Date.today + 1.day)
       return false

@@ -1,9 +1,7 @@
 class SessionsController < ApplicationController
 
   include UserPresence
-  #FIXME_AB: except :destroy
   skip_before_action :authorize, except: :destroy
-  #FIXME_AB: before_action :ensure_not_logged_in
   before_action :ensure_not_logged_in, only: [:new, :create]
 
   def new

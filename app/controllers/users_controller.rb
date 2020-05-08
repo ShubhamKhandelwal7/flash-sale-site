@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   end
 
   skip_before_action :authorize
-  #FIXME_AB: we should also add verify
   before_action :ensure_not_logged_in
 
   def new
@@ -30,7 +29,6 @@ class UsersController < ApplicationController
       flash[:notice] = t("verify.flash.success")
     else
       @user.send_not_verified_mail
-      #FIXME_AB: flash.now, flash.keep. How flash messages are retained in next request, while other variables not? Read.
       flash[:alert] = t("verify.flash.failure")
     end
     redirect_to login_path

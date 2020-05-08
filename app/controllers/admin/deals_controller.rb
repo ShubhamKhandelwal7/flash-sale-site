@@ -53,9 +53,7 @@ module Admin
 
     def delete_image_attachment
       @deal_image = ActiveStorage::Attachment.find(params[:id])
-      #FIXME_AB: what if record not found
       @deal_image.purge_later
-      #FIXME_AB: we should not redirect when using ajax. send json response for success or failure and handle in the frontend
       render json: { status: true }
     rescue ActiveRecord::RecordNotFound
       render json: { status: false }

@@ -49,7 +49,6 @@
               <%= image_tag(url_for(image), class: "rounded mx-auto img-thumbnail thumbnail mt-3") %>
               <h4><%= image.blob.filename %> </h4>
               <br>
-              <% #FIXME_AB: bind ajax success and failure events on this to handle ajax error and ajax success cases(deleted or not deleted) -%>
               <%= link_to 'Remove', delete_image_attachment_admin_deal_url(image),
                             data: {  url: delete_image_attachment_admin_deal_url(image) },
                             class: "btn btn-outline-danger mb-3 deal-img-rem" %>
