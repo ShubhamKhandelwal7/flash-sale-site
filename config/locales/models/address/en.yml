@@ -2,4 +2,5 @@ en:
   address:
     errors:
       not_unique: "Address is already present"
+      md5_token: "MD5 token could not be generated"
       

@@ -2,4 +2,5 @@ en:
   users:
     errors:
       password: must include atleast one digit and one letter
+      secure_token: "Secure Token could not be generated"
       

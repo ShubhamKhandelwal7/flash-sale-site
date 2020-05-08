@@ -1,5 +1,6 @@
 en:
   errors:
     discount_price: "must be greater than discount price"
-    image: "upload should be more than"
+    image: "upload should be ateast"
+    file_format: "have incorrect format"
     

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user, :current_order
-  before_action :authorize, :make_action_mailer_use_request_host
+  before_action :authorize#, :make_action_mailer_use_request_host
 
   private def authorize
     if current_user.blank?
@@ -20,9 +20,6 @@ class ApplicationController < ActionController::Base
   end
 
   #FIXME_AB: set in config/application.rb. Take host from env.and make required keys
-  private def make_action_mailer_use_request_host
-    ActionMailer::Base.default_url_options[:host] = request.host_with_port
-  end
 
   private def current_order
     @current_order = Order.find(session[:order_id])

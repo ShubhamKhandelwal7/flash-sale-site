@@ -2,8 +2,8 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :password,  presence: true, on: :reset_password
-  validates :password, length: { minimum: USERS[:min_password_length].to_i }
-  validates :password, format: { with: REGEXPS[:password], message: I18n.t(".users.errors.password") }
+  validates :password, length: { minimum: USERS[:min_password_length] }, if: -> { new_record? || !password.nil? }
+  validates :password, format: { with: REGEXPS[:password], message: I18n.t(".users.errors.password") }, if: -> { new_record? || !password.nil? }
   validates :email, uniqueness: true, case_sensitive: false, format: {
     with: REGEXPS[:email]
   }
@@ -24,6 +24,10 @@ class User < ApplicationRecord
 
   scope :admin, -> { where(admin: true) }
   scope :regular, -> { where(admin: false) }
+
+  def placed_line_items
+    orders.placed_orders.includes(:line_items).collect(&:line_items).flatten
+  end
 
   def send_password_reset
     generate_token(:password_reset_token)
@@ -63,24 +67,13 @@ class User < ApplicationRecord
     #FIXME_AB: orders
     #FIXME_AB: orders.line_items.where(deal_id: deal_id).sum(&:quantity)
     #FIXME_AB: this should consider only placed orders
-    all_orders = Order.where(user_id: id)
-    total_deal_quantity = 0
-    all_orders.each do |order|
-      order.line_items.where(deal_id: deal_id).each do |line|
-        total_deal_quantity += line.quantity
-      end
-    end
-    total_deal_quantity
+    placed_line_items.select {|line| line.deal_id == deal_id }.sum(&:quantity)
   end
 
   def get_loyalty_discount
     #FIXME_AB: orders.placed_orders.count
     #FIXME_AB: [orders.placed_orders.count, USERS[:max_orders_count_for_discount].to_].min
-    orders_count = Order.placed_orders(id).count
-    if orders_count >= USERS[:max_orders_count_for_discount].to_i
-      orders_count = USERS[:max_orders_count_for_discount].to_i
-    end
-    orders_count
+    [orders.placed_orders.count, USERS[:max_orders_count_for_discount]].min
   end
 
   def send_not_verified_mail
@@ -92,7 +85,7 @@ class User < ApplicationRecord
       token_val = SecureRandom.urlsafe_base64
       self.public_send("#{column}=", token_val)
     rescue StandardError
-      ERROR_MSGS[:token]
+      I18n.t(".users.errors.secure_token")
     end while User.exists?(column => token_val)
   end
 

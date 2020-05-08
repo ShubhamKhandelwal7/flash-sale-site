@@ -3,7 +3,7 @@ development:
   VERIFY_MAIL_VALIDITY_HOURS: 5
   default_from_mail: abc@example.com
   REMEMBER_ME_COOKIE_EXPIRY_DAYS: 14
-  HOSTNAME_MAILER_DEV: "localhost:3000"
+  HOSTNAME: "shubham.domain4now.com"
   PER_PAGE_DEAL: '1'
   DEAL_LIVE_DAYS: '1'
   PAST_LIVE_DEALS_SHOW: '2'
@@ -13,6 +13,7 @@ test:
   VERIFY_MAIL_VALIDITY_HOURS:
   default_from_mail:
   REMEMBER_ME_COOKIE_EXPIRY_DAYS: 
+  HOSTNAME: "shubham.domain4now.com"
   PER_PAGE_DEAL:
   DEAL_LIVE_DAYS:
   PAST_LIVE_DEALS_SHOW:
@@ -22,6 +23,7 @@ production:
   VERIFY_MAIL_VALIDITY_HOURS:
   default_from_mail:
   REMEMBER_ME_COOKIE_EXPIRY_DAYS: 
+  HOSTNAME: "shubham.domain4now.com"
   PER_PAGE_DEAL:
   DEAL_LIVE_DAYS:
   PAST_LIVE_DEALS_SHOW:

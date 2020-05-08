@@ -6,7 +6,7 @@ class LineItem < ApplicationRecord
 
   with_options if: -> { order_id.present? } do |line_item|
     line_item.validates :deal_id, uniqueness: { scope: :order_id }
-    line_item.validates :quantity, numericality: { less_than_or_equal_to: ORDERS[:max_deal_quant_per_order].to_i }
+    line_item.validates :quantity, numericality: { less_than_or_equal_to: ORDERS[:max_deal_quant_per_order] }
     line_item.validate :ensure_overall_deal_qty
   end
 
@@ -17,12 +17,12 @@ class LineItem < ApplicationRecord
     calculate_tax
     calculate_totals
   end
-# here total quantity together is being validated, infuture if we limit max quantity for a deal we can check
+  
   private def ensure_overall_deal_qty
     #FIXME_AB: order.user.ordered_deal_quant
-    ordered_deal_quant = User.find(order.user_id).ordered_deal_quantity(deal_id)
-    if (quantity <= ORDERS[:max_deal_quant_per_order].to_i) && (quantity + ordered_deal_quant) > ORDERS[:max_deal_quant_per_user].to_i
-      errors.add(:quantity, "Deal already ordered by user")
+    ordered_deal_quant = order.user.ordered_deal_quantity(deal_id)
+    if (quantity <= ORDERS[:max_deal_quant_per_order]) && (quantity + ordered_deal_quant) > ORDERS[:max_deal_quant_per_user]
+      errors.add(:quantity, I18n.t(".line_item.errors.overall_deal_qty"))
     end
   end
 

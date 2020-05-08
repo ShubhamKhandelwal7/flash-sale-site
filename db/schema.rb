@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_06_190036) do
+ActiveRecord::Schema.define(version: 2020_05_08_110444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 2020_05_06_190036) do
   create_table "orders", force: :cascade do |t|
     t.decimal "total_amount"
     t.decimal "total_tax"
-    t.bigint "address_id", null: false
+    t.bigint "address_id"
     t.bigint "user_id", null: false
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false

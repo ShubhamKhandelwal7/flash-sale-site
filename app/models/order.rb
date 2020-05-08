@@ -11,15 +11,17 @@ class Order < ApplicationRecord
   has_many :deals, through: :line_items
   belongs_to :user
   #FIXME_AB: add a validation that except in cart state order should have address associated with user
+  validate :ensure_user_address, if: -> { state != 'cart' }
   belongs_to :address, optional: true
 
   #FIXME_AB: remove user
-  scope :placed_orders, ->(user) { where.not(state: :cart).where(user_id: user) }
+  scope :placed_orders, ->{ where.not(state: :cart) }
 
   def add_items(deal_id)
     #FIXME_AB: Deal.live_deals.find
-    @curr_deal = Deal.find(deal_id)
-    if is_deal_live? && is_deal_qty_availaible? && can_user_buy?
+    @curr_deal = Deal.live_deals(Time.current).find { |deal| deal.id == deal_id }
+    # @curr_deal = Deal.find(deal_id)
+    if @curr_deal && is_deal_qty_availaible? && can_user_buy?
       return true
     end
     false
@@ -28,18 +30,20 @@ class Order < ApplicationRecord
   end
 
   #FIXME_AB: this is not needed
-  private def is_deal_live?
-    @curr_deal.class.live_deals(Time.current).ids.include? @curr_deal.id
-  end
 
   #FIXME_AB: shoudl be in Deal model deal.saleable_qty_availabe?  "(quantity - sold_quantity).positive? "
   private def is_deal_qty_availaible?
-    original_qty = @curr_deal.quantity
-    (original_qty > 0) && (@curr_deal.sold_quantity < original_qty)
+    @curr_deal.saleable_qty_available?
   end
 
   #FIXME_AB: update
   private def can_user_buy?
-    User.find(user_id).ordered_deal_quantity(@curr_deal.id) < ORDERS[:max_deal_quant_per_user].to_i
+    user.ordered_deal_quantity(@curr_deal.id) < ORDERS[:max_deal_quant_per_user]
+  end
+
+  private def ensure_user_address
+    unless address_id && user.addresses.ids.include?(address_id)
+      errors.add(:address_id, "has to be of the user #{user.name}")
+    end
   end
 end

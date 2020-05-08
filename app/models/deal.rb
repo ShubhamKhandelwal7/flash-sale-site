@@ -13,9 +13,10 @@ class Deal < ApplicationRecord
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :quantity, numericality: {  greater_than: 0 }, if: -> { published_at.present? }
   validates :title, uniqueness: true, case_sensitive: false, if: -> { title.present? }
-  validates :tax, inclusion: { in: DEALS[:min_tax_allowed].to_i..DEALS[:max_tax_allowed].to_i,
+  validates :tax, numericality: { only_integer: true }, inclusion: { in: DEALS[:min_tax_allowed]..DEALS[:max_tax_allowed],
              message: "should lie between #{DEALS[:min_tax_allowed]} and #{DEALS[:max_tax_allowed]}"}, allow_nil: true,
              format: { with: REGEXPS[:tax], message: "can have max 4 decimal places" }
+  validate :ensure_image_format, if: -> { images.present? }
   validate :ensure_min_image_upload
 
   validates_with PriceValidator
@@ -30,7 +31,7 @@ class Deal < ApplicationRecord
     if published_at&.to_date == date
       return true
     end
-    valid? && (self.class.published_deals_on(date) < DEALS[:max_deals_per_day].to_i) &&
+    valid? && (self.class.published_deals_on(date) < DEALS[:max_deals_per_day]) &&
     (date > Date.today + 1.day)
   end
 
@@ -38,9 +39,19 @@ class Deal < ApplicationRecord
     published_on(date).count
   end
 
+  def saleable_qty_available?
+    (quantity - sold_quantity).positive?
+  end
+
+  private def ensure_image_format
+    bad_ext_files = images.blobs.filter {|img| !img[:filename].match(REGEXPS[:image]) }
+    if bad_ext_files.present?
+      errors.add(:images, "#{(bad_ext_files.collect { |file| file[:filename] }).join(', ')} #{I18n.t("errors.file_format")}")
+    end
+  end
 
   private def ensure_min_image_upload
-    if images.count < DEALS[:min_images_limit].to_i
+    if images.count < DEALS[:min_images_limit]
       errors.add(:images, "#{I18n.t("errors.image")} #{DEALS[:min_images_limit]}")
     end
   end
@@ -57,7 +68,7 @@ class Deal < ApplicationRecord
     if self.class.exists?(id) && self.class.find(id).published_at&.to_date == published_at.to_date
       current_published_deal =  1
     end
-    self.class.published_deals_on(published_at) - (current_published_deal || 0) <= (DEALS[:max_deals_per_day].to_i - 1)
+    self.class.published_deals_on(published_at) - (current_published_deal || 0) <= (DEALS[:max_deals_per_day] - 1)
   end
 
   private def is_tax_present?
@@ -65,7 +76,7 @@ class Deal < ApplicationRecord
   end
 
   private def valid_qty_availaible?
-    quantity >= DEALS[:min_quant_limit].to_i
+    quantity >= DEALS[:min_quant_limit]
   end
 
   private def valid_publish_date_margin?

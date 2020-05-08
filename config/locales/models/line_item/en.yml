@@ -1,0 +1,4 @@
+en:
+  line_item:
+    errors:
+      overall_deal_qty: "Deal already bought by"

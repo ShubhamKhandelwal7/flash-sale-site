@@ -16,8 +16,7 @@ class OrdersController < ApplicationController
   end
 
   def create_order
-    @order = Order.create(user_id: current_user.id,
-      address_id: current_user.addresses.first.id)
+    @order = Order.create(user_id: current_user.id)
     session[:order_id] = @order.id
   end
 end
