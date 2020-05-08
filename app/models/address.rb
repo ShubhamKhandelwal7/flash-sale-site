@@ -14,8 +14,6 @@ class Address < ApplicationRecord
     all_fields = [home_address, state, city, pincode, country].freeze
     self.token = Digest::MD5.hexdigest(all_fields.join)
   rescue StandardError
-    # FIXME_AB: remove and do i18n here
-    # ERROR_MSGS[:md5_token]
     I18n.t(".address.errors.md5_token")
   end
 end

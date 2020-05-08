@@ -44,6 +44,7 @@ class Deal < ApplicationRecord
   end
 
   private def ensure_image_format
+    #FIXME_AB: images.any?{|img| !img.image?}
     bad_ext_files = images.blobs.filter {|img| !img[:filename].match(REGEXPS[:image]) }
     if bad_ext_files.present?
       errors.add(:images, "#{(bad_ext_files.collect { |file| file[:filename] }).join(', ')} #{I18n.t("errors.file_format")}")

@@ -64,15 +64,10 @@ class User < ApplicationRecord
   end
 
   def ordered_deal_quantity(deal_id)
-    #FIXME_AB: orders
-    #FIXME_AB: orders.line_items.where(deal_id: deal_id).sum(&:quantity)
-    #FIXME_AB: this should consider only placed orders
     placed_line_items.select {|line| line.deal_id == deal_id }.sum(&:quantity)
   end
 
   def get_loyalty_discount
-    #FIXME_AB: orders.placed_orders.count
-    #FIXME_AB: [orders.placed_orders.count, USERS[:max_orders_count_for_discount].to_].min
     [orders.placed_orders.count, USERS[:max_orders_count_for_discount]].min
   end
 

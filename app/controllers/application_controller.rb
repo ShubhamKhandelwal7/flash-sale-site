@@ -19,7 +19,6 @@ class ApplicationController < ActionController::Base
     redirect_to login_path, alert: t("errors.admin_authorize")
   end
 
-  #FIXME_AB: set in config/application.rb. Take host from env.and make required keys
 
   private def current_order
     @current_order = Order.find(session[:order_id])

@@ -17,9 +17,8 @@ class LineItem < ApplicationRecord
     calculate_tax
     calculate_totals
   end
-  
+
   private def ensure_overall_deal_qty
-    #FIXME_AB: order.user.ordered_deal_quant
     ordered_deal_quant = order.user.ordered_deal_quantity(deal_id)
     if (quantity <= ORDERS[:max_deal_quant_per_order]) && (quantity + ordered_deal_quant) > ORDERS[:max_deal_quant_per_user]
       errors.add(:quantity, I18n.t(".line_item.errors.overall_deal_qty"))
