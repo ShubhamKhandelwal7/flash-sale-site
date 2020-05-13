@@ -3,6 +3,7 @@ class OrdersController < ApplicationController
 
   def add_to_cart
     if current_order.add_items(params[:id])
+      #FIXME_AB: line_items create should be the part of add_items
       @line_item = LineItem.new(deal_id: params[:id], order_id: current_order.id)
       @line_item.evaluate_amounts
       if @line_item.save
@@ -26,7 +27,11 @@ class OrdersController < ApplicationController
   end
 
   def select_address
+    #FIXME_AB: address should be associated with current_order
+    #FIXME_AB: current_user.addresses.find
     address = Address.find(params[:id])
+    #FIXME_AB: also handle the case when address not found
+
     unless address.default?
       address.set_default
     end
@@ -39,7 +44,6 @@ class OrdersController < ApplicationController
   end
 
   def create_order
-    #FIXME_AB: current_user.orders.build
     new_order = current_user.orders.build
     if new_order.save
       session[:order_id] = new_order.id

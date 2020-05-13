@@ -3,6 +3,7 @@ module Admin
     before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability]
 
     def index
+      #FIXME_AB: Lets give a dropdown in the frontend to order by created_at, publish date. default should be publish date. with ASC DESC
       @deals = Deal.with_attached_images.page(params[:page])
                    .per(ENV["PER_PAGE_DEAL"].to_i)
     end

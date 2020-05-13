@@ -13,6 +13,8 @@ class Address < ApplicationRecord
   scope :default_address, -> { where(default: true) }
 
 
+  #FIXME_AB: in the create address  form add a checkbox to mark it a default address
+  #FIXME_AB: also add checkbox in the old addresses so that when user chooses old address he can mark default.
   def set_default
     user.addresses.default_address.update_all(default: false)
     self.default = true
