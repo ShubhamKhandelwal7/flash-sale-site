@@ -1,0 +1,36 @@
+<div class = 'container'>
+  <% content_for :js do %>
+    <%= javascript_pack_tag  'order_form', 'data-turbolinks-track': 'reload' %>
+  <%end%>
+  <h3 class = "text-center">BUY NOW<h3>
+  <br>
+  <h4> Shipping Address </h4>
+  <br>
+  <% if current_user.addresses.any? %>
+    <h5> Choose from existsing Addresses </h5>
+  <% end %>
+
+  <% current_user.addresses.each do |address| %>
+    <div class = 'container border bg-light mb-3'>
+      <p><%= address.home_address %></p>
+      <p><%= address.city %></p>
+      <p><%= address.state %></p>
+      <p><%= address.pincode %></p>
+      <p><%= address.country %></p>
+      <%= link_to "Deliver to this address", select_address_order_path(address),
+        class: 'btn btn-primary mb-3', data: { turbolinks: false } %>
+    </div>
+  <% end %>
+  <br>
+  <div class="container">
+    <h5> Create a new Address </h5>
+    <% address = @address || current_user.addresses.build  %>
+    <%= form_for address, class: "form-signin" do |form| %>
+      <% if @address.nil? %>
+        <%= link_to_add_fields "Create New adress", form, :addresses %>
+      <%else%>
+        <%= render partial: "orders/address_fields", locals: { f: form, address: address }  %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

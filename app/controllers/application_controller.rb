@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user, :current_order
-  before_action :authorize#, :make_action_mailer_use_request_host
+  before_action :authorize
 
   private def authorize
     if current_user.blank?
@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
 
   private def current_order
-    @current_order = Order.find(session[:order_id])
+    @current_order ||=  current_user&.orders&.find(session[:order_id])
   rescue ActiveRecord::RecordNotFound
   end
 end

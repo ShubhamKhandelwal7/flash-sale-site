@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_110444) do
+ActiveRecord::Schema.define(version: 2020_05_11_140451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_110444) do
     t.datetime "live_end"
     t.decimal "tax"
     t.integer "sold_quantity", default: 0, null: false
+    t.integer "lock_version", default: 0, null: false
     t.index ["deleted_at"], name: "index_deals_on_deleted_at"
     t.index ["title"], name: "index_deals_on_title", unique: true
   end

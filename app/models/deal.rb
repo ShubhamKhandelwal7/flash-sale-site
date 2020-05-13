@@ -13,7 +13,7 @@ class Deal < ApplicationRecord
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :quantity, numericality: {  greater_than: 0 }, if: -> { published_at.present? }
   validates :title, uniqueness: true, case_sensitive: false, if: -> { title.present? }
-  validates :tax, numericality: { only_integer: true }, inclusion: { in: DEALS[:min_tax_allowed]..DEALS[:max_tax_allowed],
+  validates :tax, numericality: { only_decimal: true }, inclusion: { in: DEALS[:min_tax_allowed]..DEALS[:max_tax_allowed],
              message: "should lie between #{DEALS[:min_tax_allowed]} and #{DEALS[:max_tax_allowed]}"}, allow_nil: true,
              format: { with: REGEXPS[:tax], message: "can have max 4 decimal places" }
   validate :ensure_image_format, if: -> { images.present? }
@@ -43,11 +43,22 @@ class Deal < ApplicationRecord
     (quantity - sold_quantity).positive?
   end
 
+  def update_inventory(qty_bought)
+    self.sold_quantity += qty_bought
+    if saleable_qty_available? || (sold_quantity == quantity)
+      # since we cannot update live deals or those deals whose published_at is < now+24hr
+      self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1)
+    else
+      false
+    end
+  rescue ActiveRecord::StaleObjectError
+    false
+  end
+
   private def ensure_image_format
     #FIXME_AB: images.any?{|img| !img.image?}
-    bad_ext_files = images.blobs.filter {|img| !img[:filename].match(REGEXPS[:image]) }
-    if bad_ext_files.present?
-      errors.add(:images, "#{(bad_ext_files.collect { |file| file[:filename] }).join(', ')} #{I18n.t("errors.file_format")}")
+    if images.any? { |img| !img.image? }
+      errors.add(:images, "#{I18n.t("errors.file_format")}")
     end
   end
 

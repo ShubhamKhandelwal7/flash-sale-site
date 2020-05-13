@@ -1,8 +1,7 @@
 REGEXPS = {
   email: /\A[^@\s]+@[-a-z0-9]+\.+[a-z]{2,}\z/i,
   password: /\A(?=.*[a-zA-Z])(?=.*[0-9]).*\z/,
-  tax: /\A\d+(?:\.\d{0,4})?\z/,
-  image: /\.(gif|jpg|png|jpeg)\z/i
+  tax: /\A\d+(?:\.\d{0,4})?\z/
 }
 
 DEALS = {

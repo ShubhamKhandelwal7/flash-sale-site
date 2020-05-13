@@ -1,5 +1,7 @@
-cart = document.getElementById('cart')
-cart.innerHTML = "<%= j render partial: 'cart' %>"
+<% if current_order&.line_items&.any? %>
+  cart = document.getElementById('cart')
+  cart.innerHTML = "<%= j render partial: 'cart' %>"
+<% end %>
 
 flash = document.getElementById('flash')
 flash.className = "alert alert-success text-center"

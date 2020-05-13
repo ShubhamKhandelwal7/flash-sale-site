@@ -38,11 +38,7 @@
       <%= form.label :tax, "Tax (%):" %>
       <%= form.text_field :tax, placeholder: "Tax (in %)", class: 'form-control' %>
     </div>
-
     <% if deal.images.present? %>
-      <div class = "form-group">
-        <%= form.label :images, "Images" %>
-        <br>
         <% deal.images.each do |image| %>
           <% if image.id %>
             <div class="container text-center border border-primary rounded ">

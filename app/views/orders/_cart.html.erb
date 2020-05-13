@@ -28,5 +28,5 @@
       <%end%>
     </tbody>
   </table>
-  <%= link_to "Checkout CART", new_order_path, class: "btn btn-success mb-3" %>
+  <%= link_to "BUY NOW", buy_now_order_path(current_order), class: "btn btn-success mb-3", data: { turbolinks: false } %>
 </div>

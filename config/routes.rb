@@ -17,8 +17,12 @@ Rails.application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
   resources :line_items, only: [:destroy]
+  resources :addresses, only: [:create, :new]
   resources :orders do
     get "add_to_cart", on: :member
+    get "buy_now", on: :member
+    get "checkout", on: :member
+    get "select_address", on: :member
   end
 
   namespace :admin do
