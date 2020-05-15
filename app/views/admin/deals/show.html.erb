@@ -51,11 +51,14 @@
 
         <%end%>
       </div>
+      <% #FIXME_AB: don't hardcode 1 day. use env -%>
+      <% #FIXME_AB: add method @deal.can_be_reschedule? ======  should not be past deal, not live, not restricted lead time-%>
       <% if @deal.published_at.blank? || @deal.published_at > Time.current + 1.day %>
         <div id = "publish-data">
         </div>
         <br>
         <div class = "container text-center">
+          <% #FIXME_AB: show ajax loader when request is sent and hide loader when request is complete -%>
           <%= form_with method: :get, url: publish_admin_deal_path, class: "form-signin" do %>
 
             <div class = "form-group">

@@ -45,8 +45,6 @@ class Deal < ApplicationRecord
 
   def saleable_qty_available?
     salebale_qty.positive?
-    #FIXME_AB: can be done like this
-    # salebale_qty.positive?
   end
 
   def salebale_qty
@@ -72,6 +70,7 @@ class Deal < ApplicationRecord
   end
 
   def update_inventory(qty_bought)
+    #FIXME_AB: if check_inventory(qty_bought)
     if saleable_qty_available? && qty_bought <= salebale_qty
       sold_quantity = self.sold_quantity + qty_bought
       self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1, updated_at: Time.current)
@@ -83,7 +82,6 @@ class Deal < ApplicationRecord
   end
 
   private def ensure_image_format
-    #FIXME_AB: images.any?{|img| !img.image?}
     if images.any? { |img| !img.image? }
       errors.add(:images, "#{I18n.t("errors.file_format")}")
     end
@@ -96,12 +94,15 @@ class Deal < ApplicationRecord
   end
 
   private def ensure_publishability_criteria
+    #FIXME_AB: we should also check that if publish_at is changed then its previous publish date should not be in past day
+
     #FIXME_AB: in case of updating the deal which is scheduled to publish on specific day, it will fail
     #FIXME_AB: make a method for every condition can_be_scheduled_to_publish_on?(date) && valid_qty_available? && valid_publish_date_margin
     unless can_be_scheduled_to_publish_on? && valid_qty_availaible? && is_tax_present? && valid_publish_date_margin?
     raise UnPublishableError.new "Publishability criteria failed"
     end
   end
+
 
   private def can_be_scheduled_to_publish_on?
     if self.class.exists?(id) && self.class.find(id).published_at&.to_date == published_at.to_date

@@ -1,12 +1,12 @@
 class OrdersController < ApplicationController
+  #FIXME_AB: create_order from ensure_current_order
   before_action :create_order, only: :add_to_cart, if: -> { current_order.blank? }
-  before_action :ensure_current_order, except: [:create_order, :add_to_cart]
+  before_action :ensure_current_order
 
   def add_to_cart
     added_item = current_order.add_item(params[:id])
-      #FIXME_AB: line_items create should be the part of add_items
-      # @line_item = LineItem.new(deal_id: params[:id], order_id: current_order.id)
-      # @line_item.evaluate_amounts
+
+    #FIXME_AB:  if current_order.add_item(params[:id])
     if added_item&.save
       flash.now[:notice] = t(".success")
     else
@@ -14,9 +14,12 @@ class OrdersController < ApplicationController
     end
   end
 
+  #FIXME_AB: before_action :ensure_order_is_in_cart_state, should also be called in all checkout actions
   def rem_from_cart
-    remove_item = current_order.line_items.find_by(id: params[:id])
-    if current_order.state == 'cart' && remove_item&.destroy
+    line_item = current_order.line_items.find_by(id: params[:id])
+    #FIXME_AB: current_order.remove_item(deal_id) => true /false
+
+    if current_order.state == 'cart' && line_item&.destroy
       flash[:notice] = "Deal destroyed"
     else
       flash[:alert] = "Deal could not be destroyed"
@@ -39,14 +42,19 @@ class OrdersController < ApplicationController
   end
 
   def select_address
-    #FIXME_AB: address should be associated with current_order
-    #FIXME_AB: current_user.addresses.find
     address = current_user.addresses.find(params[:id])
-    #FIXME_AB: also handle the case when address not found
+
+    #FIXME_AB: since we'll have call back
+    # if params[:default] == '1'
+    #   address.default = true
+    # end
+
     if (params[:default] == '1') && !address.default?
       address.set_default
     end
+
     if address.save
+      #FIXME_AB: this would also change
       current_order.address = address
       current_order.save
       redirect_to checkout_orders_path
@@ -64,6 +72,7 @@ class OrdersController < ApplicationController
     end
   end
 
+  #FIXME_AB: if current_order is not present create one
   private def ensure_current_order
     unless current_order.present?
       redirect_to home_path, notice: "Please goto 'my orders' to view your orders"

@@ -3,7 +3,7 @@ module Admin
     before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability, :publish]
 
     def index
-      #FIXME_AB: Lets give a dropdown in the frontend to order by created_at, publish date. default should be publish date. with ASC DESC
+      #FIXME_AB: Lets merge index and sort
       @deals = Deal.with_attached_images.order(published_at: :asc).page(params[:page]).per(ENV["PER_PAGE_DEAL"].to_i)
     end
 
@@ -56,6 +56,7 @@ module Admin
       end
     end
 
+    #FIXME_AB: send json. lets not use js.erb
     def publish
       publish_on_date = Date.parse(params[:publish_date])
       if publish_on_date.present? && @deal.can_be_scheduled_to_publish_on(publish_on_date)
