@@ -33,7 +33,7 @@
       'error' => "alert-danger"
     } %>
     <div class = "site-wrapper">
-      <div class = "text-center">
+      <div class = "text-center" id="flash">
         <% flash.each do |type| %>
           <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
         <% end %>

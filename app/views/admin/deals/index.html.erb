@@ -1,3 +1,11 @@
+<div class = "container text-right col-sm">
+  <%= form_with method: :get, url: sort_admin_deals_path, class: "form-signup" do %>
+    <div class = "form-group">
+      <%= select(:sort, :sort_by, options_for_select([['created_at', 'created_at'], ['published_at', 'published_at']],selected: params[:sort] ? params[:sort][:sort_by] : 'published_at'), {}, { onchange: 'this.form.submit();'}) %>
+      <%= select(:order, :order_by, options_for_select([['asc', 'ASC'], ['desc', 'DESC']], selected: params[:order] ? params[:order][:order_by] : 'ASC'), {}, { onchange: 'this.form.submit();'}) %>
+    </div>
+  <% end %>
+</div>
 <div class="container">
   <div class="row">
     <% @deals.to_enum.with_index(1).each do |deal, index| %>

@@ -1,7 +1,9 @@
-publishStateDiv = document.getElementById("publish-data")
+publishStateDiv = document.getElementById("check-publish-data")
 
 <% if @status %>
-  publishStateDiv.innerHTML = "<strong > The Deal is Publishable </strong>"
+  publishStateDiv.innerHTML = "<strong> Publishable </strong>"
+  publishStateDiv.className = "bg-success text-center border"
 <% else %>
-  publishStateDiv.innerHTML = "<strong > The Deal is NOT publishable </strong >"
+  publishStateDiv.innerHTML = "<strong> NOT Publishable </strong >"
+  publishStateDiv.className = "bg-danger text-center border"
 <%end%>

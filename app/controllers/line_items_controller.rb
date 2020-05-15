@@ -4,15 +4,6 @@ class LineItemsController < ApplicationController
   #FIXME_AB: move to orders controller
   #FIXME_AB: before removing line item check that line item belongs to current user's order
   #FIXME_AB: before removing item check that order should be in cart state
-  def destroy
-    # i18n
-    if @line_item.destroy
-      flash[:notice] = "Deal destroyed"
-    else
-      flash[:alert] = "Deal could not be destroyed"
-    end
-    redirect_to home_path
-  end
 
   private def set_line_item
     @line_item = LineItem.find(params[:id])

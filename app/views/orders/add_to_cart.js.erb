@@ -1,4 +1,4 @@
-<% if current_order&.line_items&.any? %>
+<% if current_order&.line_items&.first&.persisted? %>
   cart = document.getElementById('cart')
   cart.innerHTML = "<%= j render partial: 'cart' %>"
 <% end %>

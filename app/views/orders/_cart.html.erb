@@ -1,5 +1,5 @@
 <div class="container text-center mt-3">
-  <h4 class="text-center"> CART Of <%= current_order.user.name %> </h4>
+  <h4 class="text-center"> CART Of <%= current_order.user.name.capitalize %> </h4>
 
   <table class="table">
     <thead>
@@ -7,7 +7,7 @@
         <th scope="col">Order_id</th>
         <th scope="col">LineItem_id</th>
         <th scope="col">Name</th>
-        <th scope="col">Price w/ Tax</th>
+        <th scope="col">Price</th>
         <th scope="col">Quantity#</th>
         <th scope="col">Action</th>
       </tr>
@@ -18,15 +18,15 @@
           <td><%= line_item.order.id %></td>
           <td><%= line_item.id%></td>
           <td><%= line_item.deal.title %></td>
-          <td><%= line_item.taxed_price %></td>
+          <td><%= line_item.sale_price %></td>
           <td><%= line_item.quantity %></td>
-          <td><%= link_to "Remove Deal", line_item_path(line_item),
+          <td><%= link_to "Remove Deal", rem_from_cart_order_path(line_item),
                           method: :delete,
                           data: { confirm: "Are you sure?" },
-                          remote: :true, class: "btn btn-outline-danger" %></td>
+                          class: "btn btn-outline-danger" %></td>
         </tr>
       <%end%>
     </tbody>
   </table>
-  <%= link_to "BUY NOW", buy_now_order_path(current_order), class: "btn btn-success mb-3", data: { turbolinks: false } %>
+  <%= link_to "BUY NOW", buy_now_orders_path, class: "btn btn-success mb-3", data: { turbolinks: false } %>
 </div>

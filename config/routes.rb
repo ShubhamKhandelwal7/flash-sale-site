@@ -16,12 +16,12 @@ Rails.application.routes.draw do
 
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
-  resources :line_items, only: [:destroy]
   resources :addresses, only: [:create, :new]
   resources :orders do
     get "add_to_cart", on: :member
-    get "buy_now", on: :member
-    get "checkout", on: :member
+    delete "rem_from_cart", on: :member
+    get "buy_now", on: :collection
+    get "checkout", on: :collection
     get "select_address", on: :member
   end
 
@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     resources :deals do
       get "check_publishability", on: :member, action: "check_publishability"
       get "delete_image_attachment", on: :member
+      get "sort", on: :collection, action: "sort"
+      get "publish", on: :member, action: "publish"
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

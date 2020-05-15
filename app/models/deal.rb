@@ -39,8 +39,12 @@ class Deal < ApplicationRecord
     published_on(date).count
   end
 
+  def live?
+    self.class.live_deals(Time.current).exists? self.id
+  end
+
   def saleable_qty_available?
-    (quantity - sold_quantity).positive?
+    salebale_qty.positive?
     #FIXME_AB: can be done like this
     # salebale_qty.positive?
   end
@@ -63,15 +67,18 @@ class Deal < ApplicationRecord
   #   false
   # end
 
+  def check_inventory(qty_bought)
+    saleable_qty_available? && qty_bought <= salebale_qty
+  end
+
   def update_inventory(qty_bought)
-    self.sold_quantity += qty_bought
-    if saleable_qty_available? || (sold_quantity == quantity)
-      # since we cannot update live deals or those deals whose published_at is < now+24hr
-      self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1)
+    if saleable_qty_available? && qty_bought <= salebale_qty
+      sold_quantity = self.sold_quantity + qty_bought
+      self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1, updated_at: Time.current)
     else
       false
     end
-  rescue ActiveRecord::StaleObjectError
+  rescue StandardError
     false
   end
 

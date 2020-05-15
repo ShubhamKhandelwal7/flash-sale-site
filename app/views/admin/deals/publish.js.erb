@@ -1,0 +1,16 @@
+publishStateDiv = document.getElementById("publish-data")
+publishDate = document.getElementById("publish-date")
+flash = document.getElementById('flash')
+
+<% if @status %>
+  publishStateDiv.innerHTML = "<strong> Published </strong>"
+  publishStateDiv.className = "bg-success text-center border"
+  flash.className = "alert alert-success text-center"
+  publishDate.innerHTML = "<%= @deal.presenter.publish_status %>"
+  flash.innerHTML = "<%= flash.now[:notice] %>"
+<% else %>
+  publishStateDiv.innerHTML = "<strong> NOT Published </strong >"
+  publishStateDiv.className = "bg-danger text-center border"
+  flash.className = "alert alert-warning text-center"
+  flash.innerHTML = "<%= flash.now[:alert] %>"
+<%end%>
