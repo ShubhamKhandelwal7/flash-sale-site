@@ -7,7 +7,7 @@
   <h4> Shipping Address </h4>
   <br>
   <% if current_user.addresses.count > 0 %>
-    <h5> Choose from existsing Addresses </h5>
+    <h5> Choose from existing Addresses </h5>
 
     <% current_user.addresses.each do |address| %>
     <% if address.persisted? %>
@@ -19,6 +19,7 @@
           <p><%= address.country %></p>
           <%= form_with method: :get, url: select_address_order_path(address), class: "form-signup", local: true do |form| %>
             <div class = "form-group">
+              <% #FIXME_AB: should come checked if this one is default address -%>
               <%= form.check_box :default %>
               <i><%= form.label "Make it as default" %></i>
             </div>
@@ -37,7 +38,7 @@
     <% address = @address || current_user.addresses.build  %>
     <%= form_for address, class: "form-signin" do |form| %>
       <% if @address.nil? %>
-        <%= link_to_add_fields "Create New adress", form, :addresses %>
+        <%= link_to_add_fields "Create New address", form, :addresses %>
       <%else%>
         <%= render partial: "orders/address_fields", locals: { f: form, address: address }  %>
       <% end %>

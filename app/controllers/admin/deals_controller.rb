@@ -3,8 +3,9 @@ module Admin
     before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability, :publish, :unpublish]
 
     def index
-      #FIXME_AB: Lets merge index and sort
-      @deals = Deal.with_attached_images.order("#{params[:sort] ? params[:sort][:sort_by] : 'published_at'} #{params[:order] ? params[:order][:order_by] : 'asc'}")
+      sort_by = (params[:sort] && params[:sort][:sort_by].present?) ? params[:sort][:sort_by] : 'published_at'
+      order = (params[:order] && params[:order][:order_by].present?) ? params[:order][:order_by] : 'asc'
+      @deals = Deal.with_attached_images.order("#{sort_by} #{order}")
                    .page(params[:page]).per(ENV["PER_PAGE_DEAL"].to_i)
     end
 
@@ -51,7 +52,6 @@ module Admin
       end
     end
 
-    #FIXME_AB: send json. lets not use js.erb
     def publish
       render json: { status: @deal.publish(params[:publish_date]), publish_presenter: @deal.presenter.publish_status }
     end

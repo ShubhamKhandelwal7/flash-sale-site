@@ -2,10 +2,7 @@ class Deal < ApplicationRecord
 
   include BasicPresenter::Concern
   acts_as_paranoid
-  #FIXME_AB: we should check the uploaded file should be image only
-  has_many_attached :images, dependent: :purge_later
-  has_many :line_items, dependent: :restrict_with_error
-  has_many :orders, through: :line_items
+
 
   validates :title, :description, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -20,6 +17,10 @@ class Deal < ApplicationRecord
   validate :ensure_min_image_upload
 
   validates_with PriceValidator
+
+  has_many_attached :images, dependent: :purge_later
+  has_many :line_items, dependent: :restrict_with_error
+  has_many :orders, through: :line_items
 
   before_save :ensure_publishability_criteria, if: -> { published_at.present? }
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
@@ -70,7 +71,6 @@ class Deal < ApplicationRecord
   end
 
   def update_inventory(qty_bought)
-    #FIXME_AB: if check_inventory(qty_bought)
     if check_inventory(qty_bought)
       sold_quantity = self.sold_quantity + qty_bought
       self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1, updated_at: Time.current)
@@ -80,7 +80,7 @@ class Deal < ApplicationRecord
   rescue StandardError
     false
   end
-  
+
   def publish(date)
     publish_on_date = Date.parse(date)
     if publish_on_date.present? && can_be_scheduled_to_publish_on(publish_on_date)

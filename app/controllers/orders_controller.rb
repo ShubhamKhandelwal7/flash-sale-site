@@ -1,6 +1,4 @@
 class OrdersController < ApplicationController
-  #FIXME_AB: create_order from ensure_current_order
-  # before_action :create_order, only: :add_to_cart, if: -> { current_order.blank? }
   before_action :ensure_current_order, :ensure_order_in_cart_state, except: :index
 
   def index
@@ -8,7 +6,6 @@ class OrdersController < ApplicationController
   end
 
   def add_to_cart
-    #FIXME_AB:  if current_order.add_item(params[:id])
     if current_order.add_item(params[:id])
       flash.now[:notice] = t(".success")
     else
@@ -16,10 +13,8 @@ class OrdersController < ApplicationController
     end
   end
 
-  #FIXME_AB: before_action :ensure_order_is_in_cart_state, should also be called in all checkout actions
   def rem_from_cart
     if current_order.remove_item(params[:id])
-    #FIXME_AB: current_order.remove_item(deal_id) => true /false
       flash[:notice] = "Deal destroyed"
     else
       flash[:alert] = "Deal could not be destroyed"
@@ -35,6 +30,7 @@ class OrdersController < ApplicationController
 
   def checkout
     if current_order.place_order
+      #FIXME_AB: prefer OrderMailer so that we can have all order related emails at one place
       UserMailer.order_placed(current_order.id).deliver_later
       session[:order_id] = nil
     else
@@ -53,7 +49,6 @@ class OrdersController < ApplicationController
     end
 
     if address.save && current_order.set_address!(address)
-      #FIXME_AB: this would also change
       redirect_to checkout_orders_path
     else
       redirect_to buy_now_orders_path, notice: "The address is invalid, please choose another"
@@ -69,10 +64,10 @@ class OrdersController < ApplicationController
     end
   end
 
-  #FIXME_AB: if current_order is not present create one
   private def ensure_current_order
     if !current_order.present?
       create_order
+      #FIXME_AB: remove redirect so that add to cart works
       redirect_to home_path, notice: "Please goto 'my orders' to view your orders"
     end
   end

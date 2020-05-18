@@ -13,9 +13,7 @@ class LineItem < ApplicationRecord
   before_destroy :ensure_order_in_cart_state
   before_save :evaluate_amounts,  if: -> { order.cart? }
 
-  #FIXME_AB: before crate and before destroy. order should be in cart state
 
-  #FIXME_AB: add this to before save callback if its order is in cart state
   def evaluate_amounts
     self.price = deal.price
     calculate_discounts

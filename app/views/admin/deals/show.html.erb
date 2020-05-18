@@ -54,12 +54,9 @@
 
           <%end%>
         </div>
-        <% #FIXME_AB: don't hardcode 1 day. use env -%>
-        <% #FIXME_AB: add method @deal.can_be_reschedule? ======  should not be past deal, not live, not restricted lead time-%>
         <div id = "publish-data">
         </div>
         <div class = "container text-center col">
-          <% #FIXME_AB: show ajax loader when request is sent and hide loader when request is complete -%>
           <%= form_with method: :get, url: publish_admin_deal_path, class: "form-signin", id: "publish-form" do %>
 
             <div class = "form-group">
@@ -67,7 +64,7 @@
             </div>
             <div class = "form-group">
               <% if @deal.published_at.blank? %>
-                <%= submit_tag "Schedule", class: "btn btn-warning btn-lg", id: "publish-btn", data: { unpublish_url: unpublish_admin_deal_url }  %>
+                <%= submit_tag "Schedule", class: "btn btn-warning btn-lg", id: "publish-btn", data: { unpublish_url: unpublish_admin_deal_url, disable_with: "Please wait..."  }  %>
               <% else %>
                 <%= submit_tag "Re Schedule", class: "btn btn-warning btn-lg" %>
                 </div>

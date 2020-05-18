@@ -23,6 +23,7 @@ class dealPublishManager {
   }
 
   publishSuccess(publishResp) {
+    // FIXME_AB: $('<strong>').text('fda'), then append
     this.$publishDataDiv.html("<strong>"+publishResp+"</strong>");
     this.$publishDataDiv.prop("class", "alert alert-success text-center");
     this.$publishDate.html(publishResp);
@@ -30,9 +31,11 @@ class dealPublishManager {
 
     if($(this.unpublishBtn).length == 0) {
       let unpublishPath = this.$publishBtn.data('unpublish-url');
+      // FIXME_AB: make use of proper jquery
       let unpublishLink = "<a title=\"Remove Schedule\" class= \"btn btn-danger text-center\" id=\"unschedule-deal\" data-confirm= \"Are you sure ?\" href=" +
           unpublishPath + ">Remove Schedule</a>";
 
+        // FIXME_AB: don't use br. use css class
       this.$publishBtn.closest('div').append( "<br><br>" + unpublishLink );
     };
   };
@@ -44,7 +47,7 @@ class dealPublishManager {
 
   ajaxError() {
     this.$publishDataDiv.html("<strong>Request Failed</strong>");
-    this.$publishDataDiv.attr("class", "alert alert-error text-center");    
+    this.$publishDataDiv.attr("class", "alert alert-error text-center");
   };
 }
 

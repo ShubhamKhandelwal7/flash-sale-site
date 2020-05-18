@@ -30,10 +30,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    #FIXME_AB: /admin should redirect user to admin/deals page from routes only
     get "/", to: "deals#index"
     resources :deals do
-      #FIXME_AB:  make a member and collection block
       member do
         get "check_publishability", action: "check_publishability"
         get "delete_image_attachment"
