@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user
+  helper_method :current_user, :current_order
   before_action :authorize
 
   private def authorize
@@ -17,5 +17,11 @@ class ApplicationController < ActionController::Base
   private def authorize_for_admin
     return if current_user.admin?
     redirect_to login_path, alert: t("errors.admin_authorize")
+  end
+
+
+  private def current_order
+    @current_order ||=  current_user&.orders&.find(session[:order_id])
+  rescue ActiveRecord::RecordNotFound
   end
 end

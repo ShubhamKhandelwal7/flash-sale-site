@@ -1,0 +1,34 @@
+<div class = "container">
+  <div class = "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class = "masthead mb-auto">
+      <div class = "inner">
+        <h1 class = "masthead-brand text-center"> Flash Sale Welcome !!! </h1>
+      </div>
+    </header>
+    <main class = "inner cover" role = "main">
+    <h3 class="cover-heading text-center">
+      <% if @live_deals.present? %>
+        <% deals = @live_deals %>
+        LIVE DEALS
+      <% else %>
+        <% deals = @past_deals %>
+        PAST DEALS
+      <% end %>
+    </h3>
+    <div class="container bg-info border border-dark rounded" id="cart">
+      <% if current_order&.line_items&.any? %>
+        <%= render partial: 'orders/cart' %>
+      <% end %>
+    </div>
+    <br>
+    <div id="deals-home">
+      <%= render partial: "deals", locals: { deals: deals } %>
+    </div>
+    </main>
+    <footer class = "mastfoot mt-auto">
+      <div class = "inner text-center">
+        <p>2020 </p>
+      </div>
+    </footer>
+  </div>
+</div>

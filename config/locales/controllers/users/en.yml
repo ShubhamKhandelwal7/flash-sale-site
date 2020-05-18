@@ -1,10 +1,11 @@
 en:
-  create:
-    flash:
-      success: successfully created
-      failure: NOT successfully created
-  
-  verify:
-    flash:
-      success: User successfully verified
-      failuer: User could not got verified
+  users:
+    create:
+      flash:
+        success: successfully created
+        failure: NOT successfully created
+    
+    verify:
+      flash:
+        success: User successfully verified
+        failuer: User could not got verified

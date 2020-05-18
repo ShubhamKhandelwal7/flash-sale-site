@@ -1,0 +1,5 @@
+<div class = 'container'>
+  <h4 class = 'text-center'>Thank you for your order </h4><br>
+  <%= render partial: 'order', locals: { order: current_order } %>
+  <h6 class = 'text-center'> GoTo <%= link_to "Home", home_path %>
+</div>

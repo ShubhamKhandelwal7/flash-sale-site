@@ -1,0 +1,5 @@
+en:
+  orders:
+    add_to_cart:
+      success: "Deal added to Cart"
+      failure: "Same Deal cannot be added multiple times"

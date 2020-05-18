@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_22_133252) do
+ActiveRecord::Schema.define(version: 2020_05_11_140451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -37,6 +37,23 @@ ActiveRecord::Schema.define(version: 2020_04_22_133252) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "addresses", force: :cascade do |t|
+    t.string "state"
+    t.string "city"
+    t.integer "pincode"
+    t.string "country"
+    t.boolean "default", default: false, null: false
+    t.bigint "user_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "home_address"
+    t.string "token"
+    t.index ["deleted_at"], name: "index_addresses_on_deleted_at"
+    t.index ["token"], name: "index_addresses_on_token", unique: true
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
   create_table "deals", force: :cascade do |t|
     t.citext "title", null: false
     t.text "description"
@@ -49,8 +66,44 @@ ActiveRecord::Schema.define(version: 2020_04_22_133252) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "live_begin"
     t.datetime "live_end"
+    t.decimal "tax"
+    t.integer "sold_quantity", default: 0, null: false
+    t.integer "lock_version", default: 0, null: false
     t.index ["deleted_at"], name: "index_deals_on_deleted_at"
     t.index ["title"], name: "index_deals_on_title", unique: true
+  end
+
+  create_table "line_items", force: :cascade do |t|
+    t.integer "quantity", default: 1, null: false
+    t.decimal "price", precision: 8, scale: 2
+    t.decimal "deal_discount_price", precision: 8, scale: 2
+    t.decimal "loyalty_discount_price", precision: 8, scale: 2
+    t.decimal "taxed_price", precision: 8, scale: 2
+    t.bigint "order_id", null: false
+    t.bigint "deal_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.decimal "sale_price", precision: 8, scale: 2
+    t.decimal "sub_total", precision: 8, scale: 2
+    t.decimal "sub_tax_total", precision: 8, scale: 2
+    t.index ["deal_id"], name: "index_line_items_on_deal_id"
+    t.index ["deleted_at"], name: "index_line_items_on_deleted_at"
+    t.index ["order_id"], name: "index_line_items_on_order_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.decimal "total_amount"
+    t.decimal "total_tax"
+    t.bigint "address_id"
+    t.bigint "user_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "state", default: 0, null: false
+    t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["deleted_at"], name: "index_orders_on_deleted_at"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -73,4 +126,9 @@ ActiveRecord::Schema.define(version: 2020_04_22_133252) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "users"
+  add_foreign_key "line_items", "deals"
+  add_foreign_key "line_items", "orders"
+  add_foreign_key "orders", "addresses"
+  add_foreign_key "orders", "users"
 end

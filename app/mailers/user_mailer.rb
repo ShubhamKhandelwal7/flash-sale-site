@@ -7,7 +7,6 @@ class UserMailer < ApplicationMailer
   #
   def sign_up_verification(user_id)
     @user = User.find(user_id)
-    #FIXME_AB: @user.unverfied?
     mail to: @user.email, subject: "Welcome to Flash Sale Site" if @user.verified_at.blank?
   end
 
@@ -20,5 +19,12 @@ class UserMailer < ApplicationMailer
     @user = User.find(user_id)
 
     mail to: @user.email, subject: "Password Reset"
+  end
+
+  def order_placed(order_id)
+    @order = Order.find_by(id: order_id)
+    @user = @order.user
+
+    mail to: @user.email, subject: "Order Placed"
   end
 end

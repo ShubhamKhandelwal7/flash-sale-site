@@ -1,8 +1,11 @@
 class PasswordResetsController < ApplicationController
 
-  skip_before_action :authorize
   include UserVerification
+  include UserPresence
 
+  skip_before_action :authorize
+
+  before_action :ensure_not_logged_in
   before_action  only: [:edit, :update] do
     current_user_via_token(:password_reset_token)
   end

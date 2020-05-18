@@ -12,7 +12,10 @@ module FlashSaleSite
     config.load_defaults 6.0
     config.time_zone = "New Delhi"
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.active_storage.replace_on_assign_to_many = false
+    config.action_mailer.default_url_options = { host: ENV['HOSTNAME'] }
 
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

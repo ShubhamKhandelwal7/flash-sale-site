@@ -7,28 +7,32 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'ajax_loader', 'data-turbolinks-track': 'reload' %>
     <%= yield :js %>
   </head>
 
-  <body>
+  <body >
+  <div class="text-center spinner-container" id="spinner-div">
+    <div class="spinner-border" role="status" id="ajax-loader">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href= <%= home_path %> >
       <img src= <%= image_path 'flash-sale-logo-navbar.jpg' %> width="130" height="80" alt=""></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href= <%= admin_deals_path %> >Deals</a>
-          <a class="nav-item nav-link" href= <%= new_user_path %>>SignUp</a>
-          <a class="nav-item nav-link" href="#">Admin</a>
+          <a class="nav-item nav-link active" href= <%= home_path %> >Home <span class="sr-only">(current)</span></a>
           <% if current_user.present? %>
+            <%= link_to "My Orders", orders_path, class: "nav-item nav-link" %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
-            <a class="nav-item nav-link" href= <%= login_path %>>SignIn</a>
+            <a class="nav-item nav-link" href= <%= new_user_path %>>Sign Up</a>
+            <a class="nav-item nav-link" href= <%= login_path %>>Sign In</a>
           <%end%>
-          <%# <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> %>
         </div>
       </div>
     </nav>
@@ -38,8 +42,8 @@
       'notice' => "alert-success",
       'error' => "alert-danger"
     } %>
-    <div>
-      <div class = "text-center">
+    <div class = "site-wrapper">
+      <div class = "text-center" id="flash">
         <% flash.each do |type| %>
           <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>
         <% end %>

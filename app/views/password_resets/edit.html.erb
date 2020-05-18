@@ -1,4 +1,4 @@
-<div class = "container">
+<div class = "container text-center">
   <%= form_for @user, url: password_reset_url(params[:token], class: "form-signup") do |form| %>
 
     <%= render partial: 'shared/errors', locals: { object: @user } %>

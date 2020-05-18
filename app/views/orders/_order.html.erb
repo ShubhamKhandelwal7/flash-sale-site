@@ -1,0 +1,55 @@
+<div class = 'container'>
+  <div class = 'container border border-dark rounded-top mt-3'>
+
+  <div class='row mt-3' >
+    <div class='col'>
+      <strong> Order ID: </strong><%= order.id %> <br>
+      <strong> Customer Name: </strong><%= order.user.name %> <br>
+      <strong> Overall Tax: </strong><%= number_to_currency(order.total_tax) %> <br>
+      <strong> Grand Total: </strong><%= number_to_currency(order.total_amount) %> <br>
+      <p class='text-success'><strong> Current state: </strong> <%= order.state %></p>
+    </div>
+    <div class='col'>
+      <strong> Delivery Address: </strong><br>
+      <% delivery_address = order.address %>
+      <div class='border bg-muted '>
+        <div class ='container text-muted'>
+          House: <%= delivery_address.home_address %><br>
+          City: <%= delivery_address.city %><br>
+          State: <%= delivery_address.state %><br>
+          Country: <%= delivery_address.country %>
+        </div>
+      </div>
+    </div>
+  </div>
+<br>
+    <table class="table text-center">
+      <thead>
+        <tr>
+          <th scope="col">S.NO</th>
+          <th scope="col">Name</th>
+          <th scope="col">Original Price</th>
+          <th scope="col">Discounted Price</th>
+          <th scope="col">Tax</th>
+          <th scope="col">Quantity#</th>
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% count = 1 %>
+        <% order.line_items.each do |line_item| %>
+          <tr>
+            <td><%= count %></td>
+            <td><%= line_item.deal.title %></td>
+            <td><%= number_to_currency(line_item.price) %></td>
+            <td><%= number_to_currency(line_item.sale_price) %></td>
+            <td><%= number_to_currency(line_item.taxed_price) %></td>
+            <td><%= line_item.quantity %></td>
+            <td><%= number_to_currency(line_item.sub_total) %></td>
+          </tr>
+          <% count += 1 %>
+        <%end%>
+      </tbody>
+    </table>
+  </div>
+</div>

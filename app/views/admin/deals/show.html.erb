@@ -1,47 +1,85 @@
 <div class = "container">
-  <p>
-    <strong>Title:</strong>
-    <%= @deal.title %>
-  </p>
-  <p>
-    <strong>Description:</strong>
-    <%= @deal.description %>
-  </p>
-  <p>
-    <strong>Price:</strong>
-    <%= @deal.price %>
-  </p> 
-  <p>
-    <strong>Publishable:</strong>
-    <%= @deal.published_at ? @deal.published_at : false %>
-  </p> 
-
-  <% if @deal.images.attached? %>
-    <% @deal.images.each do |image| %>
-      <div class = "container">
-        <%= image_tag(url_for(image), class: "rounded mx-auto d-block img-fluid") %>
-        <br>
-      </div>
-    <% end %>
+  <% content_for :js do %>
+    <%= javascript_pack_tag  'deal_publish', 'data-turbolinks-track': 'reload' %>
   <% end %>
+  <div class = "card text-black bg-light " style="width: 80%;">
+    <div class = "card-header bg-dark">
+      <% if @deal.images.attached? %>
+        <div class="row">
+          <% @deal.images.each_with_index do |image, index| %>
+            <%if index % 3 == 0 && index != 0%>
+              </div>
+              <div class="row">
+            <% end%>
+            <div class = "col">
+              <%= image_tag(url_for(image), class: "rounded mx-auto img-thumbnail thumbnail") %>
+              <br>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class = "card-body">
+      <p>
+        <strong>Title:</strong>
+        <%= @deal.title %>
+      </p>
+      <p>
+        <strong>Description:</strong>
+        <%= @deal.description %>
+      </p>
+      <p>
+        <strong>Price:</strong>
+        <%= number_to_currency(@deal.price) %>
+      </p>
+      <p>
+        <strong>Publishable:</strong>
+        <h5 id = "publish-date"><%= @deal.presenter.publish_status %></h5>
+      </p>
 
-  <div id = "publish-data">
+      <div id = "check-publish-data">
+      </div>
+
+      <br>
+      <% if @deal.published_at.blank? || @deal.can_be_rescheduled? %>
+        <div class = "container text-center mb-5">
+          <%= form_with method: :get, url: check_publishability_admin_deal_path, class: "form-signin" do %>
+
+            <div class = "form-group">
+              <%= date_field_tag(:publishable_check_date, class: "form-date") %>
+            </div>
+            <div class = "form-group">
+              <%= submit_tag "Check Publishability", class: "btn btn-info" %>
+            </div>
+
+          <%end%>
+        </div>
+        <div id = "publish-data">
+        </div>
+        <div class = "container text-center col">
+          <%= form_with method: :get, url: publish_admin_deal_path, class: "form-signin", id: "publish-form" do %>
+
+            <div class = "form-group">
+              <%= date_field_tag(:publish_date, class: "form-date") %>
+            </div>
+            <div class = "form-group">
+              <% if @deal.published_at.blank? %>
+                <%= submit_tag "Schedule", class: "btn btn-warning btn-lg", id: "publish-btn", data: { unpublish_url: unpublish_admin_deal_url, disable_with: "Please wait..."  }  %>
+              <% else %>
+                <%= submit_tag "Re Schedule", class: "btn btn-warning btn-lg" %>
+                </div>
+                <div class = "container">
+                <%= link_to "Remove Schedule", unpublish_admin_deal_path, class: "btn btn-danger", id: "unschedule-deal",
+                    data: { confirm: "Are you sure ?" } %>
+              <% end %>
+            </div>
+
+          <%end%>
+        </div>
+      <% end %>
+
+    </div>
   </div>
-
   <br>
-  
-  <%= form_with method: :get, url: check_publishability_admin_deal_path, class: "form-signin" do %>
-
-    <div class = "form-group">
-      <%= label_tag(:date, "Date:") %>
-      <%= date_field_tag(:publishable_check_date, class: "form-date") %>
-    </div>
-    <div class = "form-group">
-      <%= submit_tag "Check Publishability", class: "btn btn-info" %>
-    </div>
-
-  <%end%>
-
   <%= link_to "Back", admin_deals_path %>
 </div>
-  

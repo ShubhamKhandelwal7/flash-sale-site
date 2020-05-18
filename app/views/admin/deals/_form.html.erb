@@ -1,8 +1,9 @@
 <div class = "container">
   <% content_for :js do %>
     <%= javascript_pack_tag  'deal_form_images', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag  'deal_remove_image', 'data-turbolinks-track': 'reload' %>
   <% end %>
-<div class = 'row'>
+<div class = 'row container'>
   <%= form_with(model: deal, url: deal_path, local: true, class: "form-signin", id: "deals-form") do |form| %>
     <%= render partial: 'shared/errors', locals:{ object: deal } %>
 
@@ -33,12 +34,38 @@
       <%= form.text_field :quantity, placeholder: "Quantity", class: 'form-control' %>
     </div>
 
+    <div class = "form-group">
+      <%= form.label :tax, "Tax (%):" %>
+      <%= form.text_field :tax, placeholder: "Tax (in %)", class: 'form-control' %>
+    </div>
+    <% if deal.images.present? %>
+        <% deal.images.each do |image| %>
+          <% if image.id %>
+            <div class="container text-center border border-primary rounded ">
+              <%= image_tag(url_for(image), class: "rounded mx-auto img-thumbnail thumbnail mt-3") %>
+              <h4><%= image.blob.filename %> </h4>
+              <br>
+              <%= link_to 'Remove', delete_image_attachment_admin_deal_url(image),
+                            data: {  url: delete_image_attachment_admin_deal_url(image) },
+                            class: "btn btn-outline-danger mb-3 deal-img-rem" %>
+            </div>
+          <%end%>
+          <br>
+        <%end%>
+      </div>
+    <%end%>
+
     <%= render 'image_fields', f: form %>
-    <%= link_to_add_fields "Add more Images", form, "images" %>
+    <%= link_to_add_fields "Add more", form, "images" %>
 
     <div class = "form-group">
     <br>
+    <%if deal.persisted? %>
+      <%= form.submit :SAVE, class: "btn btn-primary" %>
+    <% else %>
       <%= form.submit :CREATE, class: "btn btn-primary" %>
+    <% end %>
+      <%= link_to :CANCEL, admin_deals_path,  class: "btn btn-primary"  %>
     </div></div>
 
   <% end %>
