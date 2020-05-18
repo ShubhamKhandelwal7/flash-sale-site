@@ -27,6 +27,7 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href= <%= home_path %> >Home <span class="sr-only">(current)</span></a>
           <% if current_user.present? %>
+            <%= link_to "My Orders", orders_path, class: "nav-item nav-link" %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
             <a class="nav-item nav-link" href= <%= new_user_path %>>Sign Up</a>

@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
   resources :addresses, only: [:create, :new]
-  resources :orders do
+  resources :orders, only: :index do
     collection do
       get "buy_now"
       get "checkout"

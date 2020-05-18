@@ -1,42 +1,5 @@
 <div class = 'container'>
-  <h4 class = 'text-center'>Thank you for your order </h4>
-
-  <strong> Order ID: <%= current_order.id %> </strong><br>
-  <strong> Customer Name: <%= current_order.user.name %> </strong><br>
-  <div class = "container border sm"> 
-    <strong> Delivery Address: </strong>
-    <% delivery_address = current_order.address %>
-    <table class="table">
-      <tbody>
-        <tr><td> House: <%= delivery_address.home_address %></tr>
-        <tr><td> City: <%= delivery_address.city %></tr>
-        <tr><td> State: <%= delivery_address.state %></tr>
-      </tbody>
-    </table>
-  </div>
-  <strong> Grand Total: <%= current_order.total_amount %> </strong><br>
-  <strong> Current State: <%= current_order.state %> </strong>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">S.NO</th>
-        <th scope="col">Name</th>
-        <th scope="col">Price</th>
-        <th scope="col">Quantity#</th>
-      </tr>
-    </thead>
-    <tbody>
-    <% count = 1 %>
-      <% current_order.line_items.each do |line_item| %>
-        <tr>
-          <td><%= count %></td>
-          <td><%= line_item.deal.title %></td>
-          <td><%= line_item.sub_total %></td>
-          <td><%= line_item.quantity %></td>
-        </tr>
-        <% count += 1 %>
-      <%end%>
-    </tbody>
-  </table>
+  <h4 class = 'text-center'>Thank you for your order </h4><br>
+  <%= render partial: 'order', locals: { order: current_order } %>
   <h6 class = 'text-center'> GoTo <%= link_to "Home", home_path %>
 </div>

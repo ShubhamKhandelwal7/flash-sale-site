@@ -1,7 +1,11 @@
 class OrdersController < ApplicationController
   #FIXME_AB: create_order from ensure_current_order
   # before_action :create_order, only: :add_to_cart, if: -> { current_order.blank? }
-  before_action :ensure_current_order, :ensure_order_in_cart_state
+  before_action :ensure_current_order, :ensure_order_in_cart_state, except: :index
+
+  def index
+    @orders = current_user.orders.placed_orders
+  end
 
   def add_to_cart
     #FIXME_AB:  if current_order.add_item(params[:id])
