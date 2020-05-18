@@ -35,6 +35,7 @@ class OrdersController < ApplicationController
 
   def checkout
     if current_order.place_order
+      UserMailer.order_placed(current_order.id).deliver_later
       session[:order_id] = nil
     else
       redirect_to home_path, notice: "Your Order could not get placed, please try again"
