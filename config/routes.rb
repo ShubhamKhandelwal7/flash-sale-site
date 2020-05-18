@@ -17,25 +17,27 @@ Rails.application.routes.draw do
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
   resources :addresses, only: [:create, :new]
-  resources :orders do
-    get "add_to_cart", on: :member
-    delete "rem_from_cart", on: :member
-    get "buy_now", on: :collection
-    get "checkout", on: :collection
-    get "select_address", on: :member
+  resources :orders, only: :index do
+    collection do
+      get "buy_now"
+      get "checkout"
+    end
+    member do
+      get "add_to_cart"
+      delete "rem_from_cart"
+      get "select_address"
+    end
   end
 
   namespace :admin do
-    #FIXME_AB: /admin should redirect user to admin/deals page from routes only
-    get "/", to: "home#index", as: "home"
+    get "/", to: "deals#index"
     resources :deals do
-      #FIXME_AB:  make a member and collection block
-      # member do
-      # end
-      get "check_publishability", on: :member, action: "check_publishability"
-      get "delete_image_attachment", on: :member
-      get "sort", on: :collection, action: "sort"
-      get "publish", on: :member, action: "publish"
+      member do
+        get "check_publishability", action: "check_publishability"
+        get "delete_image_attachment"
+        get "publish", action: "publish"
+        get "unpublish", action: "unpublish"
+      end
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

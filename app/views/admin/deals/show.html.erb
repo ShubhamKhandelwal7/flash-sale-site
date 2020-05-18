@@ -1,4 +1,7 @@
 <div class = "container">
+  <% content_for :js do %>
+    <%= javascript_pack_tag  'deal_publish', 'data-turbolinks-track': 'reload' %>
+  <% end %>
   <div class = "card text-black bg-light " style="width: 80%;">
     <div class = "card-header bg-dark">
       <% if @deal.images.attached? %>
@@ -38,34 +41,37 @@
       </div>
 
       <br>
+      <% if @deal.published_at.blank? || @deal.can_be_rescheduled? %>
+        <div class = "container text-center mb-5">
+          <%= form_with method: :get, url: check_publishability_admin_deal_path, class: "form-signin" do %>
 
-      <div class = "container text-center mb-5">
-        <%= form_with method: :get, url: check_publishability_admin_deal_path, class: "form-signin" do %>
+            <div class = "form-group">
+              <%= date_field_tag(:publishable_check_date, class: "form-date") %>
+            </div>
+            <div class = "form-group">
+              <%= submit_tag "Check Publishability", class: "btn btn-info" %>
+            </div>
 
-          <div class = "form-group">
-            <%= date_field_tag(:publishable_check_date, class: "form-date") %>
-          </div>
-          <div class = "form-group">
-            <%= submit_tag "Check Publishability", class: "btn btn-info" %>
-          </div>
-
-        <%end%>
-      </div>
-      <% #FIXME_AB: don't hardcode 1 day. use env -%>
-      <% #FIXME_AB: add method @deal.can_be_reschedule? ======  should not be past deal, not live, not restricted lead time-%>
-      <% if @deal.published_at.blank? || @deal.published_at > Time.current + 1.day %>
+          <%end%>
+        </div>
         <div id = "publish-data">
         </div>
-        <br>
-        <div class = "container text-center">
-          <% #FIXME_AB: show ajax loader when request is sent and hide loader when request is complete -%>
-          <%= form_with method: :get, url: publish_admin_deal_path, class: "form-signin" do %>
+        <div class = "container text-center col">
+          <%= form_with method: :get, url: publish_admin_deal_path, class: "form-signin", id: "publish-form" do %>
 
             <div class = "form-group">
               <%= date_field_tag(:publish_date, class: "form-date") %>
             </div>
             <div class = "form-group">
-              <%= submit_tag "Publish Now", class: "btn btn-warning btn-lg" %>
+              <% if @deal.published_at.blank? %>
+                <%= submit_tag "Schedule", class: "btn btn-warning btn-lg", id: "publish-btn", data: { unpublish_url: unpublish_admin_deal_url, disable_with: "Please wait..."  }  %>
+              <% else %>
+                <%= submit_tag "Re Schedule", class: "btn btn-warning btn-lg" %>
+                </div>
+                <div class = "container">
+                <%= link_to "Remove Schedule", unpublish_admin_deal_path, class: "btn btn-danger", id: "unschedule-deal",
+                    data: { confirm: "Are you sure ?" } %>
+              <% end %>
             </div>
 
           <%end%>

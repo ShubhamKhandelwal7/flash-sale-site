@@ -1,0 +1,12 @@
+<h2> Hi <%= @user.name.capitalize %></h2>
+<p>Thank you for shopping with us !!</p>
+<h3>Your following order is placed </h3>
+<br>
+<%= render partial: 'orders/order', locals: { order: @order } %>
+<br>
+<p> You can track the status of your order at the <strong><%= link_to "My Orders", orders_url %></strong> section of The Flash Sale Site.</p> 
+
+<p>Happy Shopping !!!</p>
+<br>
+<h4>Thanks,</h4>
+<h4>The Flash Team</h4>

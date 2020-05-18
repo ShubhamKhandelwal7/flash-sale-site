@@ -1,0 +1,12 @@
+<div class='container'>
+  <% if @orders.present? %>
+    <h3 class = 'text-center'> Orders </h3>
+    <% @orders.each do |order| %>
+      <%= render partial: 'order', locals: { order: order } %>
+      <br>
+    <% end %>
+  <% else %>
+    <h4 class = 'text-center'> No Orders placed yet </h4>
+  <% end %>
+  <h6 class = 'text-center'> GoTo <%= link_to "Home", home_path %>
+</div>

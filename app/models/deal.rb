@@ -2,10 +2,7 @@ class Deal < ApplicationRecord
 
   include BasicPresenter::Concern
   acts_as_paranoid
-  #FIXME_AB: we should check the uploaded file should be image only
-  has_many_attached :images, dependent: :purge_later
-  has_many :line_items, dependent: :restrict_with_error
-  has_many :orders, through: :line_items
+
 
   validates :title, :description, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -20,6 +17,10 @@ class Deal < ApplicationRecord
   validate :ensure_min_image_upload
 
   validates_with PriceValidator
+
+  has_many_attached :images, dependent: :purge_later
+  has_many :line_items, dependent: :restrict_with_error
+  has_many :orders, through: :line_items
 
   before_save :ensure_publishability_criteria, if: -> { published_at.present? }
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
@@ -70,8 +71,7 @@ class Deal < ApplicationRecord
   end
 
   def update_inventory(qty_bought)
-    #FIXME_AB: if check_inventory(qty_bought)
-    if saleable_qty_available? && qty_bought <= salebale_qty
+    if check_inventory(qty_bought)
       sold_quantity = self.sold_quantity + qty_bought
       self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1, updated_at: Time.current)
     else
@@ -79,6 +79,31 @@ class Deal < ApplicationRecord
     end
   rescue StandardError
     false
+  end
+
+  def publish(date)
+    publish_on_date = Date.parse(date)
+    if publish_on_date.present? && can_be_scheduled_to_publish_on(publish_on_date)
+      self.published_at = publish_on_date
+      save
+    else
+      false
+    end
+  rescue StandardError
+    false
+  end
+
+  def can_be_rescheduled? # or we can do .save? {ensure_publishability_criteria}
+    published_at && published_at > Time.current + ENV['PUBLISH_DEAL_RESTRICT_TIME'].to_i.day && !live?
+  end
+
+  def unpublish
+    if can_be_rescheduled?
+      self.published_at = nil
+      save
+    else
+      false
+    end
   end
 
   private def ensure_image_format
@@ -119,11 +144,11 @@ class Deal < ApplicationRecord
     quantity >= DEALS[:min_quant_limit]
   end
 
-  private def valid_publish_date_margin?
-    existing_user = self.class.find(id) if self.class.exists?(id)
-    if existing_user && existing_user.published_at.present?
-      if existing_user.published_at.to_date < (Time.current - 1.day) ||
-         existing_user.published_at.to_date != published_at.to_date && published_at.to_date < (Date.today + 1.day)
+   private def valid_publish_date_margin?
+    existing_deal = self.class.find_by(id: id)
+    if existing_deal&.published_at&.present?
+      if existing_deal.published_at.to_date <= (Time.current + ENV['PUBLISH_DEAL_RESTRICT_TIME'].to_i.day).to_date ||
+         existing_deal.published_at.to_date != published_at.to_date && published_at.to_date < (Date.today + 1.day)
         return false
       end
     elsif published_at.to_date < (Date.today + 1.day)

@@ -15,4 +15,13 @@
  *= require_self
  */
 
+.spinner-container {
+ display: inline-block;
+ width: 100%;
+ z-index: 50;
+ position: fixed;
+ top: 50px;
+ margin: 0 auto;
+}
+
 

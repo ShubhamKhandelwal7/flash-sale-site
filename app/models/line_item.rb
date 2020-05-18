@@ -1,6 +1,5 @@
 class LineItem < ApplicationRecord
 
-  # acts_as_paranoid (as in below valiadtion its considering deleted fields as well, will remove deleted_at column aswell)
   belongs_to :order, optional: true
   belongs_to :deal
 
@@ -10,15 +9,23 @@ class LineItem < ApplicationRecord
     line_item.validate :ensure_overall_deal_qty
   end
 
-  #FIXME_AB: before crate and before destroy. order should be in cart state
+  before_create :ensure_order_in_cart_state
+  before_destroy :ensure_order_in_cart_state
+  before_save :evaluate_amounts,  if: -> { order.cart? }
 
-  #FIXME_AB: add this to before save callback if its order is in cart state
+
   def evaluate_amounts
     self.price = deal.price
     calculate_discounts
     calculate_sale_price
     calculate_tax
     calculate_totals
+  end
+
+  private def ensure_order_in_cart_state
+    if !order.cart?
+      throw :abort
+    end
   end
 
   private def ensure_overall_deal_qty
