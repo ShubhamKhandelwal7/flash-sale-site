@@ -8,9 +8,8 @@ namespace :custom do
       name = STDIN.gets.strip
       STDOUT.puts "Enter admin email_id:"
       email = STDIN.gets.strip
-      STDOUT.puts "Enter password:"
       #FIXME_AB: use STDIN.getpass("Password:") so that password is not visible on console
-      password = STDIN.gets.strip
+      password = STDIN.getpass("Password:").strip
 
       user = User.new(name: name, email: email, password: password, admin: true, verified_at: Time.current)
       if user.save

@@ -10,13 +10,15 @@ class Address < ApplicationRecord
   validates :pincode, numericality: { only_integer: true }, length: { is: ADDRESSES[:pincode_length] }
   validates :token, uniqueness: { scope: :user_id, message: I18n.t(".address.errors.not_unique") }
 
+  after_save :set_default, if: -> { default? }
+
   scope :default_address, -> { where(default: true) }
 
 
   #FIXME_AB: this can be done in afer save. if the adddres being saved is a default address mark all other address as default false.
   def set_default
     user.addresses.default_address.update_all(default: false)
-    self.default = true
+    self.update_column(:default, true)
   end
 
   private def generate_token

@@ -10,21 +10,23 @@
     <h5> Choose from existsing Addresses </h5>
 
     <% current_user.addresses.each do |address| %>
-      <div class = 'container border bg-light mb-3'>
-        <p><%= address.home_address %></p>
-        <p><%= address.city %></p>
-        <p><%= address.state %></p>
-        <p><%= address.pincode %></p>
-        <p><%= address.country %></p>
-        <%= form_with method: :get, url: select_address_order_path(address), class: "form-signup", local: true do |form| %>
-          <div class = "form-group">
-            <%= form.check_box :default %>
-            <i><%= form.label "Make it as default" %></i>
-          </div>
-          <div class = "form-group">
-          <%= form.submit "Deliver to this address", class: "btn btn-primary mb-3" %>
-              <%# class: 'btn btn-primary ', data: { turbolinks: false } %>
-          </div>
+    <% if address.persisted? %>
+        <div class = 'container border bg-light mb-3'>
+          <p><%= address.home_address %></p>
+          <p><%= address.city %></p>
+          <p><%= address.state %></p>
+          <p><%= address.pincode %></p>
+          <p><%= address.country %></p>
+          <%= form_with method: :get, url: select_address_order_path(address), class: "form-signup", local: true do |form| %>
+            <div class = "form-group">
+              <%= form.check_box :default %>
+              <i><%= form.label "Make it as default" %></i>
+            </div>
+            <div class = "form-group">
+            <%= form.submit "Deliver to this address", class: "btn btn-primary mb-3" %>
+                <%# class: 'btn btn-primary ', data: { turbolinks: false } %>
+            </div>
+          <% end %>
         <% end %>
       </div>
     <% end %>

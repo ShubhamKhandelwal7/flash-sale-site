@@ -1,16 +1,11 @@
 module Admin
   class DealsController < AdminController
-    before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability, :publish]
+    before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability, :publish, :unpublish]
 
     def index
       #FIXME_AB: Lets merge index and sort
-      @deals = Deal.with_attached_images.order(published_at: :asc).page(params[:page]).per(ENV["PER_PAGE_DEAL"].to_i)
-    end
-
-    def sort
-      @deals = Deal.with_attached_images.order("#{params[:sort][:sort_by]} #{params[:order][:order_by]}")
+      @deals = Deal.with_attached_images.order("#{params[:sort] ? params[:sort][:sort_by] : 'published_at'} #{params[:order] ? params[:order][:order_by] : 'asc'}")
                    .page(params[:page]).per(ENV["PER_PAGE_DEAL"].to_i)
-      render :index
     end
 
     def new
@@ -58,18 +53,16 @@ module Admin
 
     #FIXME_AB: send json. lets not use js.erb
     def publish
-      publish_on_date = Date.parse(params[:publish_date])
-      if publish_on_date.present? && @deal.can_be_scheduled_to_publish_on(publish_on_date)
-        @deal.published_at = publish_on_date
-        @status = @deal.save
-        flash.now[:notice] = "Deal #{@deal.title} is now Published"
+      render json: { status: @deal.publish(params[:publish_date]), publish_presenter: @deal.presenter.publish_status }
+    end
+
+    def unpublish
+      if @deal.unpublish
+        flash[:notice] = "Deal #{@deal.title} unscheduled succsssfully"
       else
-        @status = false
-        flash.now[:alert] = "Deal could not get Published on this date"
+        flash[:alert] = "Deal could not get unscheduled"
       end
-    rescue StandardError
-      @status = false
-      flash.now[:alert] = "Deal could not get Published on this date"
+      redirect_to admin_deal_path(@deal.id)
     end
 
     def delete_image_attachment

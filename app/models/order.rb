@@ -15,20 +15,24 @@ class Order < ApplicationRecord
 
   scope :placed_orders, ->{ where.not(state: :cart) }
 
+  # def add_item(deal_id)
+  #   deal = Deal.live_deals(Time.current).find_by(id: deal_id)
+
+  #   if deal.present? && deal.saleable_qty_available? && can_user_buy?(deal.id)
+  #     #FIXME_AB:  line_item = line_items.build(deal: @curr_deal)
+  #     line_item = line_items.build
+  #     line_item.deal = deal
+  #     line_item.evaluate_amounts
+  #     #FIXME_AB: you should also save the line item so that the method returns true/false
+  #     line_item
+  #   else
+  #     false
+  #   end
+  # end
+
   def add_item(deal_id)
     deal = Deal.live_deals(Time.current).find_by(id: deal_id)
-
-    if deal.present? && deal.saleable_qty_available? && can_user_buy?(deal.id)
-      #FIXME_AB:  line_item = line_items.build(deal: @curr_deal)
-      line_item = line_items.build
-      line_item.deal = deal
-      line_item.evaluate_amounts
-      #FIXME_AB: you should also save the line item so that the method returns true/false
-      line_item
-
-    else
-      false
-    end
+    deal.present? && deal.saleable_qty_available? && can_user_buy?(deal.id) && (item = line_items.create(deal: deal, quantity: LINEITEMS[:default_quantity])) && item.persisted?
   end
 
   #FIXME_AB: something like this
@@ -36,14 +40,17 @@ class Order < ApplicationRecord
   #   deal = Deal.live_deals(Time.current).find_by(id: deal_id)
   #   deal.present? && deal.saleable_qty_available? && can_user_buy?(deal.id) && line_items.create(deal: deal, quantity: 1)
   # end
+  def remove_item(line_item_id)
+    line_items.find_by(id: line_item_id)&.destroy
+  end
+
 
   def place_order
     unless cart?
       return false
     end
-
     #FIXME_AB: include deal to eager load
-    line_items.each do |line_item|
+    line_items.includes(:deal).each do |line_item|
       unless line_item.deal.live? || can_user_buy?(line_item.deal_id) || line_item.deal.check_inventory(line_item.quantity)
         return false
       end
@@ -54,6 +61,11 @@ class Order < ApplicationRecord
     else
       false
     end
+  end
+
+  def set_address!(address)
+    self.address = address
+    save
   end
 
   private def update_inventory

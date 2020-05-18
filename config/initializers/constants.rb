@@ -25,3 +25,7 @@ ORDERS = {
   max_deal_quant_per_user: 1,
   max_deal_quant_per_order: 1
 }
+
+LINEITEMS = {
+  default_quantity: 1
+}
