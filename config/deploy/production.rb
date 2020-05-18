@@ -61,4 +61,4 @@ server "35.154.145.213", user: "deployer", roles: %w{app db web} #, my_property:
 #   }
 
 
-set :branch, 'store-front'
+set :branch, 'master'
