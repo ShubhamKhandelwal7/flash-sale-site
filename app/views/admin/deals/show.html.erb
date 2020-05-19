@@ -65,6 +65,7 @@
             <div class = "form-group">
               <% if @deal.published_at.blank? %>
                 <%= submit_tag "Schedule", class: "btn btn-warning btn-lg", id: "publish-btn", data: { unpublish_url: unpublish_admin_deal_url, disable_with: "Please wait..."  }  %>
+                <%= submit_tag "Re Schedule", class: "btn btn-warning btn-lg", id: "republish-btn", data: { unpublish_url: unpublish_admin_deal_url, disable_with: "Please wait..."  }  %>
               <% else %>
                 <%= submit_tag "Re Schedule", class: "btn btn-warning btn-lg" %>
                 </div>

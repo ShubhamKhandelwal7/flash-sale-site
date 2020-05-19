@@ -9,6 +9,7 @@ class Order < ApplicationRecord
   acts_as_paranoid
 
   validate :ensure_user_address, unless: -> { cart? }
+  validates :line_items_count, numericality: { greater_than: 0 }, if: -> { placed? }
   #FIXME_AB: add one validation that order should have min. one lineitems when state is placed
 
   has_many :line_items, dependent: :destroy
@@ -58,12 +59,17 @@ class Order < ApplicationRecord
     end
 
     #FIXME_AB: wrap this all in single transaction
-    if update_inventory
-      self.state = self.class.states[:placed]
-      save
-    else
-      false
+    transaction do
+      if update_inventory
+        self.state = self.class.states[:placed]
+        debugger
+        save!
+      else
+        false
+      end
     end
+  rescue StandardError
+  false
   end
 
   def set_address!(address)

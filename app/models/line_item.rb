@@ -1,6 +1,6 @@
 class LineItem < ApplicationRecord
 
-  belongs_to :order, optional: true
+  belongs_to :order, optional: true, counter_cache: true
   belongs_to :deal
 
   with_options if: -> { order_id.present? } do |line_item|
