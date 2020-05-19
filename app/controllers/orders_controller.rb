@@ -30,10 +30,12 @@ class OrdersController < ApplicationController
 
   def checkout
     if current_order.place_order
+      debugger
       #FIXME_AB: prefer OrderMailer so that we can have all order related emails at one place
-      UserMailer.order_placed(current_order.id).deliver_later
+      OrderMailer.placed(current_order.id).deliver_later
       session[:order_id] = nil
     else
+      debugger
       redirect_to home_path, notice: "Your Order could not get placed, please try again"
     end
   end
@@ -68,7 +70,7 @@ class OrdersController < ApplicationController
     if !current_order.present?
       create_order
       #FIXME_AB: remove redirect so that add to cart works
-      redirect_to home_path, notice: "Please goto 'my orders' to view your orders"
+      # redirect_to home_path, notice: "Please goto 'my orders' to view your orders"
     end
   end
 

@@ -20,11 +20,5 @@ class UserMailer < ApplicationMailer
 
     mail to: @user.email, subject: "Password Reset"
   end
-
-  def order_placed(order_id)
-    @order = Order.find_by(id: order_id)
-    @user = @order.user
-
-    mail to: @user.email, subject: "Order Placed"
-  end
+  
 end
