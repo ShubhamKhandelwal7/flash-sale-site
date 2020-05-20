@@ -6,7 +6,7 @@ class AddressesController < ApplicationController
   def create
     if ( @address = current_user.addresses.create(address_params) ) && @address.persisted?
       if current_order&.set_address!(@address)
-        redirect_to checkout_orders_path
+        redirect_to payment_orders_path
       else
         redirect_to home_path, notice: t("addresses.create.success")
       end

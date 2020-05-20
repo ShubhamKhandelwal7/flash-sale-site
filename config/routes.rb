@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   resources :orders, only: :index do
     collection do
       get "buy_now"
+      get "payment"
+      post "charge"
       get "checkout"
     end
     member do
@@ -33,10 +35,10 @@ Rails.application.routes.draw do
     get "/", to: "deals#index"
     resources :deals do
       member do
-        get "check_publishability", action: "check_publishability"
+        get "check_publishability"
         get "delete_image_attachment"
-        get "publish", action: "publish"
-        get "unpublish", action: "unpublish"
+        get "publish"
+        get "unpublish"
       end
     end
   end

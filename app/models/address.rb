@@ -4,6 +4,7 @@ class Address < ApplicationRecord
 
   validates :state, :city, :country, :home_address, presence: :true
   validates :pincode, numericality: { only_integer: true }, length: { is: ADDRESSES[:pincode_length] }
+  validates :country, length: { is: ADDRESSES[:country_code_length], message: I18n.t(".address.errors.country_code") }
   validates :token, uniqueness: { scope: :user_id, message: I18n.t(".address.errors.not_unique") }
 
   has_many :orders, dependent: :restrict_with_error

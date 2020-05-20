@@ -8,12 +8,13 @@ class Order < ApplicationRecord
 
   acts_as_paranoid
 
-  validate :ensure_user_address, unless: -> { cart? }
+  validate :ensure_user_address, :ensure_payment_made, unless: -> { cart? }
   validates :line_items_count, numericality: { greater_than: 0 }, if: -> { placed? }
   #FIXME_AB: add one validation that order should have min. one lineitems when state is placed
 
   has_many :line_items, dependent: :destroy
   has_many :deals, through: :line_items
+  has_many :payments, dependent: :destroy
   belongs_to :user
   belongs_to :address, optional: true
 
@@ -62,7 +63,6 @@ class Order < ApplicationRecord
     transaction do
       if update_inventory
         self.state = self.class.states[:placed]
-        debugger
         save!
       else
         false
@@ -77,6 +77,15 @@ class Order < ApplicationRecord
     save
   end
 
+  def update_totals
+    self.total_amount = line_items.sum(&:sub_total)
+    self.total_tax = line_items.sum(&:sub_tax_total)
+  end
+
+  def make_payment(token)
+    cart? && address && token && payments.build.stripe_transact(token)
+  end
+
   private def update_inventory
     line_items.each do |line_item|
       unless line_item.deal.update_inventory(line_item.quantity)
@@ -86,11 +95,6 @@ class Order < ApplicationRecord
     true
   end
 
-  def update_totals
-    self.total_amount = line_items.sum(&:sub_total)
-    self.total_tax = line_items.sum(&:sub_tax_total)
-  end
-
   private def can_user_buy?(deal_id)
     user.ordered_deal_quantity(deal_id) < ORDERS[:max_deal_quant_per_user]
   end
@@ -98,6 +102,12 @@ class Order < ApplicationRecord
   private def ensure_user_address
     unless address_id && user.addresses.ids.include?(address_id)
       errors.add(:address_id, "has to be of the user #{user.name}")
+    end
+  end
+
+  private def ensure_payment_made
+    if payments.success.blank?
+      errors.add(:payment, "no payment with state as succeeded exists")
     end
   end
 end

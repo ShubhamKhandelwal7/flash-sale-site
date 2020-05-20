@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :ensure_current_order, :ensure_order_in_cart_state, except: :index
+  before_action :ensure_payment_success, only: :checkout
 
   def index
     @orders = current_user.orders.placed_orders
@@ -28,14 +29,27 @@ class OrdersController < ApplicationController
     end
   end
 
+  def payment
+  end
+
+  def charge
+    if current_order.make_payment(params[:stripeToken])
+      redirect_to checkout_orders_path
+    elsif current_order.payments.success.present?
+      redirect_to checkout_orders_path, notice: "A successfull payment already exists against this order"
+    elsif current_order.payments.no_success.count <= ENV['MAX_PAYMENT_ATTEMPTS'].to_i
+      redirect_to buy_now_orders_path, alert: "Payment failed for some reason, please try again."
+    else
+      redirect_to home_path, notice: "Your Order could not get placed, payment failed"
+    end
+  end
+
   def checkout
     if current_order.place_order
-      debugger
       #FIXME_AB: prefer OrderMailer so that we can have all order related emails at one place
       OrderMailer.placed(current_order.id).deliver_later
       session[:order_id] = nil
     else
-      debugger
       redirect_to home_path, notice: "Your Order could not get placed, please try again"
     end
   end
@@ -51,7 +65,7 @@ class OrdersController < ApplicationController
     end
 
     if address.save && current_order.set_address!(address)
-      redirect_to checkout_orders_path
+      redirect_to payment_orders_path
     else
       redirect_to buy_now_orders_path, notice: "The address is invalid, please choose another"
     end
@@ -70,13 +84,18 @@ class OrdersController < ApplicationController
     if !current_order.present?
       create_order
       #FIXME_AB: remove redirect so that add to cart works
-      # redirect_to home_path, notice: "Please goto 'my orders' to view your orders"
     end
   end
 
   private def ensure_order_in_cart_state
     if !current_order.cart?
       redirect_to home_path, notice: "Please goto 'my orders' to view your orders"
+    end
+  end
+
+  private def ensure_payment_success
+    if current_order.payments.success.blank?
+      redirect_to payment_orders_path, notice: "Please make the payment against your current order"
     end
   end
 end
