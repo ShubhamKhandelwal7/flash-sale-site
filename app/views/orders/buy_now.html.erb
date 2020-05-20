@@ -19,7 +19,6 @@
           <p><%= address.country %></p>
           <%= form_with method: :get, url: select_address_order_path(address), class: "form-signup", local: true do |form| %>
             <div class = "form-group">
-              <% #FIXME_AB: should come checked if this one is default address -%>
               <%= form.check_box :default, checked: address.default %>
               <i><%= form.label "Make it as default" %></i>
             </div>

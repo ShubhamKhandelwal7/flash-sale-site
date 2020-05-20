@@ -25,7 +25,6 @@ class dealPublishManager {
   }
 
   publishSuccess(publishResp) {
-    // FIXME_AB: $('<strong>').text('fda'), then append
     this.$publishDataDiv.html($('<strong>').text(publishResp));
     this.$publishDataDiv.prop("class", "alert alert-success text-center");
     this.$publishDate.html(publishResp);
@@ -34,11 +33,9 @@ class dealPublishManager {
 
     if($(this.unpublishBtn).length == 0) {
       let unpublishPath = this.$publishBtn.data('unpublish-url');
-      // FIXME_AB: make use of proper jquery
       this.$publishBtn.closest('div').append($('<div>').append($("<a>").attr({ href: unpublishPath, title: "Remove Schedule", id: "unschedule-deal", "data-confirm": "Are you sure ?" })
                                                        .addClass('btn btn-danger text-center').text('Remove Schedule').css('margin-top', '15px')));
 
-        // FIXME_AB: don't use br. use css class
     };
   };
 

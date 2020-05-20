@@ -30,9 +30,14 @@ class OrdersController < ApplicationController
   end
 
   def payment
+    #FIXME_AB: add logging: initiating payment for order id : xxxx
+    #FIXME_AB: do this tagged logging 'order payments'
   end
 
   def charge
+    #FIXME_AB: tagged logging
+    #FIXME_AB: add a before action to check that stripe token should be present. redirect with message
+    #FIXME_AB: this all should be in one db transaction
     if current_order.make_payment(params[:stripeToken])
       redirect_to checkout_orders_path
     elsif current_order.payments.success.present?
@@ -56,10 +61,7 @@ class OrdersController < ApplicationController
 
   def select_address
     address = current_user.addresses.find(params[:id])
-    #FIXME_AB: since we'll have call back
-    # if params[:default] == '1'
-    #   address.default = true
-    # end
+
     if (params[:default] == '1')
       address.default = true
     end
@@ -83,7 +85,6 @@ class OrdersController < ApplicationController
   private def ensure_current_order
     if !current_order.present?
       create_order
-      #FIXME_AB: remove redirect so that add to cart works
     end
   end
 

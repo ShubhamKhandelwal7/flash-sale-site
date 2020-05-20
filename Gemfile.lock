@@ -107,6 +107,7 @@ GEM
       activesupport (>= 4.2.0)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
+    iso_country_codes (0.7.8)
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
     kaminari (1.2.0)
@@ -274,6 +275,7 @@ DEPENDENCIES
   capistrano-rails-console
   capybara (>= 2.15)
   figaro (= 1.1.1)
+  iso_country_codes (~> 0.7.8)
   jbuilder (~> 2.7)
   kaminari (= 1.2.0)
   letter_opener (= 1.7.0)

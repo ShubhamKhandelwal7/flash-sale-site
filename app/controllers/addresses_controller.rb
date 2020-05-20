@@ -20,7 +20,6 @@ class AddressesController < ApplicationController
   end
 
   private def address_params
-    #FIXME_AB: lets not permit_user id.
     params.require(:address).permit(:home_address, :state, :city, :pincode, :country, :default)
   end
 

@@ -75,3 +75,5 @@ gem "letter_opener", '1.7.0'
 gem 'letter_opener_web', '1.4.0'
 gem 'basic_presenter', '0.0.4'
 
+
+gem "iso_country_codes", "~> 0.7.8"

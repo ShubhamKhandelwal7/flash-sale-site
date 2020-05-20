@@ -9,10 +9,10 @@ class Payment < ApplicationRecord
   validates :transaction_id, :state, :amount, presence: true
 
   belongs_to :order
-  
+
   scope :success, -> { where(state: :succeeded) }
   scope :no_success, -> { where.not(state: :succeeded) }
-  
+
   def stripe_transact(token)
     if (stripe_customer = get_stripe_customer) && add_source(stripe_customer.id, token) && (charge = create_charge(stripe_customer.id))
       update_payment(charge)
@@ -25,14 +25,16 @@ class Payment < ApplicationRecord
   end
 
   private def get_stripe_customer
+
     if order.user.stripe_customer_id.blank? && !create_stripe_customer
+      #FIXME_AB: logging
       return false
     end
     Stripe::Customer.retrieve(order.user.stripe_customer_id)
   end
 
   private def create_stripe_customer
-    new_stripe_cus = Stripe::Customer.create({
+    customer_info = {
       name: order.user.name,
       email: order.user.email,
       address: {
@@ -42,22 +44,32 @@ class Payment < ApplicationRecord
         state: order.address.state,
         country: order.address.country.upcase,
       }
-    })
+      #FIXME_AB: meta info: user id , env.
+    }
+    #FIXME_AB: logging with customer_info
+    new_stripe_cus = Stripe::Customer.create(customer_info)
+    #FIXME_AB: logging: customer created on stripe with id: customer id, updating in db..
     new_stripe_cus && order.user.update(stripe_customer_id: new_stripe_cus.id)
   rescue StandardError
+    #FIXME_AB: catch exception in variable and log exception message, request id
     false
   end
 
+  #FIXME_AB: check if we can skip this step and use token directly with charge call
   private def add_source(customer_id, token)
-    Stripe::Customer.create_source(
+    #FIXME_AB: logging
+    a  = Stripe::Customer.create_source(
       customer_id,
       {source: token},
     )
-  rescue StandardError
+  rescue Exception => e
+    #FIXME_AB: logging
     false
   end
 
   private def create_charge(customer_id)
+    # logging
+    #FIXME_AB: pass token here
     if order.payments.success.blank? && order.payments.no_success.count <= ENV['MAX_PAYMENT_ATTEMPTS'].to_i
       Stripe::Charge.create({
         amount: order.total_amount.round * 100,
@@ -66,7 +78,9 @@ class Payment < ApplicationRecord
         customer: customer_id,
       })
     end
-  rescue StandardError
+  rescue Exception => e
+    #FIXME_AB: logging
+    # debugger
     false
   end
 
@@ -86,5 +100,5 @@ class Payment < ApplicationRecord
       self.card_exp_year = card['exp_year']
     end
   end
-  
+
 end

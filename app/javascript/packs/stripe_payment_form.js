@@ -1,5 +1,7 @@
 $(document).on("turbolinks:load", function(){
-  var stripe = Stripe('pk_test_Pg2DfjX63AZqSqID1VeTWFaz00pS9K8iX8');
+  var form = document.getElementById('payment-form');
+  let stripe_key = form.getAttribute("data-stripe-key");
+  var stripe = Stripe(stripe_key);
 
   var elements = stripe.elements();
 
@@ -19,7 +21,8 @@ $(document).on("turbolinks:load", function(){
     }
   };
 
-  var card = elements.create('card', {style: style});
+  // FIXME_AB: here you can have optoin to remove zip from the form
+  var card = elements.create('card', {iconStyle: 'solid'});
   card.mount('#card-element');
 
   card.on('change', function(event) {
@@ -31,7 +34,6 @@ $(document).on("turbolinks:load", function(){
     }
   });
 
-  var form = document.getElementById('payment-form');
   form.addEventListener('submit', function(event) {
     event.preventDefault();
 

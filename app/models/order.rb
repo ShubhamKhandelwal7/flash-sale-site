@@ -1,4 +1,5 @@
 class Order < ApplicationRecord
+  #FIXME_AB: canceled, refunded state
   enum state: {
     cart: 0,
     placed: 1,
@@ -10,7 +11,6 @@ class Order < ApplicationRecord
 
   validate :ensure_user_address, :ensure_payment_made, unless: -> { cart? }
   validates :line_items_count, numericality: { greater_than: 0 }, if: -> { placed? }
-  #FIXME_AB: add one validation that order should have min. one lineitems when state is placed
 
   has_many :line_items, dependent: :destroy
   has_many :deals, through: :line_items
@@ -20,7 +20,13 @@ class Order < ApplicationRecord
 
   scope :placed_orders, ->{ where.not(state: :cart) }
 
+  #FIXME_AB: we need to add validations for order state changes. like from which states to which state. Read about state machines, we usually do use that gem https://github.com/geekq/workflow
+  # STATE_TRASITIONS = {
+  #   cart: [:placed],
+  #   placed: [:shipped, :cancelled],
+  #   ...
 
+  # }
 
 
   # def add_item(deal_id)
@@ -47,7 +53,7 @@ class Order < ApplicationRecord
     line_items.find_by(id: line_item_id)&.destroy
   end
 
-
+  #FIXME_AB: lets use custom callbacks after place_order, which will send order placed or refund email based on the status of the order
   def place_order
     unless cart?
       return false
@@ -59,16 +65,17 @@ class Order < ApplicationRecord
       end
     end
 
-    #FIXME_AB: wrap this all in single transaction
     transaction do
       if update_inventory
         self.state = self.class.states[:placed]
         save!
       else
-        false
+        #FIXME_AB: raise an exception
+        return false
       end
     end
   rescue StandardError
+    #FIXME_AB: refund amount and notify user
   false
   end
 
@@ -83,6 +90,7 @@ class Order < ApplicationRecord
   end
 
   def make_payment(token)
+    #FIXME_AB:  logging
     cart? && address && token && payments.build.stripe_transact(token)
   end
 

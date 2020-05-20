@@ -11,6 +11,7 @@ namespace :custom do
           Rails.logger.info "Deal #{deal.id}: #{deal.title} is being published"
           deal.live_begin = time_now
           deal.live_end = time_now + ENV["DEAL_LIVE_DAYS"].to_i.day
+          #FIXME_AB: if can not publish deal send email to all admin users with details, like deal details and errors + reasons
           deal.save
           Rails.logger.info "Deal #{deal.id}: #{deal.title} is now published"
         end

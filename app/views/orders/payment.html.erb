@@ -6,17 +6,19 @@
   <%end%>
 
   <h3 class = "text-center">PAYMENTS</h3><br>
-
-  <%= form_with method: :post, url: charge_orders_path, local: true, id: 'payment-form' do %>
+<% #FIXME_AB: try to remove zip -%>
+  <%= form_with method: :post, url: charge_orders_path, local: true, id: 'payment-form', data: {stripe_key: ENV['STRIPE_PUBLISHABLE_KEY']} do %>
     <div class="form-row">
       <%= label_tag "Credit or debit card", nil, class: 'container text-center'%><br>
-      
+
       <div style="width: 30em" class='container border-dark text-center mb-3' id="card-element">
       </div>
 
       <div id="card-errors" role="alert"></div>
       </div>
+      <% #FIXME_AB: apply bootstrap -%>
       <%= submit_tag "Submit Payment" %>
+      <% #FIXME_AB: work on display stuff -%>
     </div>
   <% end %>
 
