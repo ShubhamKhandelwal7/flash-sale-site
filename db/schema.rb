@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_180225) do
+ActiveRecord::Schema.define(version: 2020_05_20_082102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -117,6 +117,11 @@ ActiveRecord::Schema.define(version: 2020_05_19_180225) do
     t.bigint "order_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "stripe_response"
+    t.integer "card_last_digits"
+    t.integer "card_exp_year"
+    t.integer "card_exp_month"
+    t.string "card_brand"
     t.index ["order_id"], name: "index_payments_on_order_id"
     t.index ["transaction_id"], name: "index_payments_on_transaction_id", unique: true
   end
@@ -134,6 +139,7 @@ ActiveRecord::Schema.define(version: 2020_05_19_180225) do
     t.datetime "verification_token_sent_at"
     t.datetime "verified_at"
     t.boolean "admin", default: false, null: false
+    t.string "stripe_customer_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
