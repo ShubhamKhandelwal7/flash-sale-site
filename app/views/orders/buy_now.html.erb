@@ -37,7 +37,7 @@
     <h5> Create a new Address </h5>
     <% address = @address || current_user.addresses.build  %>
     <%= form_for address, class: "form-signin" do |form| %>
-      <% if @address.nil? %>
+      <% if @address.nil? && current_user.addresses.count > 0 %>
         <%= link_to_add_fields "Create New address", form, :addresses %>
       <%else%>
         <%= render partial: "orders/address_fields", locals: { f: form, address: address }  %>

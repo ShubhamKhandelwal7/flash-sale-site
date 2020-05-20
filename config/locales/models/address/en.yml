@@ -3,4 +3,5 @@ en:
     errors:
       not_unique: "Address is already present"
       md5_token: "MD5 token could not be generated"
+      country_code: "should be your country code (alpha-2)"
       

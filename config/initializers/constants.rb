@@ -18,7 +18,8 @@ USERS = {
 }
 
 ADDRESSES = {
-  pincode_length: 6
+  pincode_length: 6,
+  country_code_length: 2
 }
 
 ORDERS = {
