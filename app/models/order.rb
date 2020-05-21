@@ -88,7 +88,7 @@ class Order < ApplicationRecord
       if process_refunds
         logger.info { "Order state changed to: #{state}, sending refund_intimation mailer" }
       end
-      # mail not sending in this case
+      # mail not sending in this case, after_place_order not running
       #FIXME_AB: refund amount and notify user
     end
   false
@@ -96,10 +96,10 @@ class Order < ApplicationRecord
 
   def process_refunds
     if (success_pay = payments.success.first) && payments.build.refund(success_pay.transaction_id)
-      logger.info { "Refund process success, updating success payment to cancelled" }
-      prev_success_payment = payments.success.first
-      prev_success_payment.state = Payment.states[:cancelled]
-      prev_success_payment.save
+      logger.info { "Refund process success, updating previous success payment to cancelled" }
+      if success_pay.update(state: Payment.states[:cancelled])
+        logger.info { "previous success payment updated to cancelled" }
+      end
       self.state = self.class.states[:refunded]
       save
     end
