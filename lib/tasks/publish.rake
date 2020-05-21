@@ -5,17 +5,17 @@ namespace :custom do
     Rails.logger.tagged("Task: custom:publish") do
         Rails.logger.info { "Publishing deals task started" }
 
-        time_now = Time.current
-
         Deal.published_on(Date.today).find_each do |deal|
           Rails.logger.info "Deal #{deal.id}: #{deal.title} is being published"
-          deal.live_begin = time_now
-          deal.live_end = time_now + ENV["DEAL_LIVE_DAYS"].to_i.day
+          if deal.live!
+            Rails.logger.info "Deal #{deal.id}: #{deal.title} is now published"
+          else
+            Rails.logger.info "Deal #{deal.id}: #{deal.title} could not get published"
+            AdminMailer.deal_publish_fail(deal.id).deliver_later
+          end
           #FIXME_AB: if can not publish deal send email to all admin users with details, like deal details and errors + reasons
-          deal.save
-          Rails.logger.info "Deal #{deal.id}: #{deal.title} is now published"
         end
-
+        
         Rails.logger.info { "Publishing deals task ended" }
     end
 

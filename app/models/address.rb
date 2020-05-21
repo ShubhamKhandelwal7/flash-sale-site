@@ -5,7 +5,7 @@ class Address < ApplicationRecord
   validates :state, :city, :country, :home_address, presence: :true
   validates :pincode, numericality: { only_integer: true }, length: { is: ADDRESSES[:pincode_length] }
   #FIXME_AB: add hint in the form  that he need to add country code and a link to a list of country code. Better we convert it to a dropdown
-  validates :country, length: { is: ADDRESSES[:country_code_length], message: I18n.t(".address.errors.country_code") }
+  # validates :country, length: { is: ADDRESSES[:country_code_length], message: I18n.t(".address.errors.country_code") }
   validates :token, uniqueness: { scope: :user_id, message: I18n.t(".address.errors.not_unique") }
 
   has_many :orders, dependent: :restrict_with_error

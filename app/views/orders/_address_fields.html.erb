@@ -25,7 +25,7 @@
 
     <div class="form-group">
       <%= f.label :country, 'Country:' %>
-      <%= f.text_field :country, class: 'form-control' %>
+      <%= f.select(:country, options_for_select(IsoCountryCodes.for_select), {}, { class: 'ml-2' } )%>
     </div>
 
     <div class = "form-group">

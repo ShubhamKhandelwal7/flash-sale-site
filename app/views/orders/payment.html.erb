@@ -7,19 +7,52 @@
 
   <h3 class = "text-center">PAYMENTS</h3><br>
 <% #FIXME_AB: try to remove zip -%>
-  <%= form_with method: :post, url: charge_orders_path, local: true, id: 'payment-form', data: {stripe_key: ENV['STRIPE_PUBLISHABLE_KEY']} do %>
-    <div class="form-row">
-      <%= label_tag "Credit or debit card", nil, class: 'container text-center'%><br>
-
-      <div style="width: 30em" class='container border-dark text-center mb-3' id="card-element">
-      </div>
-
-      <div id="card-errors" role="alert"></div>
-      </div>
-      <% #FIXME_AB: apply bootstrap -%>
-      <%= submit_tag "Submit Payment" %>
-      <% #FIXME_AB: work on display stuff -%>
+  <div class="container border border-success rounded bg-info">
+    <table class="table text-center">
+        <thead>
+          <tr>
+            <th scope="col">S.NO</th>
+            <th scope="col">Name</th>
+            <th scope="col">Original Price</th>
+            <th scope="col">Discounted Price</th>
+            <th scope="col">Tax</th>
+            <th scope="col">Quantity#</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% count = 1 %>
+          <% current_order.line_items.each do |line_item| %>
+            <tr>
+              <td><%= count %></td>
+              <td><%= line_item.deal.title %></td>
+              <td><%= number_to_currency(line_item.price) %></td>
+              <td><%= number_to_currency(line_item.sale_price) %></td>
+              <td><%= number_to_currency(line_item.taxed_price) %></td>
+              <td><%= line_item.quantity %></td>
+              <td><%= number_to_currency(line_item.sub_total) %></td>
+            </tr>
+            <% count += 1 %>
+          <%end%>
+        </tbody>
+      </table>
     </div>
-  <% end %>
+    <div class='container text-center text-nowrap font-weight-bold mt-5'>
+      Grand Total:   <%= number_to_currency(current_order.total_amount) %>
+    </div>
+    <div class='container mt-5 bg-dark border border-warning'>
+    <%= form_with method: :post, url: charge_orders_path, local: true, id: 'payment-form', data: {stripe_key: ENV['STRIPE_PUBLISHABLE_KEY']} do %>
+      <div class="form-row mt-3 mb-3">
+        <%= label_tag "Credit or Debit card", nil, class: 'container text-center text-white'%><br>
 
+        <div style="width: 30em" class='container border-dark text-center mb-3' id="card-element">
+        </div>
+        <div id="card-errors" role="alert" class="container text-center text-white"></div>
+        </div>
+        <% #FIXME_AB: apply bootstrap -%>
+        <%= submit_tag "PAY NOW", class: 'btn btn-warning mb-3' %>
+        <% #FIXME_AB: work on display stuff -%>
+      </div>
+    <% end %>
+  </div>
 </div>

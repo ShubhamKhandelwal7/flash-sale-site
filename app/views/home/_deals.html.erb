@@ -50,7 +50,7 @@
             </div>
           </div>
           <% if current_user.present? && @live_deals.present?%>
-            <%= link_to "Add To CART", add_to_cart_order_path(deal), class: "btn btn-warning ", remote: true %>
+            <%= link_to "Add To CART", add_to_cart_order_path(deal), class: "btn btn-warning add-to-cart-btn", remote: true  %>
           <%end%>
         </div>
         <br>

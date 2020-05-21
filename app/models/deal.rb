@@ -44,6 +44,13 @@ class Deal < ApplicationRecord
     self.class.live_deals(Time.current).exists? self.id
   end
 
+  def live!
+    if published_at&.today?
+      time_now = Time.current
+      update_columns(live_begin: time_now, live_end: time_now + ENV["DEAL_LIVE_DAYS"].to_i.day)
+    end
+  end
+
   def saleable_qty_available?
     salebale_qty.positive?
   end
