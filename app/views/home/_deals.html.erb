@@ -49,8 +49,12 @@
               </p>
             </div>
           </div>
-          <% if current_user.present? && @live_deals.present?%>
-            <%= link_to "Add To CART", add_to_cart_order_path(deal), class: "btn btn-warning ", remote: true %>
+          <% if current_user.present? && deal.live?%>
+            <% if deal.saleable_qty_available? %>
+              <%= link_to "Add To CART", add_to_cart_order_path(deal), class: "btn btn-warning add-to-cart-btn", remote: true  %>
+            <% else %>
+              <div class=" border rounded border-white bg-danger text-white text-center">SOLD OUT</div>
+            <% end %>
           <%end%>
         </div>
         <br>

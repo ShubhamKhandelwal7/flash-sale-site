@@ -1,5 +1,5 @@
 <div class = 'container'>
-  <div class = 'container border border-dark rounded-top mt-3'>
+  <div class = 'container border border-dark rounded-top mt-3 bg-warning'>
 
   <div class='row mt-3' >
     <div class='col'>
@@ -7,7 +7,11 @@
       <strong> Customer Name: </strong><%= order.user.name %> <br>
       <strong> Overall Tax: </strong><%= number_to_currency(order.total_tax) %> <br>
       <strong> Grand Total: </strong><%= number_to_currency(order.total_amount) %> <br>
-      <p class='text-success'><strong> Current state: </strong> <%= order.state %></p>
+      <% if order.cancelled? || order.refunded? %>
+        <p class='text-danger'><strong> Current state: </strong> <%= order.state %></p>
+      <% else %>
+        <p class='text-success'><strong> Current state: </strong> <%= order.state %></p>
+      <% end %>
     </div>
     <div class='col'>
       <strong> Delivery Address: </strong><br>

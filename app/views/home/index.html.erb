@@ -1,4 +1,9 @@
 <div class = "container">
+<% if @live_deals.present? %>
+    <% content_for :js do %>
+      <%= javascript_pack_tag  'show_past_deals', 'data-turbolinks-track': 'reload' %>
+    <%end%>
+  <% end %>
   <div class = "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class = "masthead mb-auto">
       <div class = "inner">
@@ -24,6 +29,14 @@
     <div id="deals-home">
       <%= render partial: "deals", locals: { deals: deals } %>
     </div>
+    <% if @live_deals.present? && @past_deals.present? %>
+      <div class="container text-center">
+        <%= link_to "Show Past Deals", home_path, remote: true, class: "btn btn-outline-info mb-3" , id: "past-deals-btn",
+          data: { past_deals: (render partial: "deals", locals: { deals: @past_deals }) }%>
+      </div>
+      <div id="past-deals-div">
+      </div>
+    <% end %>
     </main>
     <footer class = "mastfoot mt-auto">
       <div class = "inner text-center">

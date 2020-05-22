@@ -1,0 +1,15 @@
+<h2> Hi Admin</h2>
+
+<h3>The following deal failed to publish for <%= Date.today %> </h3>
+
+<strong> ID: </strong><%= @deal.id %><br>
+<strong> Title: </strong><%= @deal.title %><br>
+<strong> Schedule date: </strong><%= @deal.published_at %><br>
+<strong> Price: </strong><%= @deal.price %><br>
+<strong> Quantity: </strong><%= @deal.quantity %><br>
+
+<p> To view this deal, kindly click the link below: </p>
+<strong><%= link_to nil, admin_deal_url(@deal.id) %></strong> 
+<br>
+<h4>Thanks,</h4>
+<h4>The Flash Team</h4>

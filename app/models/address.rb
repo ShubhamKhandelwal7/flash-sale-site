@@ -1,11 +1,28 @@
+# == Schema Information
+#
+# Table name: addresses
+#
+#  id           :bigint           not null, primary key
+#  state        :string
+#  city         :string
+#  pincode      :integer
+#  country      :string
+#  default      :boolean          default(FALSE), not null
+#  user_id      :bigint           not null
+#  deleted_at   :datetime
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  home_address :text
+#  token        :string
+#
 class Address < ApplicationRecord
 
   acts_as_paranoid
 
   validates :state, :city, :country, :home_address, presence: :true
   validates :pincode, numericality: { only_integer: true }, length: { is: ADDRESSES[:pincode_length] }
-  #FIXME_AB: add hint in the form  that he need to add country code and a link to a list of country code. Better we convert it to a dropdown
-  validates :country, length: { is: ADDRESSES[:country_code_length], message: I18n.t(".address.errors.country_code") }
+  #FIXME_AB: add validation that country code should belong to country code list. inclusion
+  # validates :country, length: { is: ADDRESSES[:country_code_length], message: I18n.t(".address.errors.country_code") }
   validates :token, uniqueness: { scope: :user_id, message: I18n.t(".address.errors.not_unique") }
 
   has_many :orders, dependent: :restrict_with_error

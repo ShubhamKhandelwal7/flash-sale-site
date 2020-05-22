@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
   before_action :ensure_current_order, :ensure_order_in_cart_state, except: :index
   before_action :ensure_payment_success, only: :checkout
+  before_action :ensure_stripe_token_present, only: :charge
 
   def index
     @orders = current_user.orders.placed_orders
@@ -30,29 +31,36 @@ class OrdersController < ApplicationController
   end
 
   def payment
-    #FIXME_AB: add logging: initiating payment for order id : xxxx
-    #FIXME_AB: do this tagged logging 'order payments'
+    logger.tagged("Order: payments") { logger.info { "initiating payment for order id: #{current_order.id}" } }
+    @current_order = current_order
   end
 
   def charge
-    #FIXME_AB: tagged logging
-    #FIXME_AB: add a before action to check that stripe token should be present. redirect with message
-    #FIXME_AB: this all should be in one db transaction
-    if current_order.make_payment(params[:stripeToken])
-      redirect_to checkout_orders_path
-    elsif current_order.payments.success.present?
-      redirect_to checkout_orders_path, notice: "A successfull payment already exists against this order"
-    elsif current_order.payments.no_success.count <= ENV['MAX_PAYMENT_ATTEMPTS'].to_i
-      redirect_to buy_now_orders_path, alert: "Payment failed for some reason, please try again."
-    else
-      redirect_to home_path, notice: "Your Order could not get placed, payment failed"
+    logger.tagged("Order: payments") do
+      logger.info { "Fetched user payment method info(stripeToken) against order id: #{current_order.id}" }
+
+      current_order.transaction do
+        if current_order.make_payment(params[:stripeToken])
+          logger.info { "Payment process success against order id: #{current_order.id}, redirecting to checkout" }
+          redirect_to checkout_orders_path
+        elsif current_order.payments.success.present?
+          logger.info { "Already a Payment present with success state against order id: #{current_order.id}, redirecting to checkout" }
+          redirect_to checkout_orders_path, notice: "A successfull payment already exists against this order"
+        elsif current_order.payments.no_success.count <= ENV['MAX_PAYMENT_ATTEMPTS'].to_i
+          logger.info { "Payment failed with #{current_order.payments.no_success.count} failed attemts for order id: #{current_order.id},
+            trying again and redirecting to buy_now" }
+          redirect_to buy_now_orders_path, alert: "Payment failed for some reason, please try again."
+        else
+          logger.info { "Payment failed with #{current_order.payments.no_success.count} failed attemts for order id: #{current_order.id},
+            max failed attempts reached so redirecting to home_path" }
+          redirect_to home_path, notice: "Your Order could not get placed, payment failed"
+        end
+      end
     end
   end
 
   def checkout
     if current_order.place_order
-      #FIXME_AB: prefer OrderMailer so that we can have all order related emails at one place
-      OrderMailer.placed(current_order.id).deliver_later
       session[:order_id] = nil
     else
       redirect_to home_path, notice: "Your Order could not get placed, please try again"
@@ -90,6 +98,7 @@ class OrdersController < ApplicationController
 
   private def ensure_order_in_cart_state
     if !current_order.cart?
+      session[:order_id] = nil
       redirect_to home_path, notice: "Please goto 'my orders' to view your orders"
     end
   end
@@ -97,6 +106,17 @@ class OrdersController < ApplicationController
   private def ensure_payment_success
     if current_order.payments.success.blank?
       redirect_to payment_orders_path, notice: "Please make the payment against your current order"
+    end
+  end
+
+  private def ensure_stripe_token_present
+    if params[:stripeToken].blank?
+
+      logger.tagged("Order: payments") {
+        logger.info { "Stripe token blank for order id: #{current_order.id}, redirecting to payment_orders_path" }
+      }
+
+      redirect_to payment_orders_path, notice: "Payment could not get processed, please try again"
     end
   end
 end

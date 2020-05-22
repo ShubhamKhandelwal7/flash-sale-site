@@ -18,8 +18,8 @@ USERS = {
 }
 
 ADDRESSES = {
-  pincode_length: 6,
-  country_code_length: 2
+  pincode_length: 6
+  # country_code_length: 2
 }
 
 ORDERS = {
@@ -29,4 +29,13 @@ ORDERS = {
 
 LINEITEMS = {
   default_quantity: 1
+}
+
+STATE_TRASITIONS = {
+  'cart' => ['placed', 'refunded'],
+  'placed' => ['shipped', 'cancelled', 'refunded'],
+  'shipped'=> ['delivered', 'cancelled', 'refunded'],
+  'delivered' => [],
+  'cancelled' => [],
+  'refunded' => []
 }
