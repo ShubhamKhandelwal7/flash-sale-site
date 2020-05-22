@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: line_items
+#
+#  id                     :bigint           not null, primary key
+#  quantity               :integer          default(1), not null
+#  price                  :decimal(8, 2)
+#  deal_discount_price    :decimal(8, 2)
+#  loyalty_discount_price :decimal(8, 2)
+#  taxed_price            :decimal(8, 2)
+#  order_id               :bigint           not null
+#  deal_id                :bigint           not null
+#  deleted_at             :datetime
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  sale_price             :decimal(8, 2)
+#  sub_total              :decimal(8, 2)
+#  sub_tax_total          :decimal(8, 2)
+#
 class LineItem < ApplicationRecord
 
   belongs_to :order, optional: true, counter_cache: true

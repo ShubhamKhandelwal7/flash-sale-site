@@ -33,16 +33,12 @@ class OrdersController < ApplicationController
   def payment
     logger.tagged("Order: payments") { logger.info { "initiating payment for order id: #{current_order.id}" } }
     @current_order = current_order
-    #FIXME_AB: add logging: initiating payment for order id : xxxx
-    #FIXME_AB: do this tagged logging 'order payments'
   end
 
   def charge
-    #FIXME_AB: tagged logging
-    #FIXME_AB: add a before action to check that stripe token should be present. redirect with message
-    #FIXME_AB: this all should be in one db transaction
     logger.tagged("Order: payments") do
       logger.info { "Fetched user payment method info(stripeToken) against order id: #{current_order.id}" }
+
       current_order.transaction do
         if current_order.make_payment(params[:stripeToken])
           logger.info { "Payment process success against order id: #{current_order.id}, redirecting to checkout" }
@@ -65,7 +61,6 @@ class OrdersController < ApplicationController
 
   def checkout
     if current_order.place_order
-      #FIXME_AB: prefer OrderMailer so that we can have all order related emails at one place
       session[:order_id] = nil
     else
       redirect_to home_path, notice: "Your Order could not get placed, please try again"
@@ -116,7 +111,11 @@ class OrdersController < ApplicationController
 
   private def ensure_stripe_token_present
     if params[:stripeToken].blank?
-      logger.tagged("Order: payments") { logger.info { "Stripe token blank for order id: #{current_order.id}, redirecting to payment_orders_path" } }
+
+      logger.tagged("Order: payments") {
+        logger.info { "Stripe token blank for order id: #{current_order.id}, redirecting to payment_orders_path" }
+      }
+
       redirect_to payment_orders_path, notice: "Payment could not get processed, please try again"
     end
   end

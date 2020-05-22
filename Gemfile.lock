@@ -63,6 +63,9 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
+    annotate (3.1.1)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 14.0)
     basic_presenter (0.0.4)
       activesupport (>= 3.0)
     bcrypt (3.1.13)
@@ -265,6 +268,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_paranoid (= 0.6.3)
+  annotate
   basic_presenter (= 0.0.4)
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.2)

@@ -21,7 +21,6 @@ $(document).on("turbolinks:load", function(){
     }
   };
 
-  // FIXME_AB: here you can have optoin to remove zip from the form
   var card = elements.create('card', { hidePostalCode: true, iconStyle: 'solid'});
   card.mount('#card-element');
 

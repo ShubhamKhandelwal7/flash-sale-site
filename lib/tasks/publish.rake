@@ -13,9 +13,8 @@ namespace :custom do
             Rails.logger.info "Deal #{deal.id}: #{deal.title} could not get published"
             AdminMailer.deal_publish_fail(deal.id).deliver_later
           end
-          #FIXME_AB: if can not publish deal send email to all admin users with details, like deal details and errors + reasons
         end
-        
+
         Rails.logger.info { "Publishing deals task ended" }
     end
 

@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: deals
+#
+#  id             :bigint           not null, primary key
+#  title          :citext           not null
+#  description    :text
+#  price          :decimal(8, 2)
+#  discount_price :decimal(8, 2)    default(0.0), not null
+#  quantity       :integer          default(0), not null
+#  published_at   :datetime
+#  deleted_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  live_begin     :datetime
+#  live_end       :datetime
+#  tax            :decimal(, )
+#  sold_quantity  :integer          default(0), not null
+#  lock_version   :integer          default(0), not null
+#
 class Deal < ApplicationRecord
 
   include BasicPresenter::Concern
