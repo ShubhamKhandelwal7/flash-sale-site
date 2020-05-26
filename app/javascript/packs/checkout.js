@@ -1,1 +1,1 @@
-require('default')
+// require('default')
