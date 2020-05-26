@@ -26,7 +26,8 @@ class Payment < ApplicationRecord
     pending: 0,
     succeeded: 1,
     failed: 2,
-    cancelled: 3
+    cancelled: 3, 
+    refunded: 4
   }
 
   validates :state, uniqueness: { scope: [:order_id, :category] }, if: -> { succeeded? }
@@ -51,12 +52,12 @@ class Payment < ApplicationRecord
     false
   end
 
-  def refund(charge_id)
-    if order.payments.success.present?
+  def refund
+    if succeeded?
       logger.info { "refund initiated for order ID: #{order.id}" }
-      refund = Stripe::Refund.create({ charge: charge_id })
+      refund = Stripe::Refund.create({ charge: transaction_id })
       logger.info { "refund created with ID: #{refund.id}" }
-      update_payment(refund) && succeeded?
+      update(stripe_response: refund, state: self.class.states[:refunded], refunded_at: Time.current) && refund.status == 'succeeded'
     else
       logger.info { "refund cant be initiated for order ID: #{order.id} as payment_state: not success" }
       false
@@ -136,7 +137,7 @@ class Payment < ApplicationRecord
     logger.info { "stripe customer retrieved, initiating stripe create_charge for customer_id: #{customer_id}" }
     if order.payments.success.blank? && order.payments.no_success.count <= ENV['MAX_PAYMENT_ATTEMPTS'].to_i
       charge_info = {
-        amount: order.total_amount * 100,
+        amount: (order.total_amount * 100).to_i,
         currency: 'inr',
         description: "Payment for Order ID: #{order.id}",
         statement_descriptor_suffix: "Order Payment",
@@ -171,17 +172,16 @@ class Payment < ApplicationRecord
     self.transaction_id = stripe_resp.id
     self.state = stripe_resp.status
     self.category = stripe_resp.object
-    self.amount = stripe_resp.amount / 100
+    self.amount = stripe_resp.amount.to_f / 100
     self.currency = stripe_resp.currency
+    self.method = stripe_resp.payment_method_details['type']
+    self.paid_at = Time.current
     if self.method == 'card'
       card = stripe_resp.payment_method_details['card']
       self.card_brand = card['brand']
       self.card_last_digits = card['last4']
       self.card_exp_month = card['exp_month']
       self.card_exp_year = card['exp_year']
-    end
-    if category != 'refund'
-      self.method = stripe_resp.payment_method_details['type']
     end
     save
   end

@@ -4,15 +4,10 @@ class HomeController < ApplicationController
   def index
     @live_deals = Deal.live_deals(Time.current).with_attached_images
     @past_deals = Deal.past_live(ENV["PAST_LIVE_DEALS_SHOW"].to_i)
-  end
 
-  # def deals
-  #   deal = Deal.live_deals(Time.current).with_attached_images
-  #   if deal.blank?
-  #     deal = Deal.past_live(ENV["PAST_LIVE_DEALS_SHOW"].to_i)
-  #   end
-  #   respond_to do |format|
-  #     format.html { render partial: "deals", locals: { deals: deal }  }
-  #   end
-  # end
+    respond_to do |format|
+      format.html
+      format.json { render json: { live_deals: Deal.live_deals(Time.current).pluck(:id, :updated_at).to_json  }}
+    end
+  end
 end

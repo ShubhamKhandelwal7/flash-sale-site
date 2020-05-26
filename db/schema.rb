@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_20_082102) do
+ActiveRecord::Schema.define(version: 2020_05_25_113959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 2020_05_20_082102) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "state", default: 0, null: false
     t.integer "line_items_count"
+    t.datetime "placed_at"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["deleted_at"], name: "index_orders_on_deleted_at"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -122,6 +123,8 @@ ActiveRecord::Schema.define(version: 2020_05_20_082102) do
     t.integer "card_exp_year"
     t.integer "card_exp_month"
     t.string "card_brand"
+    t.datetime "paid_at"
+    t.datetime "refunded_at"
     t.index ["order_id"], name: "index_payments_on_order_id"
     t.index ["transaction_id"], name: "index_payments_on_transaction_id", unique: true
   end

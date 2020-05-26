@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-  before_action :ensure_current_order, :ensure_order_in_cart_state, except: :index
+  before_action :ensure_current_order, except: :index
+  before_action :ensure_order_in_cart_state, except: [:index, :checkout]
   before_action :ensure_payment_success, only: :checkout
   before_action :ensure_stripe_token_present, only: :charge
 
@@ -17,9 +18,9 @@ class OrdersController < ApplicationController
 
   def rem_from_cart
     if current_order.remove_item(params[:id])
-      flash[:notice] = "Deal destroyed"
+      flash[:notice] = "Deal Removed"
     else
-      flash[:alert] = "Deal could not be destroyed"
+      flash[:alert] = "Deal could not be removed"
     end
     redirect_to home_path
   end
@@ -104,7 +105,7 @@ class OrdersController < ApplicationController
   end
 
   private def ensure_payment_success
-    if current_order.payments.success.blank?
+    if current_order.payments.success.blank? && !current_order.paid?
       redirect_to payment_orders_path, notice: "Please make the payment against your current order"
     end
   end
