@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_11_140451) do
+ActiveRecord::Schema.define(version: 2020_05_25_113959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -101,9 +101,32 @@ ActiveRecord::Schema.define(version: 2020_05_11_140451) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "state", default: 0, null: false
+    t.integer "line_items_count"
+    t.datetime "placed_at"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["deleted_at"], name: "index_orders_on_deleted_at"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.string "transaction_id", null: false
+    t.integer "state", default: 0, null: false
+    t.string "method"
+    t.string "category"
+    t.integer "amount", null: false
+    t.string "currency"
+    t.bigint "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "stripe_response"
+    t.integer "card_last_digits"
+    t.integer "card_exp_year"
+    t.integer "card_exp_month"
+    t.string "card_brand"
+    t.datetime "paid_at"
+    t.datetime "refunded_at"
+    t.index ["order_id"], name: "index_payments_on_order_id"
+    t.index ["transaction_id"], name: "index_payments_on_transaction_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -119,6 +142,7 @@ ActiveRecord::Schema.define(version: 2020_05_11_140451) do
     t.datetime "verification_token_sent_at"
     t.datetime "verified_at"
     t.boolean "admin", default: false, null: false
+    t.string "stripe_customer_id"
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
@@ -131,4 +155,5 @@ ActiveRecord::Schema.define(version: 2020_05_11_140451) do
   add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "users"
+  add_foreign_key "payments", "orders"
 end

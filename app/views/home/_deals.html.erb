@@ -1,5 +1,5 @@
 <% deals.each do |deal| %>
-  <div class="row">
+  <div class="row" data-deal_id = <%= deal.id %>>
     <div class="col">
       <div class = "card bg-dark mb-4">
         <div class = "card-header ">
@@ -49,8 +49,12 @@
               </p>
             </div>
           </div>
-          <% if current_user.present? && @live_deals.present?%>
-            <%= link_to "Add To CART", add_to_cart_order_path(deal), class: "btn btn-warning ", remote: true %>
+          <% if current_user.present? && deal.live?%>
+            <% if deal.saleable_qty_available? %>
+              <%= link_to "Add To CART", add_to_cart_order_path(deal), class: "btn btn-warning add-to-cart-btn", remote: true  %>
+            <% else %>
+              <div class=" border rounded border-white bg-danger text-white text-center">SOLD OUT</div>
+            <% end %>
           <%end%>
         </div>
         <br>

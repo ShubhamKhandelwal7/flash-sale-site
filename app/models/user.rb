@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                         :bigint           not null, primary key
+#  name                       :string           not null
+#  email                      :citext           not null
+#  password_digest            :string           not null
+#  password_reset_token       :string
+#  password_reset_sent_at     :datetime
+#  deleted_at                 :datetime
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  verification_token         :string
+#  verification_token_sent_at :datetime
+#  verified_at                :datetime
+#  admin                      :boolean          default(FALSE), not null
+#  stripe_customer_id         :string
+#
 class User < ApplicationRecord
 
   validates :name, presence: true

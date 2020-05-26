@@ -5,10 +5,12 @@ class dealPublishManager {
     this.$publishDate = $(defaultSelector.publishDateSelector);
     this.$publishDataDiv = $(defaultSelector.publishDataDivSelector);
     this.$publishBtn = $(defaultSelector.publishBtnSelector);
+    this.$republishBtn = $(defaultSelector.republishBtnSelector);
     this.unpublishBtn = defaultSelector.unpublishBtnSelector;
   }
 
   init() {
+    this.$republishBtn.hide();
     $(this.publishForm).on('ajax:success', (event) => {
       let response = event.detail[0];
       if(response.status == true) {
@@ -23,30 +25,27 @@ class dealPublishManager {
   }
 
   publishSuccess(publishResp) {
-    // FIXME_AB: $('<strong>').text('fda'), then append
-    this.$publishDataDiv.html("<strong>"+publishResp+"</strong>");
+    this.$publishDataDiv.html($('<strong>').text(publishResp));
     this.$publishDataDiv.prop("class", "alert alert-success text-center");
     this.$publishDate.html(publishResp);
-    this.$publishBtn.prop("value", "Re Schedule");
+    this.$publishBtn.hide();
+    this.$republishBtn.show();
 
     if($(this.unpublishBtn).length == 0) {
       let unpublishPath = this.$publishBtn.data('unpublish-url');
-      // FIXME_AB: make use of proper jquery
-      let unpublishLink = "<a title=\"Remove Schedule\" class= \"btn btn-danger text-center\" id=\"unschedule-deal\" data-confirm= \"Are you sure ?\" href=" +
-          unpublishPath + ">Remove Schedule</a>";
+      this.$publishBtn.closest('div').append($('<div>').append($("<a>").attr({ href: unpublishPath, title: "Remove Schedule", id: "unschedule-deal", "data-confirm": "Are you sure ?" })
+                                                       .addClass('btn btn-danger text-center').text('Remove Schedule').css('margin-top', '15px')));
 
-        // FIXME_AB: don't use br. use css class
-      this.$publishBtn.closest('div').append( "<br><br>" + unpublishLink );
     };
   };
 
   publishFailure() {
-    this.$publishDataDiv.html("<strong>NOT Scheduled</strong>");
+    this.$publishDataDiv.html($('<strong>').text("NOT Scheduled"));
     this.$publishDataDiv.attr("class", "alert alert-warning text-center");
   };
 
   ajaxError() {
-    this.$publishDataDiv.html("<strong>Request Failed</strong>");
+    this.$publishDataDiv.html($('<strong>').text("Request Failed"));
     this.$publishDataDiv.attr("class", "alert alert-error text-center");
   };
 }
@@ -58,6 +57,7 @@ $(document).on("turbolinks:load", function(){
     publishDateSelector: "#publish-date",
     publishDataDivSelector: "#publish-data",
     publishBtnSelector: "#publish-btn",
+    republishBtnSelector: "#republish-btn",
     unpublishBtnSelector: "#unschedule-deal"
   };
     let dealPublishObj = new dealPublishManager(defaultSelector);

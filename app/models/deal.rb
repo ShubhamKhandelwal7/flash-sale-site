@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: deals
+#
+#  id             :bigint           not null, primary key
+#  title          :citext           not null
+#  description    :text
+#  price          :decimal(8, 2)
+#  discount_price :decimal(8, 2)    default(0.0), not null
+#  quantity       :integer          default(0), not null
+#  published_at   :datetime
+#  deleted_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  live_begin     :datetime
+#  live_end       :datetime
+#  tax            :decimal(, )
+#  sold_quantity  :integer          default(0), not null
+#  lock_version   :integer          default(0), not null
+#
 class Deal < ApplicationRecord
 
   include BasicPresenter::Concern
@@ -44,6 +64,13 @@ class Deal < ApplicationRecord
     self.class.live_deals(Time.current).exists? self.id
   end
 
+  def live!
+    if published_at&.today?
+      time_now = Time.current
+      update_columns(live_begin: time_now, live_end: time_now + ENV["DEAL_LIVE_DAYS"].to_i.day)
+    end
+  end
+
   def saleable_qty_available?
     salebale_qty.positive?
   end
@@ -51,20 +78,6 @@ class Deal < ApplicationRecord
   def salebale_qty
     quantity - sold_quantity
   end
-
-  #FIXME_AB: we can do this way
-  # def update_inventory(qty_bought)
-  #   if saleable_qty_available? && qty_bought <= salebale_qty # || (sold_quantity == quantity)
-  #     # since we cannot update live deals or those deals whose published_at is < now+24hr
-  #     sold_quantity = sold_quantity + qty_bought
-  #     self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1)
-  #   else
-  #     false
-  #   end
-  #FIXME_AB: resque all
-  # rescue #ActiveRecord::StaleObjectError
-  #   false
-  # end
 
   def check_inventory(qty_bought)
     saleable_qty_available? && qty_bought <= salebale_qty

@@ -39,6 +39,8 @@ gem 'kaminari', '1.2.0'
 
 gem 'whenever', '1.0.0'
 
+gem 'stripe', '5.22.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -47,6 +49,7 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   # gem 'awesome_print'
+  gem 'annotate'
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
@@ -73,3 +76,5 @@ gem "letter_opener", '1.7.0'
 gem 'letter_opener_web', '1.4.0'
 gem 'basic_presenter', '0.0.4'
 
+
+gem "iso_country_codes", "~> 0.7.8"
