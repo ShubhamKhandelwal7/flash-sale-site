@@ -1,6 +1,6 @@
 <h2> Hi <%= @user.name.capitalize %></h2>
 
-<h3>We are sorry to inform you that your following order got cancelled: </h3>
+<h3>We are sorry to inform you that your order <%= @order.number %> got cancelled: </h3>
 <br>
 <%= render partial: 'orders/order', locals: { order: @order } %>
 <br>

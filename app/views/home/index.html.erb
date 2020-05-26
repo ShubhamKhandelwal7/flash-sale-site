@@ -2,6 +2,7 @@
 <% if @live_deals.present? %>
     <% content_for :js do %>
       <%= javascript_pack_tag  'show_past_deals', 'data-turbolinks-track': 'reload' %>
+      <%= javascript_pack_tag  'deals_home_polling', 'data-turbolinks-track': 'reload' %>
     <%end%>
   <% end %>
   <div class = "cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -21,12 +22,13 @@
       <% end %>
     </h3>
     <div class="container bg-info border border-dark rounded" id="cart">
-      <% if current_order&.line_items&.any? %>
+      <% #FIXME_AB: should_display_cart?(current_order) -%>
+      <% if current_order&.cart? && current_order&.line_items&.any? %>
         <%= render partial: 'orders/cart' %>
       <% end %>
     </div>
     <br>
-    <div id="deals-home">
+    <div id="deals-home" data-url = <%= admin_deals_url%> data-deal_ids = "<%= deals.collect(&:id) %>">
       <%= render partial: "deals", locals: { deals: deals } %>
     </div>
     <% if @live_deals.present? && @past_deals.present? %>
