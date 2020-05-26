@@ -1,5 +1,5 @@
 const PER_SECONDS_CHECK = 2*60*1000
-POLLING_INTERVAL = 60000
+const POLLING_INTERVAL = 60000
 
 class HomepageUpdator {
   constructor(defaultSelector) {
@@ -22,7 +22,7 @@ class HomepageUpdator {
         resp = JSON.parse(response.live_deals)
         this.checkResponse(resp, this.currentDeals);
       },
-      error: function(response) {
+      error: (response) => {
         console.log("AJAX request failed");
       }
     });
