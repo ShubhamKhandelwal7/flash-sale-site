@@ -20,8 +20,6 @@
 #
 class Payment < ApplicationRecord
 
-  #FIXME_AB: paid_at, refunded_at.
-  #FIXME_AB: new state refunded
   enum state: {
     pending: 0,
     succeeded: 1,
@@ -35,6 +33,7 @@ class Payment < ApplicationRecord
 
   belongs_to :order
 
+  #FIXME_AB: where(state: Payment.states[:succeeded]).where(category: :charge)
   scope :success, -> { where("state = ? AND category = ?", Payment.states[:succeeded], 'charge') }
   scope :no_success, -> { where("state != ? AND category = ?", Payment.states[:succeeded], 'charge') }
 
@@ -66,25 +65,6 @@ class Payment < ApplicationRecord
     request_failure('refund', e)
     false
   end
-
-  #FIXME_AB:
-  # def refund
-  #   if succeeded?
-  #     #FIXME_AB: include payment id in log
-  #     logger.info { "refund initiated for order ID: #{order.id}" }
-  #     refund = Stripe::Refund.create({ charge: charge_id })
-  #     #FIXME_AB: include payment id order id
-  #     logger.info { "refund created with ID: #{refund.id}" }
-  #     #FIXME_AB: set refund at, and state shoudl be refunded
-  #     #FIXME_AB: save refund_response
-  #   else
-  #     logger.info { "refund cant be initiated for order ID: #{order.id} as payment_state: not success" }
-  #     false
-  #   end
-  # rescue Exception => e
-  #   request_failure('refund', e)
-  #   false
-  # end
 
   private def get_stripe_customer
     if order.user.stripe_customer_id.blank? && !create_stripe_customer
@@ -120,18 +100,6 @@ class Payment < ApplicationRecord
     logger.info { "failed to create new stripe customer with exception: #{e.message}, request_id: #{e.response.request_id}, http_status: #{e.response.http_status}" }
     false
   end
-
-  #FIXME_AB: check if we can skip this step and use token directly with charge call
-  # private def add_source(customer_id, token)
-  #   #FIXME_AB: logging
-  #   a  = Stripe::Customer.create_source(
-  #     customer_id,
-  #     {source: token},
-  #   )
-  # rescue Exception => e
-  #   #FIXME_AB: logging
-  #   false
-  # end
 
   private def create_charge(customer_id, token)
     logger.info { "stripe customer retrieved, initiating stripe create_charge for customer_id: #{customer_id}" }

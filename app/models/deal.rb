@@ -79,20 +79,6 @@ class Deal < ApplicationRecord
     quantity - sold_quantity
   end
 
-  #FIXME_AB: we can do this way
-  # def update_inventory(qty_bought)
-  #   if saleable_qty_available? && qty_bought <= salebale_qty # || (sold_quantity == quantity)
-  #     # since we cannot update live deals or those deals whose published_at is < now+24hr
-  #     sold_quantity = sold_quantity + qty_bought
-  #     self.update_columns(sold_quantity: sold_quantity, lock_version: lock_version + 1)
-  #   else
-  #     false
-  #   end
-  #FIXME_AB: resque all
-  # rescue #ActiveRecord::StaleObjectError
-  #   false
-  # end
-
   def check_inventory(qty_bought)
     saleable_qty_available? && qty_bought <= salebale_qty
   end
