@@ -30,6 +30,7 @@ class HomepageUpdator {
 
   checkResponse(response, currentDeals) {
     for(var latestDeal of response) {
+      // FIXME_AB: update
       if((Date.parse(latestDeal[1]) >= (Date.now() - PER_SECONDS_CHECK)) || currentDeals.length != response.length || !currentDeals.includes(latestDeal[0])) {
         location.reload(true);
       };

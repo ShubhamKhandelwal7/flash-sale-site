@@ -38,9 +38,11 @@ $(document).on("turbolinks:load", function(){
 
     stripe.createToken(card).then(function(result) {
       if (result.error) {
+      console.log(result)
         var errorElement = document.getElementById('card-errors');
         errorElement.textContent = result.error.message;
       } else {
+      console.log(result)
         stripeTokenHandler(result.token);
       }
     });

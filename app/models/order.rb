@@ -42,32 +42,7 @@ class Order < ApplicationRecord
 
   scope :placed_orders, ->{ where.not(state: :cart) }
 
-  #FIXME_AB: we need to add validations for order state changes. like from which states to which state. Read about state machines, we usually do use that gem https://github.com/geekq/workflow
-  # STATE_TRASITIONS = {
-  #   cart: [:placed],
-  #   placed: [:shipped, :cancelled],
-  #   ...
-
-  # }
-
-
-  # def add_item(deal_id)
-  #   deal = Deal.live_deals(Time.current).find_by(id: deal_id)
-
-  #   if deal.present? && deal.saleable_qty_available? && can_user_buy?(deal.id)
-  #     #FIXME_AB:  line_item = line_items.build(deal: @curr_deal)
-  #     line_item = line_items.build
-  #     line_item.deal = deal
-  #     line_item.evaluate_amounts
-  #     #FIXME_AB: you should also save the line item so that the method returns true/false
-  #     line_item
-  #   else
-  #     false
-  #   end
-  # end
-
   def number
-    #FIXME_AB: should be replaced with placed_at. Record order placed at
    "#{(placed_at || created_at).to_s(:number)}-#{id}"
   end
 
@@ -82,7 +57,6 @@ class Order < ApplicationRecord
 
   def place_order
     run_callbacks :place_order do
-      #FIXME_AB: paid?
       unless paid?
         return false
       end
@@ -94,7 +68,7 @@ class Order < ApplicationRecord
       end
 
       transaction do
-        if !update_inventory
+        if update_inventory
           self.state = self.class.states[:placed]
           self.placed_at = Time.current
           save!
@@ -117,25 +91,13 @@ class Order < ApplicationRecord
 
 
   def process_refunds
-    if payments.success.map(&:refund).all?{ |payment| payment}
+    if payments.success.map(&:refund).all?{ |refund_status| refund_status}
       logger.info { "Refund process success, updating order state to refund state" }
-    update(state: self.class.states[:refunded])
+      update(state: self.class.states[:refunded])
     else
       logger.info { "some payments could not be refunded" }
     end
   end
-
-  #FIXME_AB:
-  # def process_refunds
-  #   if payments.success.map(&:refund).all?{|x| x}
-        # move order to refund state
-      #
-      #else
-        # log that some payments could not be refunded
-      #end
-  # end
-
-
 
   def set_address!(address)
     self.address = address

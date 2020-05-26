@@ -26,7 +26,7 @@ class Payment < ApplicationRecord
     pending: 0,
     succeeded: 1,
     failed: 2,
-    cancelled: 3, 
+    cancelled: 3,
     refunded: 4
   }
 

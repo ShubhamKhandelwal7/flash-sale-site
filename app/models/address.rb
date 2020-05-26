@@ -21,7 +21,7 @@ class Address < ApplicationRecord
 
   validates :state, :city, :country, :home_address, presence: :true
   validates :pincode, numericality: { only_integer: true }, length: { is: ADDRESSES[:pincode_length] }
-  #FIXME_AB: add validation that country code should belong to country code list. inclusion
+  #FIXME_AB: we can move this array in initializers so that single array is used. Freeze it. IsoCountryCodes.all.collect &:alpha2
   validates :country, inclusion: { in: IsoCountryCodes.for_select.map{ |x| x[1] }, message: I18n.t(".address.errors.country_code") }
   validates :token, uniqueness: { scope: :user_id, message: I18n.t(".address.errors.not_unique") }
 
