@@ -1,11 +1,40 @@
 module Api
-  class DealsController < ApplicationController
-    skip_before_action :authorize 
 
+  #FIXME_AB: class DealsController < Api::ApiBaseController
+  class DealsController < ApplicationController
+    skip_before_action :authorize
+    add_flash_types :error
+
+#FIXME_AB: show like this use jbuilder
+# [
+#   {
+#     "deals": [
+#       {
+#         "title": "Morbi mollis tellus ac",
+#         "description": "Aenean vulputate eleifend tellus. Pellentesque dapibus hendrerit tortor. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Aliquam erat volutpat. Vivamus in erat ut urna cursus vestibulum.",
+#         "price": "12.0",
+#         "discount_price": "2.0",
+#         "published_at": "2020-05-28T14:08:33.200+05:30",
+#         "tax": "2.0",
+#       },
+#       {
+#         "title": "Morbi mollis tellus ac",
+#         "description": "Aenean vulputate eleifend tellus. Pellentesque dapibus hendrerit tortor. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Aliquam erat volutpat. Vivamus in erat ut urna cursus vestibulum.",
+#         "price": "12.0",
+#         "discount_price": "2.0",
+#         "published_at": "2020-05-28T14:08:33.200+05:30",
+#         "tax": "2.0",
+#       },
+
+#     ]
+#   }
+# ]
     def live
       live_deals = Deal.live_deals(Time.current).present? ? Deal.live_deals(Time.current).to_json : nil
       respond_to do |format|
         format.json { render json: live_deals }
+        format.html { render plain: 'invalid url' }
+        # format.html{redirect_to home_path, error: "Could not find page you were looking for"}
       end
     end
 
@@ -13,6 +42,7 @@ module Api
       past_deals = Deal.past_deals(Time.current).present? ? Deal.past_deals(Time.current).to_json : nil
       respond_to do |format|
         format.json { render json: past_deals }
+        format.html { render plain: 'invalid url' }
       end
     end
   end

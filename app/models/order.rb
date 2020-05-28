@@ -12,6 +12,7 @@
 #  updated_at       :datetime         not null
 #  state            :integer          default("cart"), not null
 #  line_items_count :integer
+#  placed_at        :datetime
 #
 class Order < ApplicationRecord
   enum state: {
@@ -37,7 +38,6 @@ class Order < ApplicationRecord
   belongs_to :user
   belongs_to :address, optional: true
 
-  #FIXME_AB: check your issue related to exception
   after_place_order :send_placed_mailer
 
   scope :placed_orders, ->{ where.not(state: :cart) }

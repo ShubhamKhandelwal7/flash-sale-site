@@ -22,7 +22,6 @@
       <% end %>
     </h3>
     <div class="container bg-info border border-dark rounded" id="cart">
-      <% #FIXME_AB: should_display_cart?(current_order) -%>
       <% if should_display_cart?(current_order) %>
         <%= render partial: 'orders/cart' %>
       <% end %>

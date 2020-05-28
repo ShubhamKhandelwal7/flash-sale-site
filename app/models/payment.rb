@@ -17,6 +17,8 @@
 #  card_exp_year    :integer
 #  card_exp_month   :integer
 #  card_brand       :string
+#  paid_at          :datetime
+#  refunded_at      :datetime
 #
 class Payment < ApplicationRecord
 
@@ -33,7 +35,6 @@ class Payment < ApplicationRecord
 
   belongs_to :order
 
-  #FIXME_AB: where(state: Payment.states[:succeeded]).where(category: :charge)
   scope :success, -> { where(state: Payment.states[:succeeded]).where(category: :charge) }
   scope :no_success, -> { where(category: :charge).where.not(state: Payment.states[:succeeded]) }
 

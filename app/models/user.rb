@@ -16,8 +16,11 @@
 #  verified_at                :datetime
 #  admin                      :boolean          default(FALSE), not null
 #  stripe_customer_id         :string
+#  authentication_token       :string
 #
 class User < ApplicationRecord
+
+#FIXME_AB: authentication_token should have unique index
 
   include BasicPresenter::Concern
   has_secure_password
@@ -45,6 +48,7 @@ class User < ApplicationRecord
 
   scope :admin, -> { where(admin: true) }
   scope :regular, -> { where(admin: false) }
+  #FIXME_AB: add scope for verified user
 
   def placed_line_items
     orders.placed_orders.includes(:line_items).collect(&:line_items).flatten
@@ -80,6 +84,7 @@ class User < ApplicationRecord
     end
   end
 
+  #FIXME_AB: custom callback after_verify
   def set_auth_token
     generate_token(:authentication_token)
     save!
