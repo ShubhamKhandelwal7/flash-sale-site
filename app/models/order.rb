@@ -38,7 +38,7 @@ class Order < ApplicationRecord
   belongs_to :address, optional: true
 
   #FIXME_AB: check your issue related to exception
-  after_place_order :send_mailer
+  after_place_order :send_placed_mailer
 
   scope :placed_orders, ->{ where.not(state: :cart) }
 
@@ -81,11 +81,10 @@ class Order < ApplicationRecord
       logger.tagged("Order: payments[refund]") do
         if process_refunds
           logger.info { "Order state changed to: #{state}, sending refund_intimation mailer" }
+          OrderMailer.refund_intimation(id).deliver_later
         end
       end
-      # returning false leading to stop the callback chain
     false
-    # debugger
     end
   end
 
@@ -145,11 +144,9 @@ class Order < ApplicationRecord
     end
   end
 
-  private def send_mailer
+  private def send_placed_mailer
     if placed?
       OrderMailer.placed(id).deliver_later
-    elsif refunded?
-      OrderMailer.refund_intimation(id).deliver_later
     end
   end
 end

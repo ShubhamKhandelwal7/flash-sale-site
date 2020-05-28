@@ -6,8 +6,8 @@ class UsersController < ApplicationController
     current_user_via_token(:verification_token)
   end
 
-  skip_before_action :authorize
-  before_action :ensure_not_logged_in
+  skip_before_action :authorize, except: :my_profile
+  before_action :ensure_not_logged_in, except: :my_profile
 
   def new
     @user = User.new
@@ -17,11 +17,15 @@ class UsersController < ApplicationController
     @user = User.regular.new(user_params)
     respond_to do |format|
       if @user.save
+        @user.set_auth_token
         format.html { redirect_to home_path, notice: "#{@user.name} #{t("users.create.flash.success")}" }
       else
         format.html { render :new, notice: "#{@user.name} #{t("users.create.flash.failure")}" }
       end
     end
+  end
+
+  def my_profile
   end
 
   def verify

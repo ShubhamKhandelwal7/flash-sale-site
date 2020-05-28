@@ -50,6 +50,7 @@ group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   # gem 'awesome_print'
   gem 'annotate'
+  gem 'bullet', '6.1.0'
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
@@ -76,6 +77,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "letter_opener", '1.7.0'
 gem 'letter_opener_web', '1.4.0'
 gem 'basic_presenter', '0.0.4'
-
+gem 'exception_notification', '4.4.0', group: :production
 
 gem "iso_country_codes", "~> 0.7.8"

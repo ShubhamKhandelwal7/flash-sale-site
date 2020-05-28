@@ -1,6 +1,7 @@
 module Admin
   class DealsController < AdminController
     before_action :set_deal, only: [:show, :edit, :update, :destroy, :check_publishability, :publish, :unpublish]
+    before_action :ensure_editable, only: :edit
 
     def index
       sort_by = (params[:sort] && params[:sort][:sort_by].present?) ? params[:sort][:sort_by] : 'published_at'
@@ -79,9 +80,15 @@ module Admin
     end
 
     private def set_deal
-      @deal = Deal.find(params[:id])
+      @deal = Deal.with_attached_images.find(params[:id])
       if @deal.blank?
         redirect_to login_path, notice: "Please login again"
+      end
+    end
+
+    private def ensure_editable
+      if !@deal.can_be_updated?
+        redirect_to admin_deals_path, notice: "Deal #{@deal.title} cannot be updated at this stage"
       end
     end
 

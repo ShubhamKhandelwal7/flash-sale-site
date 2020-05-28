@@ -22,6 +22,7 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href= <%= home_path %> >Home <span class="sr-only">(current)</span></a>
           <% if current_user.present? %>
+            <%= link_to "My Profile", my_profile_users_path, class: "nav-item nav-link" %>
             <%= link_to "My Orders", orders_path, class: "nav-item nav-link" %>
             <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
           <% else %>
@@ -37,7 +38,7 @@
       'notice' => "alert-success",
       'error' => "alert-danger"
     } %>
-    <div class = "site-wrapper">
+    <div class = "site-wrapper shadow-lg p-3 mb-5 bg-light rounded">
       <div class = "text-center" id="flash">
         <% flash.each do |type| %>
           <aside class = "alert <%=  flash_bootstrap_class[type[0]] %>" > <%= type[1] %></aside>

@@ -1,0 +1,26 @@
+<div class = 'container shadow-lg p-3 mb-5 bg-light rounded'>
+  <h4 class = 'text-center'>My Profile</h4><br>
+  <div class = 'container mt-3 '>
+
+  <div class='row mt-3' >
+    <div class='col'>
+      <strong> ID: </strong><%= current_user.id %> <br>
+      <strong> Name: </strong><%= current_user.name %> <br>
+      <strong> Email: </strong><%= current_user.email %> <br>
+      <strong> API Token: </strong><%= current_user.authentication_token %> <br>
+      <strong> Verified: </strong><%= current_user.presenter.verification_status %> <br>
+      <strong> Orders: </strong><%=link_to "My Orders", orders_path %> <br>
+      <strong> Addresses: </strong><br>
+
+      <% current_user.addresses.each do |address| %>
+        <div class = 'container border bg-light mb-3 mr-3 '>
+          <p>ID: <%= address.id %></p>
+          <p>Home: <%= address.home_address %></p>
+          <p>City: <%= address.city %></p>
+          <p>State: <%= address.state %></p>
+          <p>Pincode: <%= address.pincode %></p>
+          <p>Country: <%= address.country %></p>
+        </div>
+      <%end%>
+    </div>
+  </div>

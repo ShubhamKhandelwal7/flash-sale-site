@@ -19,6 +19,10 @@
 #
 class User < ApplicationRecord
 
+  include BasicPresenter::Concern
+  has_secure_password
+  acts_as_paranoid
+
   validates :name, presence: true
   validates :password,  presence: true, on: :reset_password
   validates :password, length: { minimum: USERS[:min_password_length] }, if: -> { new_record? || !password.nil? }
@@ -29,8 +33,6 @@ class User < ApplicationRecord
 
   validates :password_reset_token, :verification_token, uniqueness: true
 
-  has_secure_password
-  acts_as_paranoid
   has_many :addresses, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :line_items, through: :orders
@@ -76,6 +78,11 @@ class User < ApplicationRecord
     else
       { status: false, reason: "token_expired" }
     end
+  end
+
+  def set_auth_token
+    generate_token(:authentication_token)
+    save!
   end
 
   def verified?
