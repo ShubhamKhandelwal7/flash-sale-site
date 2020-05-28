@@ -9,7 +9,7 @@ module Api
     end
 
     private def current_user
-      @current_user ||= User.find_by(authentication_token: params[:token])
+      @current_user ||= User.verified.find_by(authentication_token: params[:token])
     end
 
   end

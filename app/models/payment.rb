@@ -37,6 +37,7 @@ class Payment < ApplicationRecord
 
   scope :success, -> { where(state: Payment.states[:succeeded]).where(category: :charge) }
   scope :no_success, -> { where(category: :charge).where.not(state: Payment.states[:succeeded]) }
+  scope :refunded, -> { where(state: Payment.states[:succeeded]).where(category: :refund) }
 
   def stripe_transact(token)
     logger.info { "Reached stripe_transact method, creating customer and its charge via stripe" }

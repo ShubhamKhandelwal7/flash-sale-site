@@ -41,6 +41,7 @@ class Order < ApplicationRecord
   after_place_order :send_placed_mailer
 
   scope :placed_orders, ->{ where(state: :placed).or where(state: :shipped).or where(state: :delivered) }
+  scope :paid_orders, -> { where.not(state: :cart) }
 
   def number
    "#{(placed_at || created_at).to_s(:number)}-#{id}"

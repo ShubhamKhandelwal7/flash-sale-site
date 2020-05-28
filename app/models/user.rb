@@ -48,8 +48,8 @@ class User < ApplicationRecord
 
   scope :admin, -> { where(admin: true) }
   scope :regular, -> { where(admin: false) }
-  scope :verified, -> { where('verified_at IS NOT NULL') }
-  scope :without_auth_token, -> { where('authentication_token IS NULL') }
+  scope :verified, -> { where.not(verified_at: nil) }
+  scope :without_auth_token, -> { where(authentication_token: nil) }
 
   def placed_line_items
     orders.placed_orders.includes(:line_items).collect(&:line_items).flatten
