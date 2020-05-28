@@ -20,8 +20,6 @@
 #
 class User < ApplicationRecord
 
-#FIXME_AB: authentication_token should have unique index
-
   include BasicPresenter::Concern
   has_secure_password
   acts_as_paranoid
@@ -52,7 +50,6 @@ class User < ApplicationRecord
   scope :regular, -> { where(admin: false) }
   scope :verified, -> { where('verified_at IS NOT NULL') }
   scope :without_auth_token, -> { where('authentication_token IS NULL') }
-  #FIXME_AB: add scope for verified user
 
   def placed_line_items
     orders.placed_orders.includes(:line_items).collect(&:line_items).flatten
@@ -90,7 +87,6 @@ class User < ApplicationRecord
     end
   end
 
-  #FIXME_AB: custom callback after_verify
   def set_auth_token!
     generate_token(:authentication_token)
     save!

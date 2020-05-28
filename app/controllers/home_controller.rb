@@ -4,7 +4,6 @@ class HomeController < ApplicationController
   def index
     @live_deals = Deal.live_deals(Time.current).with_attached_images
     @past_deals = Deal.with_attached_images.past_live(ENV["PAST_LIVE_DEALS_SHOW"].to_i)
-    #FIXME_AB: optimize by making a seperate action
   end
 
   def poll
