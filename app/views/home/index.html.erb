@@ -27,7 +27,7 @@
       <% end %>
     </div>
     <br>
-    <div id="deals-home" data-url = <%= home_url%> data-deal_ids = "<%= deals.collect(&:id) %>">
+    <div id="deals-home" data-url = <%= homepage_poll_url%> data-deal_ids = "<%= deals.collect(&:id) %>">
       <%= render partial: "deals", locals: { deals: deals } %>
     </div>
     <% if @live_deals.present? && @past_deals.present? %>

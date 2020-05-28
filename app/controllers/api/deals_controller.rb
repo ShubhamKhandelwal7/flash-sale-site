@@ -1,9 +1,8 @@
 module Api
-
   #FIXME_AB: class DealsController < Api::ApiBaseController
-  class DealsController < ApplicationController
-    skip_before_action :authorize
-    add_flash_types :error
+  class DealsController < ApiBaseController
+    # skip_before_action :authorize_by_api_token
+    # add_flash_types :error
 
 #FIXME_AB: show like this use jbuilder
 # [
@@ -30,18 +29,18 @@ module Api
 #   }
 # ]
     def live
-      live_deals = Deal.live_deals(Time.current).present? ? Deal.live_deals(Time.current).to_json : nil
+      @live_deals = Deal.live_deals(Time.current)
       respond_to do |format|
-        format.json { render json: live_deals }
+        format.json 
         format.html { render plain: 'invalid url' }
         # format.html{redirect_to home_path, error: "Could not find page you were looking for"}
       end
     end
 
     def past
-      past_deals = Deal.past_deals(Time.current).present? ? Deal.past_deals(Time.current).to_json : nil
+      @past_deals = Deal.past_deals(Time.current)
       respond_to do |format|
-        format.json { render json: past_deals }
+        format.json
         format.html { render plain: 'invalid url' }
       end
     end

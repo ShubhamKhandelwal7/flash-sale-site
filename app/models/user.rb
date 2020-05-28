@@ -25,6 +25,7 @@ class User < ApplicationRecord
   include BasicPresenter::Concern
   has_secure_password
   acts_as_paranoid
+  define_model_callbacks :verify, only: :after
 
   validates :name, presence: true
   validates :password,  presence: true, on: :reset_password
@@ -45,9 +46,12 @@ class User < ApplicationRecord
 
   before_destroy :ensure_order_not_placed
   after_commit :send_signup_verification_mail, on: :create, unless: -> { admin? }
+  after_verify :set_auth_token!
 
   scope :admin, -> { where(admin: true) }
   scope :regular, -> { where(admin: false) }
+  scope :verified, -> { where('verified_at IS NOT NULL') }
+  scope :without_auth_token, -> { where('authentication_token IS NULL') }
   #FIXME_AB: add scope for verified user
 
   def placed_line_items
@@ -62,11 +66,13 @@ class User < ApplicationRecord
   end
 
   def verify
-    if verification_token_sent_at > ENV['VERIFY_MAIL_VALIDITY_HOURS'].to_i.hours.ago
-      self.verified_at = Time.current
-      self.verification_token = nil
-      self.verification_token_sent_at = nil
-      save!
+    run_callbacks :verify do
+      if verification_token_sent_at > ENV['VERIFY_MAIL_VALIDITY_HOURS'].to_i.hours.ago
+        self.verified_at = Time.current
+        self.verification_token = nil
+        self.verification_token_sent_at = nil
+        save!
+      end
     end
   end
 
@@ -85,7 +91,7 @@ class User < ApplicationRecord
   end
 
   #FIXME_AB: custom callback after_verify
-  def set_auth_token
+  def set_auth_token!
     generate_token(:authentication_token)
     save!
   end

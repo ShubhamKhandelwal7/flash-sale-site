@@ -6,10 +6,10 @@ namespace :custom do
         Rails.logger.info { "setting auth_token for users task started" }
 
         #FIXME_AB: User.verified.without_auth_token.find_each
-        User.where(authentication_token: nil).find_each do |user|
+        User.verified.without_auth_token.find_each do |user|
           Rails.logger.info "User #{user.id}: #{user.name} is being updated with token"
           #FIXME_AB: user.set_auth_token!
-          if user.set_auth_token
+          if user.set_auth_token!
             Rails.logger.info "User #{user.id}: #{user.name} is updated"
           else
             Rails.logger.info "User #{user.id}: #{user.name} could not get updated"
