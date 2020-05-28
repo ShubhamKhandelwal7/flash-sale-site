@@ -41,5 +41,5 @@ STATE_TRASITIONS = {
   'refunded' => []
 }
 
-ISO_COUNTRYCODES_ARRAY = IsoCountryCodes.all.collect(&:alpha2)
+ISO_COUNTRYCODES_ARRAY = IsoCountryCodes.all.collect(&:alpha2).freeze
 
