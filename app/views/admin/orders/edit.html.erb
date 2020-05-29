@@ -1,7 +1,32 @@
+<% #FIXME_AB: based on order's current state, show appropriate buttons
+
+  # 'placed' => ['shipped', 'cancel', 'delivered'],
+  # 'shipped'=> ['delivered', 'cancel'],
+  # 'delivered' => [],
+
+
+  # whenever taking any action in show bootstrap modal to ask notes. you can store this in a now table order_history
+
+  # order history should also have paid and placed events
+  # and show this order history in reverse chronological order
+
+
+-%>
+
+
+<% #FIXME_AB:
+  # show payment info
+ -%>
+
+  <% #FIXME_AB:
+      # send user email about the state change with notes
+   -%>
+
+
 <div class="container">
   <%= render partial: 'shared/errors', locals:{ object: @current_order } %>
   <%@current_order = @current_order.valid? ? @current_order : Order.find(@current_order.id)%>
-   <%= render partial: "orders/order", locals: { order: @current_order } %> 
+   <%= render partial: "orders/order", locals: { order: @current_order } %>
    <h3>Mark As</h3>
     <%= form_with method: "get", local: true, url: update_state_admin_order_path(@current_order), class: "form-signup" do |form| %>
       <div class = "form-group">

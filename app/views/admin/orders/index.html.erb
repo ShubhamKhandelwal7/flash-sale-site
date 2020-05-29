@@ -3,8 +3,8 @@
 <div class = "container text-right col-sm mr-3">
   <%= form_with method: :get, local: true, url: admin_orders_path, class: "form-signup" do |form| %>
     <div class = "form-group">
-      <%= form.text_field :user_email, placeholder: "Email" %>   
-      
+      <%= form.text_field :user_email, placeholder: "Email" %>
+
       <%= form.submit :SEARCH, class: "btn btn-primary btn-sm" %>
 
     </div>
@@ -13,4 +13,5 @@
   <% if @orders.present? %>
     <%= render partial: "orders", locals: { orders: @orders } %>
   <%end%>
+  <% #FIXME_AB: what if orders are not present -%>
 </div>

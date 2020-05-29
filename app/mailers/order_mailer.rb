@@ -15,6 +15,7 @@ class OrderMailer < ApplicationMailer
   end
 
   def delivered(order_id)
+    #FIXME_AB: delivered
     if(@order = Order.placed_orders.find_by(id: order_id))
       @user = @order.user
       mail to: @user.email, subject: "Order #{@order.number}: Delivered"

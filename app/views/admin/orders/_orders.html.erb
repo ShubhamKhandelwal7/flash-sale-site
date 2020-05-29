@@ -2,32 +2,33 @@
   <table class="table text-center table-striped bg-light">
     <thead class="thead-dark">
       <tr>
-        <th scope="col">S.NO</th>
+        <th scope="col">ID</th>
         <th scope="col">Number</th>
         <th scope="col">State</th>
-        <th scope="col">Total_amount</th>
-        <th scope="col">Total_tax</th>
+        <th scope="col">Total Amount</th>
+        <th scope="col">Total Tax</th>
         <th scope="col">user</th>
-        <th scope="col">Line Items#</th>
+        <th scope="col">Items#</th>
         <th scope="col">created at</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
     <tbody>
-    <% count = 1 %>
       <% orders.each do |order| %>
         <tr>
-          <td><%= count %></td>
+          <td><%= order.id %></td>
+          <% #FIXME_AB: link order number to show page -%>
           <td><%= order.number %></td>
           <td><%= order.state %></td>
+          <% #FIXME_AB: INR -%>
           <td><%= number_to_currency(order.total_amount) %></td>
           <td><%= number_to_currency(order.total_tax) %></td>
           <td><%= order.user.email %></td>
           <td><%= order.line_items_count %></td>
+          <% #FIXME_AB: placed_at else created at -%>
           <td><%= order.created_at.to_s(:orders) %></td>
           <td><%= link_to "EDIT STATUS", edit_admin_order_path(order) %></td>
         </tr>
-        <% count += 1 %>
       <%end%>
     </tbody>
   </table>
