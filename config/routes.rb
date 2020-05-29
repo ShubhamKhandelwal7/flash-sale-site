@@ -43,6 +43,7 @@ Rails.application.routes.draw do
         get "unpublish"
       end
     end
+    resources :orders, only: :index
   end
 
   namespace :api do
