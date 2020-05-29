@@ -1,0 +1,26 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">S.NO</th>
+      <th scope="col">transaction_id</th>
+      <th scope="col">state</th>
+      <th scope="col">method</th>
+      <th scope="col">amount</th>
+      <th scope="col">paid_at</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% count = 1 %>
+    <% payments.each do |payment| %>
+      <tr>
+        <td><%= count %></td>
+        <td><%= payment.transaction_id %></td>
+        <td><%= payment.state %></td>
+        <td><%= payment.method%></td>
+        <td><%= number_to_currency(payment.amount) %></td>
+        <td><%= payment.paid_at%></td>
+      </tr>
+      <% count +=1 %>
+    <%end%>
+  </tbody>
+</table>

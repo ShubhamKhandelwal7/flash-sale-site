@@ -10,7 +10,14 @@ class OrderMailer < ApplicationMailer
   def refund_intimation(order_id)
     if(@order = Order.find_by(id: order_id))
       @user = @order.user
-    mail to: @user.email, subject: "Order #{@order.number}: Cancelled | Amount Refunded"
+      mail to: @user.email, subject: "Order #{@order.number}: Cancelled | Amount Refunded"
+    end
+  end
+
+  def delivered(order_id)
+    if(@order = Order.placed_orders.find_by(id: order_id))
+      @user = @order.user
+      mail to: @user.email, subject: "Order #{@order.number}: Delivered"
     end
   end
 end

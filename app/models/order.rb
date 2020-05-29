@@ -26,7 +26,7 @@ class Order < ApplicationRecord
   }
 
   acts_as_paranoid
-  define_model_callbacks :place_order, only: :after
+  define_model_callbacks :place_order, :mark_states, only: :after
 
   validate :ensure_user_address, :ensure_payment_made, if: -> { placed? || shipped? || delivered? }
   validates :line_items_count, numericality: { greater_than: 0 }, if: -> { placed? }
@@ -39,6 +39,7 @@ class Order < ApplicationRecord
   belongs_to :address, optional: true
 
   after_place_order :send_placed_mailer
+  after_mark_states :send_status_update
 
   scope :placed_orders, ->{ where(state: :placed).or where(state: :shipped).or where(state: :delivered) }
   scope :paid_orders, -> { where.not(state: :cart) }
@@ -112,6 +113,28 @@ class Order < ApplicationRecord
   def make_payment(token)
     logger.info { "initiating make_payment method against order id: #{id}, calling stripe_transact after checks & building payment" }
     cart? && address && payments.build.stripe_transact(token) && update(state: self.class.states[:paid])
+  end
+
+  def mark_as_delivered!
+    run_callbacks :mark_states do
+      self.state = Order.states[:delivered]
+      self.save
+    end
+  end
+
+  def mark_as_cancelled!
+    run_callbacks :mark_states do
+      self.state = Order.states[:cancelled]
+      self.save && process_refunds
+    end
+  end
+
+  private def send_status_update
+    if refunded?
+      OrderMailer.refund_intimation(id).deliver_later
+    elsif delivered?
+      OrderMailer.delivered(id).deliver_later
+    end
   end
 
   private def ensure_state_transition

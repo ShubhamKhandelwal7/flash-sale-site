@@ -34,10 +34,10 @@ LINEITEMS = {
 STATE_TRASITIONS = {
   'cart' => [ 'paid'],
   'paid' => ['placed', 'cancelled', 'refunded'],
-  'placed' => ['shipped', 'cancelled', 'refunded'],
+  'placed' => ['shipped', 'cancelled', 'refunded', 'delivered'],
   'shipped'=> ['delivered', 'cancelled', 'refunded'],
   'delivered' => [],
-  'cancelled' => [],
+  'cancelled' => ['refunded'],
   'refunded' => []
 }
 

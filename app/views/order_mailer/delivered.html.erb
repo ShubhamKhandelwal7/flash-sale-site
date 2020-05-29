@@ -1,0 +1,13 @@
+<h2> Hi <%= @user.name.capitalize %></h2>
+<p>Thank you for shopping with us !!</p>
+<h3>Your order <%= @order.number %> is delivered </h3>
+<br>
+<%= render partial: 'orders/order', locals: { order: @order } %>
+<br>
+<p> Your payment details are as follows:</p> 
+<%= render partial: 'orders/payments', locals: { payments: @order.payments.success } %>
+
+<p>Happy Shopping !!!</p>
+<br>
+<h4>Thanks,</h4>
+<h4>The Flash Team</h4>

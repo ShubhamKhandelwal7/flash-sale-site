@@ -43,7 +43,9 @@ Rails.application.routes.draw do
         get "unpublish"
       end
     end
-    resources :orders, only: :index
+    resources :orders, only: [:index, :edit] do
+      get "update_state", on: :member
+    end
   end
 
   namespace :api do
