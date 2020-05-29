@@ -35,7 +35,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 #FIXME_AB: read about Gemfile and Gemfile.lock https://github.com/vinsol/vtapp_study_material/blob/master/rails/Gemfile%20and%20Gemfile.lock%20in%20Ruby%20-%20Daval%20Pargal%20-%20Medium.pdf
 gem "figaro", '1.1.1'
 
-gem 'kaminari', '1.2.0'
+gem 'kaminari', '1.2.1'
 
 gem 'whenever', '1.0.0'
 
