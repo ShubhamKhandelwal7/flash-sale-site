@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   before_action :ensure_stripe_token_present, only: :charge
 
   def index
-    @orders = current_user.orders.placed_orders
+    @orders = current_user.orders.placed_orders.includes([:address, :line_items])
   end
 
   def add_to_cart

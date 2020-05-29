@@ -5,8 +5,8 @@ REGEXPS = {
 }
 
 DEALS = {
-  min_images_limit: 1,
-  min_quant_limit: 10,
+  min_images_limit: 2,
+  min_quant_limit: 11,
   max_deals_per_day: 2,
   min_tax_allowed: 0,
   max_tax_allowed: 28
@@ -40,3 +40,6 @@ STATE_TRASITIONS = {
   'cancelled' => [],
   'refunded' => []
 }
+
+ISO_COUNTRYCODES_ARRAY = IsoCountryCodes.all.collect(&:alpha2).freeze
+

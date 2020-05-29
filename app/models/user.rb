@@ -16,8 +16,14 @@
 #  verified_at                :datetime
 #  admin                      :boolean          default(FALSE), not null
 #  stripe_customer_id         :string
+#  authentication_token       :string
 #
 class User < ApplicationRecord
+
+  include BasicPresenter::Concern
+  has_secure_password
+  acts_as_paranoid
+  define_model_callbacks :verify, only: :after
 
   validates :name, presence: true
   validates :password,  presence: true, on: :reset_password
@@ -29,8 +35,6 @@ class User < ApplicationRecord
 
   validates :password_reset_token, :verification_token, uniqueness: true
 
-  has_secure_password
-  acts_as_paranoid
   has_many :addresses, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :line_items, through: :orders
@@ -40,9 +44,12 @@ class User < ApplicationRecord
 
   before_destroy :ensure_order_not_placed
   after_commit :send_signup_verification_mail, on: :create, unless: -> { admin? }
+  after_verify :set_auth_token!
 
   scope :admin, -> { where(admin: true) }
   scope :regular, -> { where(admin: false) }
+  scope :verified, -> { where.not(verified_at: nil) }
+  scope :without_auth_token, -> { where(authentication_token: nil) }
 
   def placed_line_items
     orders.placed_orders.includes(:line_items).collect(&:line_items).flatten
@@ -56,11 +63,13 @@ class User < ApplicationRecord
   end
 
   def verify
-    if verification_token_sent_at > ENV['VERIFY_MAIL_VALIDITY_HOURS'].to_i.hours.ago
-      self.verified_at = Time.current
-      self.verification_token = nil
-      self.verification_token_sent_at = nil
-      save!
+    run_callbacks :verify do
+      if verification_token_sent_at > ENV['VERIFY_MAIL_VALIDITY_HOURS'].to_i.hours.ago
+        self.verified_at = Time.current
+        self.verification_token = nil
+        self.verification_token_sent_at = nil
+        save!
+      end
     end
   end
 
@@ -76,6 +85,11 @@ class User < ApplicationRecord
     else
       { status: false, reason: "token_expired" }
     end
+  end
+
+  def set_auth_token!
+    generate_token(:authentication_token)
+    save!
   end
 
   def verified?

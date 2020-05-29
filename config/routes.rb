@@ -9,10 +9,12 @@ Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" #if Rails.env.development?
 
   root 'home#index', as: 'home'
+  get "homepage_poll", to: 'home#poll'
   get "verify/:token", action: :verify, controller: :users, as: 'verify'
-  get "homedeals", to: "home#deals"
 
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create] do
+    get "my_profile", on: :collection
+  end
 
   resources :password_resets, only: [:new, :create, :edit, :update], param: :token
 
@@ -41,6 +43,12 @@ Rails.application.routes.draw do
         get "unpublish"
       end
     end
+  end
+
+  namespace :api do
+    get 'deals/live', to: 'deals#live' 
+    get 'deals/past', to: 'deals#past' 
+    get 'myorders/:token', to: 'orders#index'
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_25_113959) do
+ActiveRecord::Schema.define(version: 2020_05_28_124219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -143,6 +143,8 @@ ActiveRecord::Schema.define(version: 2020_05_25_113959) do
     t.datetime "verified_at"
     t.boolean "admin", default: false, null: false
     t.string "stripe_customer_id"
+    t.string "authentication_token"
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true

@@ -6,18 +6,18 @@
     </div>
   <% end %>
 </div>
-<div class="container">
-  <div class="row">
+<div class="container shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="row ml-5">
     <% @deals.to_enum.with_index(1).each do |deal, index| %>
 
       <%if index % 3 == 0%>
         </div>
-        <div class="row">
+        <div class="row ml-5">
       <% end%>
 
       <div class="col-md-6 d-flex align-items-stretch col-lg-6">
-        <div class = "card text-white bg-dark mb-3 " style="width: 80%;">
-          <div class = "card-header text-center bg-dark">
+        <div class = "card text-dark bg-light mb-3 shadow-lg" style="width: 80%;">
+          <div class = "card-header text-center bg-light">
             <%if deal.images.attached? %>
               <% image = deal.presenter.cover_image %>
               <div class="col text-center">
@@ -27,8 +27,8 @@
           </div>
 
 
-            <div class = "card-body">
-              <h5 class="card-title"><%= deal.title %></h5>
+            <div class = "card-body ">
+              <h5 class="card-title text-white bg-dark text-center rounded"><%= deal.title %></h5>
               <p> <strong>Price:</strong>
                 <%= number_to_currency(deal.price) %>
               </p>
@@ -39,9 +39,9 @@
               <table class="table text-white">
                 <tbody>
                   <tr>
-                    <td> <%= link_to "EDIT", edit_admin_deal_path(deal) %> </td>
-                    <td> <%= link_to "SHOW", admin_deal_path(deal) %> </td>
-                    <td> <%= link_to "DESTROY", admin_deal_path(deal), method: :delete,
+                    <td> <%= link_to "EDIT", edit_admin_deal_path(deal), class: "btn btn-primary btn-block" %> </td>
+                    <td> <%= link_to "SHOW", admin_deal_path(deal), class: "btn btn-primary btn-block" %> </td>
+                    <td> <%= link_to "DESTROY", admin_deal_path(deal), method: :delete, class: "btn btn-danger btn-block",
                                      data: { confirm: "Are you sure to delete deal with title #{deal.title}?" } %> </td>
                   </tr>
                 </tbody>

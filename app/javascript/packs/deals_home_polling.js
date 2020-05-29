@@ -1,4 +1,3 @@
-const PER_SECONDS_CHECK = 2*60*1000
 const POLLING_INTERVAL = 60000
 
 class HomepageUpdator {
@@ -19,8 +18,10 @@ class HomepageUpdator {
       dataType: 'json',
 
       success: (response) => {
-        resp = JSON.parse(response.live_deals)
-        this.checkResponse(resp, this.currentDeals);
+        resp = JSON.parse(response.live_deals);
+        if(resp) {
+          this.checkResponse(resp, this.currentDeals);
+        };
       },
       error: (response) => {
         console.log("AJAX request failed");
@@ -30,8 +31,7 @@ class HomepageUpdator {
 
   checkResponse(response, currentDeals) {
     for(var latestDeal of response) {
-      // FIXME_AB: update
-      if((Date.parse(latestDeal[1]) >= (Date.now() - PER_SECONDS_CHECK)) || currentDeals.length != response.length || !currentDeals.includes(latestDeal[0])) {
+      if((Date.parse(latestDeal[1]) < (new Date()).getTime()) || currentDeals.length != response.length || !currentDeals.includes(latestDeal[0])) {
         location.reload(true);
       };
     };

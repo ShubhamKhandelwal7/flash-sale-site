@@ -1,8 +1,8 @@
 <% deals.each do |deal| %>
   <div class="row" data-deal_id = <%= deal.id %>>
     <div class="col">
-      <div class = "card bg-dark mb-4">
-        <div class = "card-header ">
+      <div class = "card bg-light mb-4 shadow-lg p-3 mb-5 bg-light rounded">
+        <div class = "card-header bg-dark">
           <div id="carouselExampleControls<%=deal.id%>" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
               <% if deal.images.attached? %>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class = "card-body bg-secondary">
-          <h5 class="card-title text-center"><%= deal.title %></h5>
+          <h5 class="card-title text-center text-white bg-dark rounded"><%= deal.title %></h5>
           <div class="row">
             <div class="col">
               <p>

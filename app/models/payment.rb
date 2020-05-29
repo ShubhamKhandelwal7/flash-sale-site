@@ -17,6 +17,8 @@
 #  card_exp_year    :integer
 #  card_exp_month   :integer
 #  card_brand       :string
+#  paid_at          :datetime
+#  refunded_at      :datetime
 #
 class Payment < ApplicationRecord
 
@@ -33,9 +35,9 @@ class Payment < ApplicationRecord
 
   belongs_to :order
 
-  #FIXME_AB: where(state: Payment.states[:succeeded]).where(category: :charge)
-  scope :success, -> { where("state = ? AND category = ?", Payment.states[:succeeded], 'charge') }
-  scope :no_success, -> { where("state != ? AND category = ?", Payment.states[:succeeded], 'charge') }
+  scope :success, -> { where(state: Payment.states[:succeeded]).where(category: :charge) }
+  scope :no_success, -> { where(category: :charge).where.not(state: Payment.states[:succeeded]) }
+  scope :refunded, -> { where(state: Payment.states[:succeeded]).where(category: :refund) }
 
   def stripe_transact(token)
     logger.info { "Reached stripe_transact method, creating customer and its charge via stripe" }

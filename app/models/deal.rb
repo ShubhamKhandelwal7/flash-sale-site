@@ -46,6 +46,7 @@ class Deal < ApplicationRecord
   scope :published_on, ->(date) { where(published_at: date.beginning_of_day..date.end_of_day) }
   scope :past_live, ->(quantity) { where('published_at < ?', Time.current - 1.day).order(:published_at).last(quantity) }
   scope :live_deals, ->(datetime) { where('live_begin <= :lookup_time AND live_end >= :lookup_time', { lookup_time: datetime }) }
+  scope :past_deals, ->(datetime) { where("live_end < ?", datetime) }
 
   def can_be_scheduled_to_publish_on(date)
     #FIXME_AB: need to consider current deal
@@ -108,6 +109,10 @@ class Deal < ApplicationRecord
 
   def can_be_rescheduled? # or we can do .save? {ensure_publishability_criteria}
     published_at && published_at > Time.current + ENV['PUBLISH_DEAL_RESTRICT_TIME'].to_i.day && !live?
+  end
+
+  def can_be_updated?
+    published_at.blank? || can_be_rescheduled?
   end
 
   def unpublish
