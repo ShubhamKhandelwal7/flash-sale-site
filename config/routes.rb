@@ -43,8 +43,12 @@ Rails.application.routes.draw do
         get "unpublish"
       end
     end
-    resources :orders, only: [:index, :edit] do
-      get "update_state", on: :member
+    resources :orders, only: [:index, :show] do
+      member do
+        get "cancel"
+        get "shipped"
+        get "delivered"
+      end
     end
   end
 

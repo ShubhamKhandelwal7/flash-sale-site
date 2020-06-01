@@ -1,0 +1,120 @@
+<% #FIXME_AB: based on order's current state, show appropriate buttons
+
+  # 'placed' => ['shipped', 'cancel', 'delivered'],
+  # 'shipped'=> ['delivered', 'cancel'],
+  # 'delivered' => [],
+
+
+  # whenever taking any action in show bootstrap modal to ask notes. you can store this in a now table order_history
+
+  # order history should also have paid and placed events
+  # and show this order history in reverse chronological order
+
+
+-%>
+
+
+<% #FIXME_AB:
+  # show payment info
+ -%>
+
+  <% #FIXME_AB:
+      # send user email about the state change with notes
+   -%>
+ 
+
+<div class="container">
+   <%= render partial: "orders/order", locals: { order: @current_order } %>
+   <div class='container mt-5 text-center'>
+      <%if @current_order.placed? %>
+
+        <div class="modal fade" id="shipped-modal" tabindex="-1" role="dialog" aria-labelledby=orderNotes" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Order Notes: <%= @current_order.state %> => <span class="text-info">SHIPPED</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <%= form_with(method: 'get', local: true, url: shipped_admin_order_path(@current_order)) do |f| %>
+                  <div class="form-group">
+                    <%= f.text_area :note, placeholder: "Order Note", class: 'form-control', id: "message-text", rows: 5, cols: 30   %> 
+                  </div>
+                  <div class="modal-footer">
+                    <%= f.submit :SUBMIT, class: "btn btn-primary" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%= link_to "SHIPPED", "#", data: {toggle: "modal", target: "#shipped-modal"}, class: "btn btn-lg btn-info ml-5" %>
+
+    <%end%>
+
+    <%if @current_order.placed? || @current_order.shipped? %>
+
+        <div class="modal fade" id="delivered-modal" tabindex="-1" role="dialog" aria-labelledby=orderNotes" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Order Notes: <%= @current_order.state %> => <span class="text-success">DELIVERED</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <%= form_with(method: 'get', local: true, url: delivered_admin_order_path(@current_order)) do |f| %>
+                  <div class="form-group">
+                    <%= f.text_area :note, placeholder: "Order Note", class: 'form-control', id: "message-text", rows: 5, cols: 30   %> 
+                  </div>
+                  <div class="modal-footer">
+                    <%= f.submit :SUBMIT, class: "btn btn-primary" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog" aria-labelledby=orderNotes" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Order Notes: <%= @current_order.state %> => <span class="text-danger">CANCEL</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <%= form_with(method: 'get', local: true, url: cancel_admin_order_path(@current_order)) do |f| %>
+                  <div class="form-group">
+                    <%= f.text_area :note, placeholder: "Order Note", class: 'form-control', id: "message-text", rows: 5, cols: 30   %> 
+                  </div>
+                  <div class="modal-footer">
+                    <%= f.submit :SUBMIT, class: "btn btn-primary" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <%= link_to "DELIVERED", "#", data: {toggle: "modal", target: "#delivered-modal"}, class: "btn btn-lg btn-success ml-5" %>
+        <%= link_to "CANCEL", "#", data: {toggle: "modal", target: "#cancel-modal"}, class: "btn btn-lg btn-danger ml-5" %>
+<%
+=begin%>
+       
+        <%= link_to "", delivered_admin_order_path(@current_order), class: "btn btn-lg btn-success ml-5" %>
+        <%= link_to "", cancel_admin_order_path(@current_order), class: "btn btn-lg btn-danger ml-5" %> 
+<%
+=end%>
+    <%end%>
+
+
+   </div>
+</div>

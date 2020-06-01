@@ -30,7 +30,7 @@
             <div class = "card-body ">
               <h5 class="card-title text-white bg-dark text-center rounded"><%= deal.title %></h5>
               <p> <strong>Price:</strong>
-                <%= number_to_currency(deal.price) %>
+                <%= number_to_currency(deal.price, unit: '₹') %>
               </p>
               <p> <strong>Publishable:</strong>
                 <%= deal.presenter.publish_status %>

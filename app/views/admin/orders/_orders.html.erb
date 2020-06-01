@@ -7,9 +7,9 @@
         <th scope="col">State</th>
         <th scope="col">Total Amount</th>
         <th scope="col">Total Tax</th>
-        <th scope="col">user</th>
+        <th scope="col">User</th>
         <th scope="col">Items#</th>
-        <th scope="col">created at</th>
+        <th scope="col">Placed/Created at</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
@@ -18,18 +18,21 @@
         <tr>
           <td><%= order.id %></td>
           <% #FIXME_AB: link order number to show page -%>
-          <td><%= order.number %></td>
+          <td><%= link_to order.number, admin_order_path(order) %></td>
           <td><%= order.state %></td>
           <% #FIXME_AB: INR -%>
-          <td><%= number_to_currency(order.total_amount) %></td>
-          <td><%= number_to_currency(order.total_tax) %></td>
+          <td><%= number_to_currency(order.total_amount, unit: '₹') %></td>
+          <td><%= number_to_currency(order.total_tax, unit: '₹') %></td>
           <td><%= order.user.email %></td>
           <td><%= order.line_items_count %></td>
           <% #FIXME_AB: placed_at else created at -%>
-          <td><%= order.created_at.to_s(:orders) %></td>
-          <td><%= link_to "EDIT STATUS", edit_admin_order_path(order) %></td>
+          <td><%= order.placed_at&.to_s(:orders) || order.created_at.to_s(:orders) %></td>
+          <td><%= link_to "EDIT STATUS", admin_order_path(order) %></td>
         </tr>
       <%end%>
     </tbody>
   </table>
+  <div class="container text-center mt-3">
+    <%= paginate orders %>
+  </div>
 </div>

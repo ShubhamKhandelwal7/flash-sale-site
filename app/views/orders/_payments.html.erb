@@ -17,7 +17,7 @@
         <td><%= payment.transaction_id %></td>
         <td><%= payment.state %></td>
         <td><%= payment.method%></td>
-        <td><%= number_to_currency(payment.amount) %></td>
+        <td><%= number_to_currency(payment.amount, unit: '₹') %></td>
         <td><%= payment.paid_at%></td>
       </tr>
       <% count +=1 %>

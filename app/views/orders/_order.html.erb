@@ -32,11 +32,11 @@
               <tr>
                 <td><%= count %></td>
                 <td><%= line_item.deal.title %></td>
-                <td><%= number_to_currency(line_item.price) %></td>
-                <td><%= number_to_currency(line_item.sale_price) %></td>
+                <td><%= number_to_currency(line_item.price, unit: '₹') %></td>
+                <td><%= number_to_currency(line_item.sale_price, unit: '₹') %></td>
                 <td><%= line_item.quantity %></td>
-                <td><%= number_to_currency(line_item.taxed_price) %></td>
-                <td><%= number_to_currency(line_item.sub_total) %></td>
+                <td><%= number_to_currency(line_item.taxed_price, unit: '₹') %></td>
+                <td><%= number_to_currency(line_item.sub_total, unit: '₹') %></td>
               </tr>
               <% count += 1 %>
             <%end%>
@@ -45,10 +45,10 @@
       </p>
       <div class="mt-5 float-right">
         <button type="button" class="btn btn-warning">
-          Tax <span class="badge badge-light"><%= number_to_currency(order.total_tax) %></span>
+          Tax <span class="badge badge-light"><%= number_to_currency(order.total_tax, unit: '₹') %></span>
         </button>
         <button type="button" class="btn btn-success">
-          Total <span class="badge badge-light"><%= number_to_currency(order.total_amount) %></span>
+          Total <span class="badge badge-light"><%= number_to_currency(order.total_amount, unit: '₹') %></span>
         </button>
       </div>
 
@@ -74,9 +74,9 @@
             <b>Payment Info</b>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+            <% order.payments.order(created_at: :desc).each do |payment| %>
+              <li class="list-group-item">[<%= payment.state %>] [<%= payment.method %>] <%= number_to_currency(payment.amount, unit: '₹') %> </li>
+            <% end %>
           </ul>
         </div>
       </div>
@@ -87,9 +87,9 @@
             <b>History</b>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+            <% order.order_histories.order(created_at: :desc).each do |order_history| %>
+              <li class="list-group-item">[<%= order_history.state %>] <%= order_history.note %></li>
+            <% end %>
           </ul>
         </div>
       </div>

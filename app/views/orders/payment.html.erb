@@ -25,11 +25,11 @@
             <tr>
               <td><%= count %></td>
               <td><%= line_item.deal.title %></td>
-              <td><%= number_to_currency(line_item.price) %></td>
-              <td><%= number_to_currency(line_item.sale_price) %></td>
-              <td><%= number_to_currency(line_item.taxed_price) %></td>
+              <td><%= number_to_currency(line_item.price, unit: '₹') %></td>
+              <td><%= number_to_currency(line_item.sale_price, unit: '₹') %></td>
+              <td><%= number_to_currency(line_item.taxed_price, unit: '₹') %></td>
               <td><%= line_item.quantity %></td>
-              <td><%= number_to_currency(line_item.sub_total) %></td>
+              <td><%= number_to_currency(line_item.sub_total, unit: '₹') %></td>
             </tr>
             <% count += 1 %>
           <%end%>
@@ -37,7 +37,7 @@
       </table>
     </div>
     <div class='container text-center text-nowrap font-weight-bold mt-5'>
-      Grand Total:   <%= number_to_currency(current_order.total_amount) %>
+      Grand Total:   <%= number_to_currency(current_order.total_amount, unit: '₹') %>
     </div>
     <div class='container mt-5 bg-dark border border-warning'>
     <%= form_with method: :post, url: charge_orders_path, local: true, id: 'payment-form', data: {stripe_key: ENV['STRIPE_PUBLISHABLE_KEY']} do %>

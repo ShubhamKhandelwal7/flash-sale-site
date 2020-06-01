@@ -26,7 +26,7 @@ class Order < ApplicationRecord
   }
 
   acts_as_paranoid
-  define_model_callbacks :place_order, :mark_states, only: :after
+  define_model_callbacks :place_order, :mark_shipped, :mark_delivered, :mark_cancelled, only: :after
 
   validate :ensure_user_address, :ensure_payment_made, if: -> { placed? || shipped? || delivered? }
   validates :line_items_count, numericality: { greater_than: 0 }, if: -> { placed? }
@@ -35,14 +35,19 @@ class Order < ApplicationRecord
   has_many :line_items, dependent: :destroy
   has_many :deals, through: :line_items
   has_many :payments, dependent: :destroy
+  has_many :order_histories, dependent: :destroy
   belongs_to :user
   belongs_to :address, optional: true
 
   after_place_order :send_placed_mailer
-  after_mark_states :send_status_update
+  after_mark_shipped :state_shipped
+  after_mark_delivered :state_delivered
+  after_mark_cancelled :state_cancelled
 
   scope :placed_orders, ->{ where(state: :placed).or where(state: :shipped).or where(state: :delivered) }
   scope :paid_orders, -> { where.not(state: :cart) }
+  scope :shipped, -> { where(state: :shipped) }
+  scope :delivered, -> { where(state: :delivered) }
 
   def number
    "#{(placed_at || created_at).to_s(:number)}-#{id}"
@@ -73,7 +78,7 @@ class Order < ApplicationRecord
         if update_inventory
           self.state = self.class.states[:placed]
           self.placed_at = Time.current
-          save!
+          save! && order_histories.create(state: state, note: "Order Placed")
         else
           raise StandardError.new "Update Inventory Failure"
           return false
@@ -94,6 +99,7 @@ class Order < ApplicationRecord
   def process_refunds
     if payments.success.map(&:refund).all?{ |refund_status| refund_status}
       logger.info { "Refund process success, updating order state to refund state" }
+      order_histories.create(state: state, note: "Refund success")
       update(state: self.class.states[:refunded])
     else
       logger.info { "some payments could not be refunded" }
@@ -112,28 +118,46 @@ class Order < ApplicationRecord
 
   def make_payment(token)
     logger.info { "initiating make_payment method against order id: #{id}, calling stripe_transact after checks & building payment" }
-    cart? && address && payments.build.stripe_transact(token) && update(state: self.class.states[:paid])
+    paid = self.class.states[:paid]
+    cart? && address && payments.build.stripe_transact(token) && update(state: paid) && order_histories.create(state: paid, note: "Payment success")
   end
 
-  def mark_as_delivered!
-    run_callbacks :mark_states do
+  def mark_as_shipped!(note)
+    run_callbacks :mark_shipped do
+      self.state = Order.states[:shipped]
+      save && (event = order_histories.create(state: state, note: note)) && event.persisted?
+    end
+  end
+
+  def mark_as_delivered!(note)
+    run_callbacks :mark_delivered do
       self.state = Order.states[:delivered]
-      self.save
+      save && (event = order_histories.create(state: state, note: note)) && event.persisted?
     end
   end
 
-  def mark_as_cancelled!
-    run_callbacks :mark_states do
+  def mark_as_cancelled!(note)
+    run_callbacks :mark_cancelled do
       self.state = Order.states[:cancelled]
-      self.save && process_refunds
+      save && process_refunds && (event = order_histories.create(state: state, note: note)) && event.persisted?
+    end
+  end
+  
+  private def state_shipped
+    if shipped?
+      OrderMailer.shipped(id).deliver_later
     end
   end
 
-  private def send_status_update
+  private def state_delivered
+    if delivered?
+      OrderMailer.delivered(id).deliver_later
+    end
+  end
+
+  private def state_cancelled
     if refunded?
       OrderMailer.refund_intimation(id).deliver_later
-    elsif delivered?
-      OrderMailer.delivered(id).deliver_later
     end
   end
 
