@@ -3,21 +3,15 @@ module Admin
     before_action :set_order, only: [:shipped, :delivered, :cancel, :show]
     before_action :check_user, only: :index
 
-    #FIXME_AB: before actoin to check if email present and user not present, redirect.
     def index
-      # if @user
-      #   ...
-      # else
-      #   ....
-      # end
       if @user
         @orders = @user.orders.paid_orders
         flash.now[:notice] = "Orders of #{@user.email} found"
       else
         @orders = Order.includes(:user).paid_orders
       end
+      #FIXME_AB: add PER_PAGE_ORDER in application.yml.example and in requried keys
       @orders = @orders.order(placed_at: :desc, created_at: :desc).page(params[:page]).per(ENV['PER_PAGE_ORDER'].to_i)
-      #FIXME_AB: pagination
     end
 
     def show
@@ -29,6 +23,7 @@ module Admin
       else
         flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
+      #FIXME_AB: don't redirect user to list, keep on the same page
       redirect_to admin_orders_path
     end
 
@@ -38,6 +33,7 @@ module Admin
       else
         flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
+      #FIXME_AB: don't redirect user to list, keep on the same page
       redirect_to admin_orders_path
     end
 
@@ -47,10 +43,12 @@ module Admin
       else
         flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
+      #FIXME_AB: don't redirect user to list, keep on the same page
       redirect_to admin_orders_path
     end
 
     #FIXME_AB: separate actions. shipped, delivered, cancel
+    #FIXME_AB: I think we can delete this action
     def update_state
       if params[:delivered] == '1'&& @current_order.mark_as_delivered! #state = Order.states[:delivered]
         redirect_to admin_orders_path, notice: "State of Order:#{@current_order.number} updated successfully"

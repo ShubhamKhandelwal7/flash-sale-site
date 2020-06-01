@@ -78,6 +78,7 @@ class Order < ApplicationRecord
         if update_inventory
           self.state = self.class.states[:placed]
           self.placed_at = Time.current
+          #FIXME_AB: use create! here so that it raise an eception if failed and transaction rollbacks, same at other places
           save! && order_histories.create(state: state, note: "Order Placed")
         else
           raise StandardError.new "Update Inventory Failure"
@@ -142,7 +143,7 @@ class Order < ApplicationRecord
       save && process_refunds && (event = order_histories.create(state: state, note: note)) && event.persisted?
     end
   end
-  
+
   private def state_shipped
     if shipped?
       OrderMailer.shipped(id).deliver_later

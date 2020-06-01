@@ -17,15 +17,12 @@
       <% orders.each do |order| %>
         <tr>
           <td><%= order.id %></td>
-          <% #FIXME_AB: link order number to show page -%>
           <td><%= link_to order.number, admin_order_path(order) %></td>
           <td><%= order.state %></td>
-          <% #FIXME_AB: INR -%>
           <td><%= number_to_currency(order.total_amount, unit: '₹') %></td>
           <td><%= number_to_currency(order.total_tax, unit: '₹') %></td>
           <td><%= order.user.email %></td>
           <td><%= order.line_items_count %></td>
-          <% #FIXME_AB: placed_at else created at -%>
           <td><%= order.placed_at&.to_s(:orders) || order.created_at.to_s(:orders) %></td>
           <td><%= link_to "EDIT STATUS", admin_order_path(order) %></td>
         </tr>

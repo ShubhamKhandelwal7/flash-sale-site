@@ -16,7 +16,6 @@ class OrderMailer < ApplicationMailer
   end
 
   def delivered(order_id)
-    #FIXME_AB: delivered
     if(@order = Order.delivered.find_by(id: order_id))
       @user = @order.user
       @order_notes = @order.order_histories.order(created_at: :desc).delivered
