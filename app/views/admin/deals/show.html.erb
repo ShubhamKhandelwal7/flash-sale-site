@@ -1,8 +1,8 @@
-<div class = "container">
+<div class = "container ">
   <% content_for :js do %>
     <%= javascript_pack_tag  'deal_publish', 'data-turbolinks-track': 'reload' %>
   <% end %>
-  <div class = "card text-black bg-light " style="width: 80%;">
+  <div class = "card text-black bg-light shadow-lg border rounded" style="width: 80%;">
     <div class = "card-header bg-dark">
       <% if @deal.images.attached? %>
         <div class="row">
@@ -78,6 +78,52 @@
           <%end%>
         </div>
       <% end %>
+      <div class="container text-center">
+      <button type="button" class="btn btn-lg btn-primary deal-report-btn">Show Report</button>
+      </div>
+      <div class="row deal-report">
+        <div class="card col-md-12 shadow-lg border rounded">
+          <div class="card-body">
+            <h4 class="card-title">
+              <%= @deal.title %>(<%= @deal.id %>)
+              <span class='float-right text-uppercase'>
+              <% deal_publish_status = @deal.presenter.publish_status %>
+              <% if @deal.published_at.blank? %>
+                <span class='text-danger'><%= deal_publish_status %></span>
+              <% else %>
+                <span class='text-success'><%= deal_publish_status %></span>
+              <% end %>
+              </span>
+            </h4>
+            <h6 class="card-subtitle mb-2 text-muted"><%= @deal.description %></h6>
+            <div class="mt-5 float-right">
+              <button type="button" class="btn btn-warning">
+                Discount <span class="badge badge-light"><%= number_to_currency(@deal.discount_price, unit: '₹') %></span>
+              </button>
+              <button type="button" class="btn btn-success">
+                Price <span class="badge badge-light"><%= number_to_currency(@deal.price, unit: '₹') %></span>
+              </button>
+            </div>
+            <p class="card-text">
+              <h3 class = 'mt-5'>Reports:</h3>
+              <div class="clearfix"></div>
+              <br>
+              <button type="button" class="btn btn-primary btn-lg text-center">
+                GROSS REVENUE <span class="badge badge-light"><%= number_to_currency(@deal.gross_revenue, unit: '₹') %></span>
+              </button>
+              <div class="float-right">
+                <button type="button" class="btn btn-light btn-md">
+                  MAX Potential <span class="badge badge-light"><%= number_to_currency(@deal.max_potential, unit: '₹') %></span>
+                </button>
+                <button type="button" class="btn btn-dark btn-md text-color-light">
+                  MIN Potential <span class="badge badge-light"><%= number_to_currency(@deal.min_potential, unit: '₹') %></span>
+                </button>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+
 
     </div>
   </div>

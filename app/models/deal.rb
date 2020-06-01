@@ -72,6 +72,18 @@ class Deal < ApplicationRecord
     end
   end
 
+  def gross_revenue
+    line_items.includes(:order).select{|line| line.order && (line.order.placed? || line.order.shipped? || line.order.delivered?) }.collect(&:sub_total).sum
+  end
+
+  def max_potential
+    price - discount_price
+  end
+
+  def min_potential
+    max_potential - ((USERS[:max_orders_count_for_discount].to_f/100) * max_potential)
+  end
+
   def saleable_qty_available?
     salebale_qty.positive?
   end

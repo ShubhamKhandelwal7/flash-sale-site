@@ -7,10 +7,17 @@ class dealPublishManager {
     this.$publishBtn = $(defaultSelector.publishBtnSelector);
     this.$republishBtn = $(defaultSelector.republishBtnSelector);
     this.unpublishBtn = defaultSelector.unpublishBtnSelector;
+    this.dealReportBtn = defaultSelector.dealReportBtnSelector;
+    this.$dealReportDiv = $(defaultSelector.dealReportDivSelector);
   }
 
   init() {
     this.$republishBtn.hide();
+    this.$dealReportDiv.hide();
+    $(this.dealReportBtn).on('click', (event)=> {
+      $(this.dealReportBtn).hide();
+      this.$dealReportDiv.show("slow");
+    });
     $(this.publishForm).on('ajax:success', (event) => {
       let response = event.detail[0];
       if(response.status == true) {
@@ -58,7 +65,9 @@ $(document).on("turbolinks:load", function(){
     publishDataDivSelector: "#publish-data",
     publishBtnSelector: "#publish-btn",
     republishBtnSelector: "#republish-btn",
-    unpublishBtnSelector: "#unschedule-deal"
+    unpublishBtnSelector: "#unschedule-deal",
+    dealReportBtnSelector: ".deal-report-btn",
+    dealReportDivSelector: ".deal-report"
   };
     let dealPublishObj = new dealPublishManager(defaultSelector);
     dealPublishObj.init();
