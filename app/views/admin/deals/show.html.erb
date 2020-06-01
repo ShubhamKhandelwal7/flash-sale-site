@@ -30,7 +30,7 @@
       </p>
       <p>
         <strong>Price:</strong>
-        <%= number_to_currency(@deal.price) %>
+        <%= number_to_currency(@deal.price, unit: '₹') %>
       </p>
       <p>
         <strong>Publishable:</strong>

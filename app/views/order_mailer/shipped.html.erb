@@ -1,0 +1,19 @@
+<h2> Hi <%= @user.name.capitalize %></h2>
+<p>Thank you for shopping with us !!</p>
+<h3>Your order <%= @order.number %> is now shipped </h3>
+<h3>Please follow the below link to learn more: </h3>
+<br>
+<%= link_to nil, orders_url %>
+<br>
+<p> Your payment details are as follows:</p> 
+<%= render partial: 'orders/payments', locals: { payments: @order.payments.success } %>
+<br>
+<p>Order Notes: </p>
+<% @order_notes.each do |order_note| %>
+  <%= order_note.note %> | <%= order_note.created_at.to_date %>
+  <br>
+<% end %>
+<p>Happy Shopping !!!</p>
+<br>
+<h4>Thanks,</h4>
+<h4>The Flash Team</h4>

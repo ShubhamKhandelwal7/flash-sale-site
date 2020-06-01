@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_28_124219) do
+ActiveRecord::Schema.define(version: 2020_06_01_055651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -92,6 +92,15 @@ ActiveRecord::Schema.define(version: 2020_05_28_124219) do
     t.index ["order_id"], name: "index_line_items_on_order_id"
   end
 
+  create_table "order_histories", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "note"
+    t.integer "state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id"], name: "index_order_histories_on_order_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.decimal "total_amount"
     t.decimal "total_tax"
@@ -155,6 +164,7 @@ ActiveRecord::Schema.define(version: 2020_05_28_124219) do
   add_foreign_key "addresses", "users"
   add_foreign_key "line_items", "deals"
   add_foreign_key "line_items", "orders"
+  add_foreign_key "order_histories", "orders"
   add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "users"
   add_foreign_key "payments", "orders"

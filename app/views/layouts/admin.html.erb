@@ -12,7 +12,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href= <%= admin_deals_path %> >
       <img src= <%= image_path 'flash-sale-logo-navbar.jpg' %> width="130" height="80" alt=""></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,7 +21,8 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href= <%= home_path %> >Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href= <%= admin_deals_path %> >Current Deals</a>
+          <a class="nav-item nav-link" href= <%= admin_orders_path %> >Orders</a>
+          <a class="nav-item nav-link" href= <%= admin_deals_path %> >Deals</a>
           <a class="nav-item nav-link" href= <%= new_admin_deal_path %> >New Deal</a>
           <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
         </div>
