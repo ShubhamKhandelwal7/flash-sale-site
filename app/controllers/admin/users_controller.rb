@@ -1,7 +1,8 @@
 module Admin
   class UsersController < AdminController
-    
+
     def top_customers
+      #FIXME_AB: refactor
       @from_date = Date.parse(params[:from_date].present? ? params[:from_date] : (Date.today - REPORTS[:top_customer_lookback].days).to_s)
       @to_date = Date.parse(params[:to_date].present? ? params[:to_date] : (Date.today).to_s)
 

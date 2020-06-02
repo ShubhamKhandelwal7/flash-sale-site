@@ -10,7 +10,6 @@ module Admin
       else
         @orders = Order.includes(:user).paid_orders
       end
-      #FIXME_AB: add PER_PAGE_ORDER in application.yml.example and in requried keys
       @orders = @orders.order(placed_at: :desc, created_at: :desc).page(params[:page]).per(ENV['PER_PAGE_ORDER'].to_i)
     end
 
@@ -23,7 +22,6 @@ module Admin
       else
         flash.now[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
-      #FIXME_AB: don't redirect user to list, keep on the same page
       redirect_back(fallback_location: admin_orders_path)
     end
 
@@ -33,7 +31,6 @@ module Admin
       else
         flash.now[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
-      #FIXME_AB: don't redirect user to list, keep on the same page
       redirect_back(fallback_location: admin_orders_path)
     end
 
@@ -43,12 +40,8 @@ module Admin
       else
         flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
-      #FIXME_AB: don't redirect user to list, keep on the same page
       redirect_back(fallback_location: admin_orders_path)
     end
-
-    #FIXME_AB: separate actions. shipped, delivered, cancel
-    #FIXME_AB: I think we can delete this action
 
     private def set_order
       @current_order = Order.find_by(id: params[:id])

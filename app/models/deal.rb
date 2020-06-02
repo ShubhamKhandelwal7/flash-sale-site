@@ -73,13 +73,16 @@ class Deal < ApplicationRecord
   end
 
   def gross_revenue
+    #FIXME_AB: this can be done a better way. you are selecting all line items and then selecting items based on order's status. Should be other way around
     line_items.includes(:order).select{|line| line.order && (line.order.placed? || line.order.shipped? || line.order.delivered?) }.collect(&:sub_total).sum
   end
 
+  #FIXME_AB: this calculation is wrong
   def max_potential
     price - discount_price
   end
 
+  #FIXME_AB: this calculation is wrong
   def min_potential
     max_potential - ((USERS[:max_orders_count_for_discount].to_f/100) * max_potential)
   end
