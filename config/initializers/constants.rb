@@ -41,5 +41,9 @@ STATE_TRASITIONS = {
   'refunded' => []
 }
 
+REPORTS = {
+  top_customer_lookback: 6
+}
+
 ISO_COUNTRYCODES_ARRAY = IsoCountryCodes.all.collect(&:alpha2).freeze
 

@@ -23,7 +23,13 @@
           <a class="nav-item nav-link active" href= <%= home_path %> >Home <span class="sr-only">(current)</span></a>
           <a class="nav-item nav-link" href= <%= admin_orders_path %> >Orders</a>
           <a class="nav-item nav-link" href= <%= admin_deals_path %> >Deals</a>
-          <a class="nav-item nav-link" href= <%= new_admin_deal_path %> >New Deal</a>
+          <a class="nav-item nav-link" href= <%= new_admin_deal_path %> >New Deal</a>      
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href=<%= admin_top_customers_path%>>Top Customers</a>
+            </div>
+          </li>
           <%= link_to "SignOut", logout_path, method: :delete, class: "nav-item nav-link" %>
         </div>
       </div>

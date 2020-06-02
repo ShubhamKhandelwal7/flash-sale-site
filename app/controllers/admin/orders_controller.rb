@@ -10,7 +10,6 @@ module Admin
       else
         @orders = Order.includes(:user).paid_orders
       end
-      #FIXME_AB: add PER_PAGE_ORDER in application.yml.example and in requried keys
       @orders = @orders.order(placed_at: :desc, created_at: :desc).page(params[:page]).per(ENV['PER_PAGE_ORDER'].to_i)
     end
 
@@ -19,22 +18,20 @@ module Admin
 
     def shipped
       if @current_order.mark_as_shipped!(params[:note])
-        flash[:notice] =  "State of Order:#{@current_order.number} updated successfully"
+        flash.now[:notice] =  "State of Order:#{@current_order.number} updated successfully"
       else
-        flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
+        flash.now[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
-      #FIXME_AB: don't redirect user to list, keep on the same page
-      redirect_to admin_orders_path
+      redirect_back(fallback_location: admin_orders_path)
     end
 
     def delivered
       if @current_order.mark_as_delivered!(params[:note])
-        flash[:notice] =  "State of Order:#{@current_order.number} updated successfully"
+        flash.now[:notice] =  "State of Order:#{@current_order.number} updated successfully"
       else
-        flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
+        flash.now[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
-      #FIXME_AB: don't redirect user to list, keep on the same page
-      redirect_to admin_orders_path
+      redirect_back(fallback_location: admin_orders_path)
     end
 
     def cancel
@@ -43,20 +40,7 @@ module Admin
       else
         flash[:alert] = "State of Order:#{@current_order.number} could not get updated"
       end
-      #FIXME_AB: don't redirect user to list, keep on the same page
-      redirect_to admin_orders_path
-    end
-
-    #FIXME_AB: separate actions. shipped, delivered, cancel
-    #FIXME_AB: I think we can delete this action
-    def update_state
-      if params[:delivered] == '1'&& @current_order.mark_as_delivered! #state = Order.states[:delivered]
-        redirect_to admin_orders_path, notice: "State of Order:#{@current_order.number} updated successfully"
-      elsif params[:cancelled] == '1' && @current_order.mark_as_cancelled! #.state = Order.states[:cancelled]
-        redirect_to admin_orders_path, notice: "State of Order:#{@current_order.number} updated successfully"
-      else
-        render :edit
-      end
+      redirect_back(fallback_location: admin_orders_path)
     end
 
     private def set_order

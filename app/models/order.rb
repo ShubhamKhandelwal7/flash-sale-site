@@ -79,7 +79,7 @@ class Order < ApplicationRecord
           self.state = self.class.states[:placed]
           self.placed_at = Time.current
           #FIXME_AB: use create! here so that it raise an eception if failed and transaction rollbacks, same at other places
-          save! && order_histories.create(state: state, note: "Order Placed")
+          save! && order_histories.create!(state: state, note: "Order Placed")
         else
           raise StandardError.new "Update Inventory Failure"
           return false
@@ -98,12 +98,14 @@ class Order < ApplicationRecord
 
 
   def process_refunds
-    if payments.success.map(&:refund).all?{ |refund_status| refund_status}
-      logger.info { "Refund process success, updating order state to refund state" }
-      order_histories.create(state: state, note: "Refund success")
-      update(state: self.class.states[:refunded])
-    else
-      logger.info { "some payments could not be refunded" }
+    transaction do
+      if payments.success.map(&:refund).all?{ |refund_status| refund_status}
+        logger.info { "Refund process success, updating order state to refund state" }
+        order_histories.create!(state: state, note: "Refund success")
+        update(state: self.class.states[:refunded])
+      else
+        logger.info { "some payments could not be refunded" }
+      end
     end
   end
 
@@ -120,27 +122,33 @@ class Order < ApplicationRecord
   def make_payment(token)
     logger.info { "initiating make_payment method against order id: #{id}, calling stripe_transact after checks & building payment" }
     paid = self.class.states[:paid]
-    cart? && address && payments.build.stripe_transact(token) && update(state: paid) && order_histories.create(state: paid, note: "Payment success")
+    cart? && address && payments.build.stripe_transact(token) && update(state: paid) && order_histories.create!(state: paid, note: "Payment success")
   end
 
   def mark_as_shipped!(note)
-    run_callbacks :mark_shipped do
-      self.state = Order.states[:shipped]
-      save && (event = order_histories.create(state: state, note: note)) && event.persisted?
+    transaction do
+      run_callbacks :mark_shipped do
+        self.state = Order.states[:shipped]
+        save && (event = order_histories.create!(state: state, note: note)) && event.persisted?
+      end
     end
   end
 
   def mark_as_delivered!(note)
-    run_callbacks :mark_delivered do
-      self.state = Order.states[:delivered]
-      save && (event = order_histories.create(state: state, note: note)) && event.persisted?
+    transaction do
+      run_callbacks :mark_delivered do
+        self.state = Order.states[:delivered]
+        save && (event = order_histories.create!(state: state, note: note)) && event.persisted?
+      end
     end
   end
 
   def mark_as_cancelled!(note)
-    run_callbacks :mark_cancelled do
-      self.state = Order.states[:cancelled]
-      save && process_refunds && (event = order_histories.create(state: state, note: note)) && event.persisted?
+    transaction do 
+      run_callbacks :mark_cancelled do
+        self.state = Order.states[:cancelled]
+        save && process_refunds && (event = order_histories.create!(state: state, note: note)) && event.persisted?
+      end
     end
   end
 
